@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-var config = require('./config');
+var config = require('./config');  // database connection settings in config.js file
 const db = new Sequelize(`mysql://${config.username}:${config.password}@localhost:3306/${config.database}`);
 
 db
@@ -11,6 +11,8 @@ db
     console.error('Unable to connect to the database:', err);
 });
 
+selectSubmissionDetailsFor(1);
+selectCollaboratorsFor(1);
 insertRecital({date:"2020-08-01", start_time:"14:00:00", end_time:"15:00:00"});
 
 /**
@@ -105,20 +107,27 @@ function selectSubmissionDetailsFor(submissionId) {
             `AND sub.id = ${submissionId}`
     , { type: db.QueryTypes.SELECT})
 
-  .then(submissions => {
-    submissions.map(submission => {
-        db.query("SELECT perf.name, perf.medium FROM submission_performers AS perfs " + 
-                 "INNER JOIN performer AS perf " +
-                    "ON perfs.performer_id = perf.id " +
-                `WHERE perfs.submission_id = ${submissionId} ` +
-                "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT})
-        .then(collaborators => {
-            submission.collaborators = collaborators;
-            console.log("Submissions:", JSON.stringify(submissions, null, 4));
-        });
-    });
+  .then(submission => {
+    console.log("Submission details:", JSON.stringify(submission[0], null, 4));
   });
 }
+
+/**
+ * Returns list of collaborator objects for a given
+ * submission id, including each collaborator name
+ * and medium.
+ * @param {int} submissionId - The submission's pk.
+ */
+function selectCollaboratorsFor(submissionId) {
+    db.query("SELECT perf.name, perf.medium FROM submission_performers AS perfs " + 
+             "INNER JOIN performer AS perf " +
+                "ON perfs.performer_id = perf.id " +
+            `WHERE perfs.submission_id = ${submissionId} ` +
+            "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT})
+    .then(collaborators => {
+        console.log("Collaborators:", JSON.stringify(collaborators, null, 4));
+    });
+};
 
 /**
  * Insert submission into rsms db for a given recital.
