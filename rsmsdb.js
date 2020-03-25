@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const db = new Sequelize('mysql://sandra:sandra@localhost:3306/alexshta_rsms');
+var config = require('./config');
+const db = new Sequelize(`mysql://${config.username}:${config.password}@localhost:3306/${config.database}`);
 
 db
   .authenticate()
