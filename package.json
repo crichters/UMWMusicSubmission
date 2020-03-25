@@ -1,0 +1,22 @@
+{
+  "name": "umwmusicsubmission",
+  "version": "1.0.0",
+  "description": "A utility for the UMW Music Department to Handle Recital Submissions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crichters/UMWMusicSubmission.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crichters/UMWMusicSubmission/issues"
+  },
+  "homepage": "https://github.com/crichters/UMWMusicSubmission#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
