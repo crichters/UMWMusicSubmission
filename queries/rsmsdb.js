@@ -130,12 +130,80 @@ function selectCollaboratorsFor(submissionId) {
 };
 
 /**
+ * Insert collaborators into the performer table
+ * @param {Object[]} collaborators - a list of collaborator objects
+ */
+function insertCollaborators(collaborators, isCollaborator){
+
+	for(var x=0;x<collaborators.length;x++)
+	{
+		db.query(`INSERT INTO performer (name, medium)`+
+		` values("${collaborators[x].name}", "${collaborators[x].medium}");`);
+	}
+	
+	for(var x=0;x<collaborators.length;x++)
+	{
+		insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium);
+	}
+
+};
+
+
+/**
+ * Insert Submission_Performers into the submission performer table
+ * @param {Object[]} collaborators - a list of collaborator objects
+ */
+function insertSubmissionPerformers(name, medium){
+
+	db.query(`INSERT INTO submission_performers (performer_id, submission_id)`+
+		` values((select id from performer where name="${name}" and medium="${medium}"),`+ 			`(select id from submission order by id desc limit 1));`);
+
+};
+
+/**
  * Insert submission into rsms db for a given recital.
  * @param {Object} submission - The submission details. 
  * @param {Object[]} collaborators - A list of collaborator objects.
  * @param {int} recitalId - The recital's pk.
  */
-function insertSubmission(submission, collaborators, recitalId) {
+function insertSubmission(submission, performer, collaborators, recitalId) {
+
+	const { duration,
+		      title, 
+	        larger_work, 
+          email, 
+          composer_name, 
+          composer_birth_year, 
+          composer_death_year, 
+          catalog_num, 
+          scheduling_req, 
+          tech_req, 
+          movement } = submission;
+
+	db.query(`INSERT INTO submission (duration, `+
+                                   `title, `+
+                                   `larger_work, `+
+                                   `email, `+
+                                   `composer_name, `+
+                                   `composer_birth_year, `+
+                                   `composer_death_year, `+
+                                   `catalog_num, `+
+                                   `scheduling_req, `+
+                                   `tech_req, `+
+                                   `movement, `+
+                                   `recital_id) `+
+		`values ("${duration}", "${title}", "${larger_work}", `+
+		`"${email}", "${composer_name}", "${composer_birth_year}", `+
+		`"${composer_death_year}", "${catalog_num}", "${scheduling_req}", `+
+		`"${tech_req}", "${movement}", "${recitalId}");`);
+
+	db.query(`INSERT INTO recital_submissions (submission_id, recital_id) `+
+		`values((select id from submission order by id desc limit 1),"${recitalId}");`);
+
+	insertCollaborators([performer], false);
+
+	insertCollaborators(collaborators, true);
+
 };
 
 /*
