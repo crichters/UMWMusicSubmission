@@ -11,56 +11,46 @@ db
     console.error('Unable to connect to the database:', err);
 });
 
-// selectSubmissionDetailsFor(1);
-// selectCollaboratorsFor(1);
-// insertRecital({date:"2020-08-01", start_time:"14:00:00", end_time:"15:00:00"});
-
 /**
- * Returns a list of active recital objects.
+ * Returns a promise to a list of active recital objects.
  * Objects contain the recital id (int), date (string), 
  * endTime (string) and startTime (string).
  */
-function selectOpenRecitals() {
-    db.query("SELECT id, " + 
+async function selectOpenRecitals() {
+    return db.query("SELECT id, " + 
                     "DATE_FORMAT(date, '%M %e, %Y') as date, " + 
                     "TIME_FORMAT(start_time, '%h:%i %p') as startTime, " +
                     "TIME_FORMAT(end_time, '%h:%i %p') as endTime " + 
             "FROM recital WHERE NOT is_closed"
-    , { type: db.QueryTypes.SELECT})
-  .then(recitals => {
-      console.log("Open recitals:", JSON.stringify(recitals, null, 4));
-      return recitals;
-   });
+    , { type: db.QueryTypes.SELECT});
 };
 
+
 /**
- * Returns a list of recital objects that
+ * Returns a promise to a list of recital objects that
  * appear in the dashboard. Objects contain
  * the recital id (int), date (string), endTime (string), 
  * startTime (string) and isClosed status (boolean).
  */
-function selectUnarchivedRecitals() {
-    db.query("SELECT id, " + 
+async function selectUnarchivedRecitals() {
+    return db.query("SELECT id, " + 
                     "DATE_FORMAT(date, '%M %e, %Y') as date, " + 
                     "TIME_FORMAT(start_time, '%h:%i %p') as startTime, " +
                     "TIME_FORMAT(end_time, '%h:%i %p') as endTime, " +
                     "is_closed as isClosed " +
             "FROM recital WHERE NOT is_archived"
-    , { type: db.QueryTypes.SELECT})
-  .then(recitals => {
-    console.log("Dashboard recitals:", JSON.stringify(recitals, null, 4));
-    return recitals;
-  });
+    , { type: db.QueryTypes.SELECT});
 };
 
+
 /**
- * Returns list of submission objects for a given
+ * Returns a promise to a list of submission objects for a given
  * recital. Objects contain submission id, performer name,
  * medium, title, largerWork (null if not specified) and status.
  * @param {int} recitalId - The recital's pk. 
  */
-function selectSubmissionsFor(recitalId) {
-    db.query("SELECT sub.id, " +
+async function selectSubmissionsFor(recitalId) {
+    return db.query("SELECT sub.id, " +
                 "sub.larger_work AS largerWork, " +
                 "sub.title, " +
                 "performer.name, " +
@@ -73,66 +63,58 @@ function selectSubmissionsFor(recitalId) {
                 "ON performers.performer_id = performer.id " +
             "WHERE NOT performers.is_collaborator " +
             `AND recital_id = ${recitalId}`
-    , { type: db.QueryTypes.SELECT})
-  .then(submissions => {
-    console.log("Submissions:", JSON.stringify(submissions, null, 4));
-    return submissions;
-  });
+    , { type: db.QueryTypes.SELECT});
 }
 
+
 /**
- * Returns submission object for submission of given
+ * Returns a promise to a list that contains the single
+ * submission object for the submission of given
  * id. Object contains all attributes of submission,
  * including fields that were left blank.
  * @param {int} submissionId - The submission's pk.
  */
-function selectSubmissionDetailsFor(submissionId) {
-    db.query("SELECT sub.duration, " +
+async function selectSubmissionDetailsFor(submissionId) {
+    return db.query("SELECT sub.duration, " +
                     "sub.title, " +
-                    "sub.larger_work, " +
+                    "sub.larger_work AS largerWork, " +
                     "sub.email, " +
-                    "sub.composer_name, " +
-                    "sub.composer_birth_year, " +
-                    "sub.composer_death_year, " +
-                    "sub.catalog_num," +
-                    "sub.scheduling_req, " +
-                    "sub.tech_req, " +
+                    "sub.composer_name AS composerName, " +
+                    "sub.composer_birth_year AS composerBirthYear, " +
+                    "sub.composer_death_year AS composerDeathYear, " +
+                    "sub.catalog_num AS catalogNum," +
+                    "sub.scheduling_req AS schedulingReq, " +
+                    "sub.tech_req AS techReq, " +
                     "sub.movement, " +
                     "recital.date, " +
                     "perf.name," +
                     "perf.medium " +
             "FROM submission AS sub " +
-            "NATURAL JOIN recital " +
             "NATURAL JOIN submission_performers AS perfs " +
             "INNER JOIN performer AS perf " +
                 "ON perfs.performer_id = perf.id " +
+            "INNER JOIN recital " +
+              "ON sub.recital_id = recital.id " +
             "WHERE NOT perfs.is_collaborator " +
             `AND sub.id = ${submissionId}`
-    , { type: db.QueryTypes.SELECT})
-
-  .then(submission => {
-    console.log("Submission details:", JSON.stringify(submission[0], null, 4));
-    return submission[0];
-  });
+    , { type: db.QueryTypes.SELECT});
 }
 
+
 /**
- * Returns list of collaborator objects for a given
- * submission id, including each collaborator name
- * and medium.
+ * Returns a promise to a list of collaborator objects
+ * for a given submission id, including each 
+ * collaborator name and medium.
  * @param {int} submissionId - The submission's pk.
  */
-function selectCollaboratorsFor(submissionId) {
-    db.query("SELECT perf.name, perf.medium FROM submission_performers AS perfs " + 
+async function selectCollaboratorsFor(submissionId) {
+    return db.query("SELECT perf.name, perf.medium FROM submission_performers AS perfs " + 
              "INNER JOIN performer AS perf " +
                 "ON perfs.performer_id = perf.id " +
             `WHERE perfs.submission_id = ${submissionId} ` +
-            "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT})
-    .then(collaborators => {
-        console.log("Collaborators:", JSON.stringify(collaborators, null, 4));
-        return collaborators;
-    });
+            "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT});
 };
+
 
 /**
  * Insert performers into the performer table. If the performer in the list is not a collaborator
@@ -147,12 +129,7 @@ function insertCollaborators(collaborators, isCollaborator) {
 	{
 		db.query(`INSERT INTO performer (name, medium)`+
 		` values("${collaborators[x].name}", "${collaborators[x].medium}");`);
-	}
-  
-  // add all collaborators into submission_performers junction table.
-	for (var x = 0; x< collaborators.length; x++)
-	{
-		insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium, isCollaborator);
+    insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium, isCollaborator);
 	}
 
 };
@@ -179,6 +156,7 @@ function insertSubmissionPerformers(name, medium, isCollaborator){
           );
 
 };
+
 
 /**
  * Insert submission into rsms db for a given recital.
@@ -247,6 +225,7 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
 
 };
 
+
 /*
 * Insert passed recital object into rsms db. Recital
 * object should contain date (YYYY-MM-DD), end_time
@@ -256,4 +235,4 @@ function insertRecital(recital) {
 };
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-        selectUnarchivedRecitals, insertRecital, insertSubmission};
+        selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission};
