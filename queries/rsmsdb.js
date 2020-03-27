@@ -169,14 +169,14 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
 
 	const { duration,
 		      title, 
-	        larger_work, 
+	        largerWork, 
           email, 
-          composer_name, 
-          composer_birth_year, 
-          composer_death_year, 
-          catalog_num, 
-          scheduling_req, 
-          tech_req, 
+          composerName, 
+          composerBirthYear, 
+          composerDeathYear, 
+          catalogNum, 
+          schedulingReq, 
+          techReq, 
           movement } = submission;
 
   db.query("INSERT INTO submission (" + 
@@ -195,14 +195,14 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
             "VALUES (" +
                         `${duration}, ` +
                         `"${title}", ` +
-                        `"${larger_work}", ` +
+                        `"${largerWork}", ` +
                         `"${email}", ` +
-                        `${composer_name ? '"' + composer_name + '"' : null}, ` +
-                        `${composer_birth_year}, ` +
-                        `${composer_death_year}, ` + 
-                        `${catalog_num ? '"' + catalog_num + '"' : null}, ` + 
-                        `${scheduling_req ? '"' + scheduling_req + '"' : null}, ` +
-                        `${tech_req ? '"' + tech_req + '"' : null}, ` + 
+                        `${composerName ? '"' + composerName + '"' : null}, ` +
+                        `${composerBirthYear}, ` +
+                        `${composerDeathYear}, ` + 
+                        `${catalogNum ? '"' + catalogNum + '"' : null}, ` + 
+                        `${schedulingReq ? '"' + schedulingReq + '"' : null}, ` +
+                        `${techReq ? '"' + techReq + '"' : null}, ` + 
                         `${movement ? '"' + movement + '"' : null}, ` + 
                         `${recitalId}` +
                     ");"
