@@ -7,7 +7,7 @@ const submission = {
 	"email": "email@mail.umw.edu", 
 	"composer_name": "John Williams", 
 	"composer_birth_year": 1932, 
-	"composer_death_year": 0, 
+	"composer_death_year": null, 
 	"catalog_num": "No. 1",
 	"scheduling_req": null, 
 	"tech_req": "Need chair and music stand", 
@@ -29,4 +29,5 @@ const collaborators =[
 		"medium": "piano"
 	}
 ];
+
 rsmsdb.insertSubmission(submission, performer, collaborators, 2);

@@ -11,9 +11,9 @@ db
     console.error('Unable to connect to the database:', err);
 });
 
-selectSubmissionDetailsFor(1);
-selectCollaboratorsFor(1);
-insertRecital({date:"2020-08-01", start_time:"14:00:00", end_time:"15:00:00"});
+// selectSubmissionDetailsFor(1);
+// selectCollaboratorsFor(1);
+// insertRecital({date:"2020-08-01", start_time:"14:00:00", end_time:"15:00:00"});
 
 /**
  * Returns a list of active recital objects.
@@ -28,7 +28,8 @@ function selectOpenRecitals() {
             "FROM recital WHERE NOT is_closed"
     , { type: db.QueryTypes.SELECT})
   .then(recitals => {
-      console.log("Open recitals:", JSON.stringify(recitals, null, 4))
+      console.log("Open recitals:", JSON.stringify(recitals, null, 4));
+      return recitals;
    });
 };
 
@@ -47,7 +48,8 @@ function selectUnarchivedRecitals() {
             "FROM recital WHERE NOT is_archived"
     , { type: db.QueryTypes.SELECT})
   .then(recitals => {
-    console.log("Dashboard recitals:", JSON.stringify(recitals, null, 4))
+    console.log("Dashboard recitals:", JSON.stringify(recitals, null, 4));
+    return recitals;
   });
 };
 
@@ -74,6 +76,7 @@ function selectSubmissionsFor(recitalId) {
     , { type: db.QueryTypes.SELECT})
   .then(submissions => {
     console.log("Submissions:", JSON.stringify(submissions, null, 4));
+    return submissions;
   });
 }
 
@@ -109,6 +112,7 @@ function selectSubmissionDetailsFor(submissionId) {
 
   .then(submission => {
     console.log("Submission details:", JSON.stringify(submission[0], null, 4));
+    return submission[0];
   });
 }
 
@@ -126,43 +130,60 @@ function selectCollaboratorsFor(submissionId) {
             "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT})
     .then(collaborators => {
         console.log("Collaborators:", JSON.stringify(collaborators, null, 4));
+        return collaborators;
     });
 };
 
 /**
- * Insert collaborators into the performer table
- * @param {Object[]} collaborators - a list of collaborator objects
+ * Insert performers into the performer table. If the performer in the list is not a collaborator
+ * (they are the main performer), set isCollaborator to 0.
+ * @param {Object[]} collaborators - a list of performer objects, each containing name and medium.
+ * @param {boolean} isCollaborator - whether performer list contains only collaborators. 1 for true.
  */
-function insertCollaborators(collaborators, isCollaborator){
+function insertCollaborators(collaborators, isCollaborator) {
 
-	for(var x=0;x<collaborators.length;x++)
+  // add all colaborators into performer table.
+	for (var x = 0; x < collaborators.length; x++)
 	{
 		db.query(`INSERT INTO performer (name, medium)`+
 		` values("${collaborators[x].name}", "${collaborators[x].medium}");`);
 	}
-	
-	for(var x=0;x<collaborators.length;x++)
+  
+  // add all collaborators into submission_performers junction table.
+	for (var x = 0; x< collaborators.length; x++)
 	{
-		insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium);
+		insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium, isCollaborator);
 	}
 
 };
 
 
 /**
- * Insert Submission_Performers into the submission performer table
- * @param {Object[]} collaborators - a list of collaborator objects
+ * Insert Submission_Performer into the submission performer table
+ * @param {String} name - The name of the performer.
+ * @param {String} medium - The medium of the performer.
+ * @param {boolean} isCollaborator - 1 if collaborator, 0 if not.
  */
-function insertSubmissionPerformers(name, medium){
+function insertSubmissionPerformers(name, medium, isCollaborator){
 
-	db.query(`INSERT INTO submission_performers (performer_id, submission_id)`+
-		` values((select id from performer where name="${name}" and medium="${medium}"),`+ 			`(select id from submission order by id desc limit 1));`);
+  db.query("INSERT INTO submission_performers (" +
+                      "performer_id, " + 
+                      "submission_id, " +
+                      "is_collaborator" +
+                  ") " +
+            "VALUES(" +
+                      `(SELECT id FROM performer WHERE name = "${name}" AND medium = "${medium}"),`+ 			
+                      "(SELECT id FROM submission ORDER BY id DESC LIMIT 1)," +
+                      `${isCollaborator}` +
+                  ");"
+          );
 
 };
 
 /**
  * Insert submission into rsms db for a given recital.
- * @param {Object} submission - The submission details. 
+ * @param {Object} submission - The submission details.
+ * @param {Object} - The performer object, including their name and medium.
  * @param {Object[]} collaborators - A list of collaborator objects.
  * @param {int} recitalId - The recital's pk.
  */
@@ -180,35 +201,55 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
           tech_req, 
           movement } = submission;
 
-	db.query(`INSERT INTO submission (duration, `+
-                                   `title, `+
-                                   `larger_work, `+
-                                   `email, `+
-                                   `composer_name, `+
-                                   `composer_birth_year, `+
-                                   `composer_death_year, `+
-                                   `catalog_num, `+
-                                   `scheduling_req, `+
-                                   `tech_req, `+
-                                   `movement, `+
-                                   `recital_id) `+
-		`values ("${duration}", "${title}", "${larger_work}", `+
-		`"${email}", "${composer_name}", "${composer_birth_year}", `+
-		`"${composer_death_year}", "${catalog_num}", "${scheduling_req}", `+
-		`"${tech_req}", "${movement}", "${recitalId}");`);
+  db.query("INSERT INTO submission (" + 
+                        "duration, " +
+                        `title, `+
+                        `larger_work, `+
+                        `email, `+
+                        `composer_name, `+
+                        `composer_birth_year, `+
+                        `composer_death_year, `+
+                        `catalog_num, `+
+                        `scheduling_req, `+
+                        `tech_req, `+
+                        `movement, `+
+                        `recital_id) `+
+            "VALUES (" +
+                        `${duration}, ` +
+                        `"${title}", ` +
+                        `"${larger_work}", ` +
+                        `"${email}", ` +
+                        `${composer_name ? '"' + composer_name + '"' : null}, ` +
+                        `${composer_birth_year}, ` +
+                        `${composer_death_year}, ` + 
+                        `${catalog_num ? '"' + catalog_num + '"' : null}, ` + 
+                        `${scheduling_req ? '"' + scheduling_req + '"' : null}, ` +
+                        `${tech_req ? '"' + tech_req + '"' : null}, ` + 
+                        `${movement ? '"' + movement + '"' : null}, ` + 
+                        `${recitalId}` +
+                    ");"
+          )
+  .then(() => {
+    db.query("INSERT INTO recital_submissions (" + 
+                          "submission_id, " + 
+                          "recital_id" +
+                      ") " +
+              "VALUES(" +
+                        "(SELECT id FROM submission ORDER BY id DESC LIMIT 1)," +
+                        `${recitalId}` +
+                    ");"
+            );
 
-	db.query(`INSERT INTO recital_submissions (submission_id, recital_id) `+
-		`values((select id from submission order by id desc limit 1),"${recitalId}");`);
+    insertCollaborators([performer], 0);
+    insertCollaborators(collaborators, 1);
 
-	insertCollaborators([performer], false);
-
-	insertCollaborators(collaborators, true);
+  });
 
 };
 
 /*
 * Insert passed recital object into rsms db. Recital
-* objected should contain date (YYYY-MM-DD), end_time
+* object should contain date (YYYY-MM-DD), end_time
 * (HH:mm:ss) and start_time (HH:mm:ss).
 */
 function insertRecital(recital) {
