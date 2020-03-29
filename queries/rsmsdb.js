@@ -232,6 +232,10 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
 * (HH:mm:ss) and start_time (HH:mm:ss).
 */
 function insertRecital(recital) {
+	const { date, end_time, start_time } = recital;
+	db.query(`INSERT INTO recital (date, end_time, start_time) `+
+		`VALUES("${date}","${end_time}","${start_time}")`);
+
 };
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
