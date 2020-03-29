@@ -30,14 +30,23 @@ const collaborators = [
 	}
 ];
 
+const recital = {	
+	date: "2020-04-20",
+	end_time: "14:45:00",
+	start_time: "12:30:00"
+};
+
 
 rsmsdb.selectOpenRecitals()
 .then(openRecitals => {
 	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
 	var recitalId = openRecitals[0].id;
-	
+
 	// insert submission, performer and collaborator objects into database.
 	rsmsdb.insertSubmission(submission, performer, collaborators, recitalId);
+
+	// insert recital
+	rsmsdb.insertRecital(recital);
 })
 .catch(err => {
 	console.error('Unable to find open recitals:', err);
