@@ -1,4 +1,4 @@
-use alexshta_rsms;
+use umwrecit_rsms;
 
 insert into recital (date, start_time, end_time) values ("2020-04-06", "19:30:00", "20:30:00");
 insert into recital (date, start_time, end_time) values ("2020-04-23", "16:00:00", "17:00:00");

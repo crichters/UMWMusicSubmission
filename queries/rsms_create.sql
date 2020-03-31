@@ -1,4 +1,4 @@
-USE alexshta_rsms;
+USE umwrecit_rsms;
 
 CREATE TABLE faculty_member (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
