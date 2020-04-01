@@ -1,0 +1,118 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Submit Recital Form</title>
+    <meta name="The form that is used to submit a recital" content="Recital Submission">
+
+    <!-- Minified Bootstrap CSS Rules-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+
+
+<body>
+    <nav class="navbar">
+            <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">UMW Music</a>
+                    </div>
+                
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="#">Recital Submission</a>
+                    </li>
+                    <li><a href="#">Search Submissions</a></li>
+                </ul>
+            </div>
+    </nav>
+        
+            <div class="container container-main">
+                <div class="row row-main">
+                    <h5>Submit a New Recital</h5>
+                </div>
+                <br>
+                <div class="row row-main">
+                    <form id="recital-form" method="post" action="contact.php" role="form" style="width: -webkit-fill-available;">
+                        <div class="row">
+                            <div class="col"><label for="name">Name: *</label><br><input required="required" type="text" id="name" name="name" value=""></div>
+                            <div class="col"><label for="UMWEmail">UMW Email Address: *</label><br><input required="required" type="text" id="UMWEmail" name="UMWEmail" value=""></div>
+                            <div class="col"><label for="recitalDate">Recital Date: *</label><br><input required="required" type="date" id="recitalDate" name="recitalDate" value=""></div>
+                            <div class="col"><label for="performanceDuration">Performance Duration: *</label><br><input required="required" type="text" id="performanceDuration" name="performanceDuration" value=""><br></div>
+                        </div>
+                        <br><br>
+
+                        <div class="row">
+                            <div class="col"><label for="titleOfSelection">Title of Selection: *</label><br><input required="required" type="text" id="titleOfSelection" name="titleOfSelection" value=""></div>
+                            <div class="col"><label for="titleLargerWork">Title of Larger Work:</label><br><input type="text" id="titleLargerWork" name="titleLargerWork" value=""></div>
+                            <div class="col"><label for="opusNum">Opus Number / Catalog Number:</label><br><input type="text" id="opusNum" name="opusNum" value=""></div>
+                            <div class="col"><label for="movement">Movement:</label><br><input type="text" id="movement" name="movement" value=""><br></div>
+                        </div>
+                        <br><br>
+
+                        <div class="row">
+                            <div class="col"><label for="composer">Composer:</label><br><input type="text" id="composer" name="composer" value=""></div>
+                            <div class="col"><label for="composerBirthYear">Composer Birth Year:</label><br><input type="text" id="composerBirthYear" name="composerBirthYear" value=""></div>
+                            <div class="col"><label for="collaboratorName">Collaborator Name:</label><br><input type="text" id="collaboratorName" name="collaboratorName" value=""></div>
+                            <div class="col"><label for="collaboratorPerformanceMedium">Collaborator Performance Medium:</label><br><input type="text" id="collaboratorPerformanceMedium" name="collaboratorPerformanceMedium" value=""><br></div>
+                        </div>
+                        <br><br>
+
+                        <div class="row">
+                            <div class="col"><label for="schedulingRequirements">Scheduling Requirements:</label><br><input type="text" id="schedulingRequirements" name="schedulingRequirements" value=""></div>
+                            <div class="col"><label for="technicalRequirements">Technical Requirements:</label><br><input type="text" id="technicalRequirements" name="technicalRequirements" value=""></div>
+                            <div class="col"></div>
+                            <div class="col">
+                                <br>
+                                <!-- recaptcha code retreived by https://bootstrapious.com/p/bootstrap-recaptcha-->
+                                <div class="g-recaptcha" data-sitekey="6Lfa4eUUAAAAAKkHo7gzRLY_BdCcpKVnFQwT0hwH" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+                                <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <br><br>
+                        
+                        <input type="submit" class="btn btn-success btn-send" value="Submit Recital">
+                    </form>
+                </div>
+            </div>
+
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="js/validator.js"></script>
+    <script src="js/recitalform.js"></script>
+        
+</body>
+                <footer>
+                    <nav class="footer">
+                        <div class="container" style="padding: 0;">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">TWITTER@UMW_MUSIC</div>
+                                        <br>
+                                        <div class="row"><a class="twitter-timeline" data-height="350" href="https://twitter.com/UMW_Music?ref_src=twsrc%5Etfw">Tweets by UMW_Music</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">FACEBOOK@UMWMUSIC</div>
+                                        <div class="row"></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">INSTA@UMWMUSIC</div>
+                                        <div class="row"></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">CONTACT</div>
+                                    </div>
+                                </div>
+                        </div>
+                    </nav>
+                </footer>
+            <!-- Minified Bootstrap JavaScript-->
+            <script src="js/bootstrap.min.js"></script>
+        
+            <!-- Jquery Scripts-->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</html>
+
