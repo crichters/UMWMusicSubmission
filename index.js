@@ -47,6 +47,15 @@ rsmsdb.selectOpenRecitals()
 
 	// insert recital
 	rsmsdb.insertRecital(recital);
+
+	// get submissions for recital
+	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
+		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	})
+	.catch(err => {
+		console.error('Unable to find submissions:', err);
+	});
+	
 })
 .catch(err => {
 	console.error('Unable to find open recitals:', err);
