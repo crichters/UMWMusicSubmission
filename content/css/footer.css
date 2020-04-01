@@ -1,0 +1,13 @@
+.page-footer {
+    background-color: #201d1b;
+    color: #fff;
+}
+
+footer .col-md-3 {
+    font-weight: 400;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #2b2b2b;
+    padding-bottom: 15px;
+}

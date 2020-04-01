@@ -1,0 +1,19 @@
+.navbar {
+    padding-top: 0%;
+    padding-bottom: 0%;
+    box-shadow: 0px 10px 10px rgba(66, 66, 66, 0.356);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    padding: 1rem 1.5rem;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color:#FFF;
+    background-color: #0d80d8;
+}
+
+.navbar img {
+    object-fit: cover;
+}

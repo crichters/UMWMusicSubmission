@@ -10,58 +10,133 @@
     <!-- Minified Bootstrap CSS Rules-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
-
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/form.css">
 </head>
 
-<body>
-    <nav class="navbar">
-        <!-- <div class="container" id="navbar">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">UMW Music</a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <a href="#">Recital Submission</a>
-                </div>
-                <div class="col-md-3">
-                    <a href="#">Search Submissions</a>
-                </div>
-            </div>
-        </div> -->
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">
+          <img src="images/UMW-Music-wordmark-e1572294563960.jpg" width="100" height="50" alt="">
+        </a>
 
-
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">UMW Music</a>
-            </div>
-        
-        <ul class="nav navbar-nav">
-            <li class="active">
-                <a href="#">Recital Submission</a>
-            </li>
-            <li><a href="#">Search Submissions</a></li>
-        </ul>
-    </div>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="form.html">Submit</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="search_page.html">Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="login_page.html">Login</a>
+              </li>
+            </ul>
+          </div>
     </nav>
+    <br>
+    <br>
+    <div class="container container-main flex-grow-1">
 
-    <div class="container">
-        <div class="row">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro, maiores debitis ad unde nam obcaecati ratione iure sequi tenetur nesciunt rerum ducimus! Omnis tenetur molestias vitae dolores vero, qui id.</div>
+      <div class="row">
+        <!-- Header -->
+        <div class="col-md-6">
+          <h5>Recital Submission Form</h5>
+        </div>
+
+        <!-- Form Content Area -->
+        <form class="col-md-12" action="" id="recital-form">
+
+          <!-- Section 1: Name, Email Address -->
+          <div class="row top-buffer">
+            <div class="col-md-6">
+              <label for="name">
+                <b>Name: </b>
+              </label>
+              <input type="text" id="name" name="name" value="">
+            </div>
+            <div class="col-md-6">
+              <label for="email">
+                <b>Email Address: </b>
+              </label>
+              <input type="text" id="email" required="required">
+            </div>
+          </div>
+
+          <!-- Section 2: Recital Date, Performance Duration -->
+          <div class="row top-buffer">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="sel1"><b>Date of Recital: </b></label>
+                <select class="form-control d-inline-block" style="width: auto;" id="sel1">
+                  <option>Recital Date One</option>
+                  <option>Recital Date Two</option>
+                  <option>Recital Date Three</option>
+                  <option>Recital Date Four</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+              <label for="email">
+                <b>Performance Duration: </b>
+              </label>
+              <input type="text" id="email" required="required"> (Minutes)
+            </div>
+          </div>
+
+          <div class="row top-buffer">
+            <div class="col-md-6">
+              <label for="Selection_Title">
+                <b>Title of Selection: </b>
+              </label>
+              <input type="text" id="Selection_Title" name="Selection_Title" value="">
+            </div>
+            <div class="col-md-6">
+              
+            </div>
+          </div>
+        </form>
+
+      </div>
+
     </div>
 
 
-        <footer>
-            <nav class="footer">
-                <div class="container-fluid">
-                    <ul class="nav na">TWITTER@UMW_MUSIC</ul>
-                </div>
-            </nav>
-        </footer>
+    
+    <footer class="page-footer font-small">
+      <div class="container-fluid text-center">
+        <div class="row">
+          <div class="col-md-3">
+            <h5>
+              Twitter@UMW_MUSIC
+            </h5>
+          </div>
+          <div class="col-md-3">
+          <h5>
+            Facebook@UMWMUsic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            Insta@umwmusic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            CONTACT
+          </h5>
+        </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Jquery Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--  Popper JS Required for Dropdown boxes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
 
-    <!-- Jquery Scripts-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 </html>
