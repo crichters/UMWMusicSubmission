@@ -5,7 +5,6 @@
     <meta charset="utf-8">
 
     <title>Submit Recital Form</title>
-    <meta name="The form that is used to submit a recital" content="Recital Submission">
 
     <!-- Minified Bootstrap CSS Rules-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -36,7 +35,7 @@
                 </div>
                 <br>
                 <div class="row row-main">
-                    <form id="recital-form" method="post" action="contact.php" role="form" style="width: -webkit-fill-available;">
+                    <form id="recital-form" method="post" action="/create-recital" role="form" style="width: -webkit-fill-available;" novalidate>
                         <div class="row">
                             <div class="col"><label for="name">Name: *</label><br><input required="required" type="text" id="name" name="name" value=""></div>
                             <div class="col"><label for="UMWEmail">UMW Email Address: *</label><br><input required="required" type="text" id="UMWEmail" name="UMWEmail" value=""></div>
@@ -75,7 +74,8 @@
                         </div>
                         <br><br>
                         
-                        <input type="submit" class="btn btn-success btn-send" value="Submit Recital">
+                        <input type="submit" class="btn btn-success" form="recital-form" value="Submit Recital">
+
                     </form>
                 </div>
             </div>
