@@ -16,7 +16,7 @@ $(function () {
 
             $.ajax({
                 type: "POST",
-                url: url,
+                url: "/create-recital",
                 data: $(this).serialize(),
                 success: function (data) {
                     var messageAlert = 'alert-' + data.type;
