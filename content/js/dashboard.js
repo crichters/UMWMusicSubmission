@@ -31,7 +31,7 @@ function insert_recital_submission(recital_number, status, summary, link) {
             </a>
         </th>
         <td>${summary}</td>
-        <td><a href="#">Delete</a> <a href="#">View</a></td>
+        <td><a href="#">Delete</a> <a href="${link}">View</a></td>
     </tr>
     `;
 
