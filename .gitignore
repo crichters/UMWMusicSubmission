@@ -1,6 +1,5 @@
 node_modules
 
-config/dev.js
 # Logs
 logs
 *.log
