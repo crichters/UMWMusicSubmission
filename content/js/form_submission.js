@@ -33,7 +33,7 @@ function send_form_data() {
     submission_values["collaborators"] = collaborator_list;
     
     // Get the recital date from the selection box and add that to the map
-    submission_values["recital_date"] = $("#date option:selected").text();
+    submission_values["recital_date"] = $("#date option:selected").attr('id');
 
     // Logging, unless there's a reason to remove it
     console.log(submission_values);
@@ -74,3 +74,18 @@ function add_collaborator() {
 
     $("#collaborators_section").append(collaborator_text);
 }
+
+function add_recital_date(id, date, start_time, end_time){
+  var option_tag = `<option id=${id}>${date} (${start_time} - ${end_time}</option>`;
+  $("#date").append(option_tag);
+}
+
+
+$(document).ready(() => {
+  $.get("/get-recitals", (data, status) => {
+    for(var i=0; i<data.length; i++){
+      recital_date = data[i];
+      add_recital_date(recital_date["id"], recital_date["date"], recital_date["startTime"], recital_date["endTime"]);
+    }
+  });
+});
