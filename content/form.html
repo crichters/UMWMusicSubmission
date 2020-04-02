@@ -46,7 +46,7 @@
         </div>
 
         <!-- Form Content Area -->
-        <form class="col-md-12" method="POST" action="/submit_recital_form" id="recital_form">
+        <form class="col-md-12" id="recital_form">
 
           <!-- Section 1: Name, Email Address -->
           <div class="row top-buffer">
@@ -103,7 +103,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" name="medium">
+              <input type="text" id="medium" name="medium">
             </div>
           </div>
 
@@ -115,7 +115,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="Selection_Title" name="selection_title" value="">
+              <input type="text" id="selection_title" name="selection_title" value="">
             </div>
             <div class="col-md-2">
               <label for="Selection_Title">
@@ -123,7 +123,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="Selection_Work" name="selection_work" value="">
+              <input type="text" id="selection_work" name="selection_work" value="">
             </div>
           </div>
 
@@ -135,7 +135,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" name="catalog_number">
+              <input type="text" id="catalog_number" name="catalog_number">
             </div>
 
             <div class="col-md-2">
@@ -144,7 +144,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" name="movement">
+              <input type="text" id="movement" name="movement">
             </div>
           </div>
 
@@ -156,7 +156,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" name="composer">
+              <input type="text" id="composer_name" name="composer">
             </div>
 
             <div class="col-md-2">
@@ -165,35 +165,30 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" name="birth_year">
+              <input type="text" id="composer_birth" name="birth_year">
             </div>
           </div>
 
-          <!-- Section 7, Collaborator Name, Collaborator Medium -->
+          <!-- Section 7, Collaborators -->
           <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="">
-                <b>Collaborator Name:</b>
-              </label>
-            </div>
+            <div class="col-md-4"></div>
             <div class="col-md-4">
-              <input type="text" name="collab_name">
+              <div class="row">
+                <h4>Collaborators</h4>
+              </div>
+              <div class="row">
+                <button class="btn btn-secondary" onclick="add_collaborator(); return false;">Add Collaborator</button>
+              </div>
+              
             </div>
-
-            <div class="col-md-2">
-              <label for="">
-                <b>Collaborator Performance Medium:</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" name="collab_medium">
-            </div>
+            <div class="col-md-4"></div>
           </div>
 
-          <!-- Submission Button -->
-          <button type="submit" class="btn btn-primary">Submit Recital</button>
+          <div id="collaborators_section"></div>
+          
         </form>
-
+        <!-- Submission Button -->
+        <div class="row top-buffer"><button onclick="send_form_data()" class="btn btn-primary">Submit Recital</button></div>
       </div>
 
     </div>
@@ -239,6 +234,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/form_submission.js"></script>
 
 </body>
 </html>

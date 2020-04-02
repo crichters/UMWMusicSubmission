@@ -5,3 +5,7 @@
 .form-control {
     display:inline;
 }
+
+a .btn-secondary {
+    color: #fff;
+}
