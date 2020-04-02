@@ -1,3 +1,5 @@
+var submissions = [];
+
 function insert_recital(recital_number, recital_title) {
     var recital_table = `
     <div class="row">
@@ -43,13 +45,17 @@ function insert_recital_submission(recital_number, status, summary) {
 
 $(document).ready(function() {
 
-    $.get("/get-recitals", (data, status) => {
+    $.get("/dashboard-data", (data, status) => {
         for(var i=0; i<data.length; i++){
           recital_date = data[i];
           insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
-          insert_recital_submission(recital_date["id"], "Status", "Lydia Laake. Piano. Versio in E Minor.");
-          insert_recital_submission(recital_date["id"], "Status", "Olivia Childers. Batti Batti O Bel Masetto. Don Giovanni.");
+          for(var j=0; j<recital_date["submissions"].length; j++){
+              submission = recital_date["submissions"][j];
+              submissions.append(submission);
+              insert_recital_submission(recital_date["id"], "Status", `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`);
+          }
         }
       });
+      console.log(submissions);
 });
 
