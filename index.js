@@ -64,7 +64,7 @@ app.get("/get-recitals", async (req, res) => {
 });
 
 app.post("/submit_recital_form", async (req, res) => {
-    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    /*if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
     {
       return res.json({"responseError" : "Please select captcha first"});
     }
@@ -77,7 +77,7 @@ app.post("/submit_recital_form", async (req, res) => {
       if(body.success !== undefined && !body.success) {
         return res.json({"responseError" : "Failed captcha verification"});
       }
-    });
+    });*/
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     console.log(req.body);
     collaborators = collaborators.map((c) => {
