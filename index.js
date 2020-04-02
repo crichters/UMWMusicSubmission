@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
+    selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -24,10 +26,18 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/form", (req, res) => {
+    console.log(recitals);
     res.sendFile(__dirname + '/content/form.html');
 });
 
-app.post("/form", (req, res) => {
+app.get("/get-recitals", async (req, res) => {
+    const recitals = await selectOpenRecitals();
+    console.log(recitals);
+    res.json(recitals);
+
+})
+
+app.post("/submit_recital_form", (req, res) => {
 
 });
 
@@ -57,3 +67,4 @@ app.get("/logout", (req, res) => {
 app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
     console.log("Server started");
 });
+
