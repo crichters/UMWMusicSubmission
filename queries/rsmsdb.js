@@ -64,7 +64,7 @@ async function selectSubmissionsFor(recitalId) {
             "WHERE NOT performers.is_collaborator " +
             `AND recital_id = ${recitalId}`
     , { type: db.QueryTypes.SELECT});
-}
+};
 
 
 /**
@@ -98,7 +98,7 @@ async function selectSubmissionDetailsFor(submissionId) {
             "WHERE NOT perfs.is_collaborator " +
             `AND sub.id = ${submissionId}`
     , { type: db.QueryTypes.SELECT});
-}
+};
 
 
 /**
