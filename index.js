@@ -26,7 +26,6 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/form", (req, res) => {
-    console.log(recitals);
     res.sendFile(__dirname + '/content/form.html');
 });
 

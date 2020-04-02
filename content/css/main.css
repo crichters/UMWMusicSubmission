@@ -61,4 +61,11 @@ footer {
 
 input {
     width: -webkit-fill-available;
+@font-face {
+    font-family: "Montserrat";
+    src: url("../fonts/Montserrat-Regular.otf");
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
 }

@@ -4,115 +4,272 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Submit Recital Form</title>
+    <title>Submission Form</title>
+    <meta name="description" content="Template Page">
 
     <!-- Minified Bootstrap CSS Rules-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
-
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/form.css">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">
+          <img src="images/UMW-Music-wordmark-e1572294563960.jpg" width="100" height="50" alt="">
+        </a>
 
-<body>
-    <nav class="navbar">
-            <div class="container">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">UMW Music</a>
-                    </div>
-                
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#">Recital Submission</a>
-                    </li>
-                    <li><a href="#">Search Submissions</a></li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="form.html">Submit</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+              </li>
+            </ul>
+          </div>
     </nav>
-        
-            <div class="container container-main">
-                <div class="row row-main">
-                    <h5>Submit a New Recital</h5>
-                </div>
-                <br>
-                <div class="row row-main">
-                    <form id="recital-form" method="post" action="/create-recital" role="form" style="width: -webkit-fill-available;" novalidate>
-                        <div class="row">
-                            <div class="col"><label for="name">Name: *</label><br><input required="required" type="text" id="name" name="name" value=""></div>
-                            <div class="col"><label for="UMWEmail">UMW Email Address: *</label><br><input required="required" type="text" id="UMWEmail" name="UMWEmail" value=""></div>
-                            <div class="col"><label for="recitalDate">Recital Date: *</label><br><input required="required" type="date" id="recitalDate" name="recitalDate" value=""></div>
-                            <div class="col"><label for="performanceDuration">Performance Duration: *</label><br><input required="required" type="text" id="performanceDuration" name="performanceDuration" value=""><br></div>
-                        </div>
-                        <br><br>
+    <br>
+    <br>
+    <div class="container container-main flex-grow-1">
 
-                        <div class="row">
-                            <div class="col"><label for="titleOfSelection">Title of Selection: *</label><br><input required="required" type="text" id="titleOfSelection" name="titleOfSelection" value=""></div>
-                            <div class="col"><label for="titleLargerWork">Title of Larger Work:</label><br><input type="text" id="titleLargerWork" name="titleLargerWork" value=""></div>
-                            <div class="col"><label for="opusNum">Opus Number / Catalog Number:</label><br><input type="text" id="opusNum" name="opusNum" value=""></div>
-                            <div class="col"><label for="movement">Movement:</label><br><input type="text" id="movement" name="movement" value=""><br></div>
-                        </div>
-                        <br><br>
+      <div class="row">
+        <!-- Header -->
+        <div class="col-md-6">
+          <h4>Recital Submission Form</h5>
+        </div>
 
-                        <div class="row">
-                            <div class="col"><label for="composer">Composer:</label><br><input type="text" id="composer" name="composer" value=""></div>
-                            <div class="col"><label for="composerBirthYear">Composer Birth Year:</label><br><input type="text" id="composerBirthYear" name="composerBirthYear" value=""></div>
-                            <div class="col"><label for="collaboratorName">Collaborator Name:</label><br><input type="text" id="collaboratorName" name="collaboratorName" value=""></div>
-                            <div class="col"><label for="collaboratorPerformanceMedium">Collaborator Performance Medium:</label><br><input type="text" id="collaboratorPerformanceMedium" name="collaboratorPerformanceMedium" value=""><br></div>
-                        </div>
-                        <br><br>
+        <!-- Form Content Area -->
+        <form class="col-md-12" id="recital_form">
 
-                        <div class="row">
-                            <div class="col"><label for="schedulingRequirements">Scheduling Requirements:</label><br><input type="text" id="schedulingRequirements" name="schedulingRequirements" value=""></div>
-                            <div class="col"><label for="technicalRequirements">Technical Requirements:</label><br><input type="text" id="technicalRequirements" name="technicalRequirements" value=""></div>
-                            <div class="col"></div>
-                            <div class="col">
-                                <br>
-                                <!-- recaptcha code retreived by https://bootstrapious.com/p/bootstrap-recaptcha-->
-                                <div class="g-recaptcha" data-sitekey="6Lfa4eUUAAAAAKkHo7gzRLY_BdCcpKVnFQwT0hwH" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
-                                <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <br><br>
-                        
-                        <input type="submit" class="btn btn-success" form="recital-form" value="Submit Recital">
-
-                    </form>
-                </div>
+          <!-- Section 1: Name, Email Address -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="name">
+                <b>Name: </b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="name" name="name" value="" required="required">
             </div>
 
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <script src="js/validator.js"></script>
-    <script src="js/recitalform.js"></script>
-        
-</body>
-                <footer>
-                    <nav class="footer">
-                        <div class="container" style="padding: 0;">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="row">TWITTER@UMW_MUSIC</div>
-                                        <br>
-                                        <div class="row"><a class="twitter-timeline" data-height="350" href="https://twitter.com/UMW_Music?ref_src=twsrc%5Etfw">Tweets by UMW_Music</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="row">FACEBOOK@UMWMUSIC</div>
-                                        <div class="row"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="row">INSTA@UMWMUSIC</div>
-                                        <div class="row"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="row">CONTACT</div>
-                                    </div>
-                                </div>
-                        </div>
-                    </nav>
-                </footer>
-            <!-- Minified Bootstrap JavaScript-->
-            <script src="js/bootstrap.min.js"></script>
-        
-            <!-- Jquery Scripts-->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-</html>
 
+            <div class="col-md-2">
+              <label for="email">
+                <b>Email Address: </b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="email" name="email" required="required">
+            </div>
+          </div>
+
+          <!-- Section 2: Recital Date, Performance Duration -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="date"><b>Date of Recital: </b></label>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <select class="form-control d-inline-block" style="width: auto;" id="date" name="date">
+                  <option>Recital Date One</option>
+                  <option>Recital Date Two</option>
+                  <option>Recital Date Three</option>
+                  <option>Recital Date Four</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label for="duration">
+                <b>Performance Duration: </b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="duration" name="duration" required="required"> (Minutes)
+            </div>
+          </div>
+
+          <!-- Section 3, Performance Medium -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="">
+                <b>Performance Medium:</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="medium" name="medium">
+            </div>
+          </div>
+
+          <!-- Section 4, Selection Title, Larger Work Title -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="Selection_Title">
+                <b>Title of Selection: </b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="selection_title" name="selection_title" value="">
+            </div>
+            <div class="col-md-2">
+              <label for="Selection_Title">
+                <b>Title of Larger Work: </b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="selection_work" name="selection_work" value="">
+            </div>
+          </div>
+
+          <!-- Section 5, Catalog Number -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="">
+                <b>Opus Number / Catalog Number</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="catalog_number" name="catalog_number">
+            </div>
+
+            <div class="col-md-2">
+              <label for="">
+                <b>Movement:</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="movement" name="movement">
+            </div>
+          </div>
+
+          <!-- Section 6, Composer, Composer Birth Year -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="">
+                <b>Composer</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="composer_name" name="composer">
+            </div>
+
+            <div class="col-md-2">
+              <label for="">
+                <b>Composer Birth Year:</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="composer_birth" name="birth_year">
+            </div>
+          </div>
+
+          <!-- Section 6 Scheduling Requirements, Technical Requirements -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="">
+                <b>Scheduling Requirements</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="schedule_requirements" name="schedule_requirements">
+            </div>
+
+            <div class="col-md-2">
+              <label for="">
+                <b>Technical Requirements</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="technical_requirements" name="technical_requirements">
+            </div>
+          </div>
+
+          <!-- Section 8, Collaborators -->
+          <div class="row top-buffer">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="row">
+                <h4>Collaborators</h4>
+              </div>
+              <div class="row">
+                <button class="btn btn-secondary" onclick="add_collaborator(); return false;">Add Collaborator</button>
+              </div>
+              
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+
+          <div id="collaborators_section"></div>
+
+          <div class="row top-buffer">
+            <div class="col-md-3"></div>
+            <div class="col-md-4"><div class="g-recaptcha center" data-sitekey="6Lfv_-UUAAAAAHuN1c0IN99vC09g3Pt13dJDQ-AL"></div></div>
+            <div class="col-md-5"></div>
+          </div>
+
+          <div class="row top-buffer">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"><button onclick="send_form_data()" class="btn btn-primary">Submit Recital</button></div>
+            <div class="col-md-4"></div>
+          </div>
+        </form>
+        <!-- Submission Button -->
+         
+        </div>
+        
+      </div>
+
+  
+
+    </div>
+
+
+    
+    <footer class="page-footer font-small">
+      <div class="container-fluid text-center">
+        <br>
+        <div class="row">
+          <div class="col-md-3">
+            <h5>
+              Twitter@UMW_MUSIC
+            </h5>
+          </div>
+          <div class="col-md-3">
+          <h5>
+            Facebook@UMWMUsic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            Insta@umwmusic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            CONTACT
+          </h5>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur atque inventore blanditiis facilis ipsam nam nostrum quaerat ex odio nulla ratione itaque quis, earum cum sed quasi? Possimus, odit nam.</div>
+          <div class="col-md-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta provident explicabo nisi dolorem laboriosam vel natus voluptatibus et enim, dicta ad asperiores vitae architecto at. Itaque expedita quod consectetur. Et!</div>
+          <div class="col-md-3">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet exercitationem eum ducimus soluta esse officiis minus, consectetur quaerat neque aut totam dolore placeat velit tenetur rerum. Quod libero ea esse?</div>
+          <div class="col-md-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum temporibus laboriosam, facilis ea dicta alias dolores harum, et consectetur saepe odio quo ullam reiciendis? Dicta animi facere quaerat rem recusandae.</div>
+        </div>
+      </div>
+    </footer>
+    <!-- Jquery Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--  Popper JS Required for Dropdown boxes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    
+    <!-- Minified Bootstrap JavaScript-->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/form_submission.js"></script>
+
+</body>
+</html>
