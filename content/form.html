@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>TEMPLATE PAGE</title>
+    <title>Submission Form</title>
     <meta name="description" content="Template Page">
 
     <!-- Minified Bootstrap CSS Rules-->
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/form.css">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -169,7 +170,28 @@
             </div>
           </div>
 
-          <!-- Section 7, Collaborators -->
+          <!-- Section 6 Scheduling Requirements, Technical Requirements -->
+          <div class="row top-buffer">
+            <div class="col-md-2">
+              <label for="">
+                <b>Scheduling Requirements</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="schedule_requirements" name="schedule_requirements">
+            </div>
+
+            <div class="col-md-2">
+              <label for="">
+                <b>Technical Requirements</b>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="technical_requirements" name="technical_requirements">
+            </div>
+          </div>
+
+          <!-- Section 8, Collaborators -->
           <div class="row top-buffer">
             <div class="col-md-4"></div>
             <div class="col-md-4">
@@ -185,11 +207,26 @@
           </div>
 
           <div id="collaborators_section"></div>
-          
+
+          <div class="row top-buffer">
+            <div class="col-md-3"></div>
+            <div class="col-md-4"><div class="g-recaptcha center" data-sitekey="6Lfv_-UUAAAAAHuN1c0IN99vC09g3Pt13dJDQ-AL"></div></div>
+            <div class="col-md-5"></div>
+          </div>
+
+          <div class="row top-buffer">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"><button onclick="send_form_data()" class="btn btn-primary">Submit Recital</button></div>
+            <div class="col-md-4"></div>
+          </div>
         </form>
         <!-- Submission Button -->
-        <div class="row top-buffer"><button onclick="send_form_data()" class="btn btn-primary">Submit Recital</button></div>
+         
+        </div>
+        
       </div>
+
+  
 
     </div>
 
@@ -232,6 +269,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!--  Popper JS Required for Dropdown boxes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/form_submission.js"></script>
