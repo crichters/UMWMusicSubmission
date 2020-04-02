@@ -46,7 +46,7 @@
         </div>
 
         <!-- Form Content Area -->
-        <form class="col-md-12" action="" id="recital-form">
+        <form class="col-md-12" method="POST" action="/submit_recital_form" id="recital_form">
 
           <!-- Section 1: Name, Email Address -->
           <div class="row top-buffer">
@@ -56,7 +56,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="name" name="name" value="">
+              <input type="text" id="name" name="name" value="" required="required">
             </div>
 
 
@@ -66,18 +66,18 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="email" required="required">
+              <input type="text" id="email" name="email" required="required">
             </div>
           </div>
 
           <!-- Section 2: Recital Date, Performance Duration -->
           <div class="row top-buffer">
             <div class="col-md-2">
-              <label for="sel1"><b>Date of Recital: </b></label>
+              <label for="date"><b>Date of Recital: </b></label>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <select class="form-control d-inline-block" style="width: auto;" id="sel1">
+                <select class="form-control d-inline-block" style="width: auto;" id="date" name="date">
                   <option>Recital Date One</option>
                   <option>Recital Date Two</option>
                   <option>Recital Date Three</option>
@@ -86,15 +86,16 @@
               </div>
             </div>
             <div class="col-md-2">
-              <label for="email">
+              <label for="duration">
                 <b>Performance Duration: </b>
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="email" required="required"> (Minutes)
+              <input type="text" id="duration" name="duration" required="required"> (Minutes)
             </div>
           </div>
 
+          <!-- Section 3, Performance Medium -->
           <div class="row top-buffer">
             <div class="col-md-2">
               <label for="">
@@ -102,10 +103,11 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="medium">
             </div>
           </div>
 
+          <!-- Section 4, Selection Title, Larger Work Title -->
           <div class="row top-buffer">
             <div class="col-md-2">
               <label for="Selection_Title">
@@ -113,7 +115,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="Selection_Title" name="Selection_Title" value="">
+              <input type="text" id="Selection_Title" name="selection_title" value="">
             </div>
             <div class="col-md-2">
               <label for="Selection_Title">
@@ -121,9 +123,11 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text" id="Selection_Work" name="Selection_Work" value="">
+              <input type="text" id="Selection_Work" name="selection_work" value="">
             </div>
           </div>
+
+          <!-- Section 5, Catalog Number -->
           <div class="row top-buffer">
             <div class="col-md-2">
               <label for="">
@@ -131,7 +135,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="catalog_number">
             </div>
 
             <div class="col-md-2">
@@ -140,10 +144,11 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="movement">
             </div>
           </div>
 
+          <!-- Section 6, Composer, Composer Birth Year -->
           <div class="row top-buffer">
             <div class="col-md-2">
               <label for="">
@@ -151,7 +156,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="composer">
             </div>
 
             <div class="col-md-2">
@@ -160,10 +165,11 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="birth_year">
             </div>
           </div>
 
+          <!-- Section 7, Collaborator Name, Collaborator Medium -->
           <div class="row top-buffer">
             <div class="col-md-2">
               <label for="">
@@ -171,7 +177,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="collab_name">
             </div>
 
             <div class="col-md-2">
@@ -180,10 +186,11 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input type="text">
+              <input type="text" name="collab_medium">
             </div>
           </div>
 
+          <!-- Submission Button -->
           <button type="submit" class="btn btn-primary">Submit Recital</button>
         </form>
 
