@@ -37,7 +37,7 @@ app.get("/get-recitals", async (req, res) => {
 })
 
 app.post("/submit_recital_form", (req, res) => {
-
+    console.log(req.body);
 });
 
 app.get("/create-recital", (req, res) => {
