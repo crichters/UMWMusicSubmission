@@ -35,9 +35,10 @@ app.get("/dashboard-data", async (req, res) => {
         promises.push(selectSubmissionsFor(recital.id));
     });
     let submissions = await Promise.all(promises);
-    let i = 0;
+    let i = -1;
     console.log(submissions);
     recitals = recitals.map((recital) => {
+        i++;
         return {
             ...recital,
             submissions: submissions[i]
