@@ -1,5 +1,3 @@
-var submissions = [];
-
 function insert_recital(recital_number, recital_title) {
     var recital_table = `
     <div class="row">
@@ -18,7 +16,7 @@ function insert_recital(recital_number, recital_title) {
 $("#recitals").append(recital_table);
 }
 
-function insert_recital_submission(recital_number, status, summary) {
+function insert_recital_submission(recital_number, status, summary, link) {
     var submission_text = `
     <tr>
         <th scope="row">
@@ -51,11 +49,11 @@ $(document).ready(function() {
           insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
           for(var j=0; j<recital_date["submissions"].length; j++){
               submission = recital_date["submissions"][j];
-              submissions.append(submission);
-              insert_recital_submission(recital_date["id"], "Status", `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`);
+              var summary = `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`;
+              var link = `/view_submission.html?name=${submission["name"]}&medium=${submission["medium"]}&title=${submission["title"]}&work=${submission["largerWork"]}`;
+              insert_recital_submission(recital_date["id"], "Status", summary, link);
           }
         }
       });
-      console.log(submissions);
 });
 
