@@ -74,3 +74,10 @@ function add_collaborator() {
 
     $("#collaborators_section").append(collaborator_text);
 }
+$(document).ready(() => {
+  $.get('/get-recitals', (data, status) => {
+    console.log(data.length);
+    console.log(data);
+    console.log(status);
+  });
+});

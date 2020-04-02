@@ -34,7 +34,7 @@ app.get("/get-recitals", async (req, res) => {
     console.log(recitals);
     res.json(recitals);
 
-})
+});
 
 app.post("/submit_recital_form", (req, res) => {
     console.log(req.body);
@@ -59,9 +59,6 @@ app.post("/change-password", (req, res) => {
 app.get("/logout", (req, res) => {
 
 });
-
-
-
 
 app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
     console.log("Server started");
