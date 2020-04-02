@@ -42,13 +42,14 @@ function insert_recital_submission(recital_number, status, summary) {
 
 
 $(document).ready(function() {
-    insert_recital(0, "OPEN Recital: April 6, 2020 (7:30 - 8:30 PM)");
-    insert_recital_submission(0, "Status", "Lydia Laake. Piano. Versio in E Minor.");
-    insert_recital_submission(0, "Status", "Olivia Childers. Batti Batti O Bel Masetto. Don Giovanni.");
 
-    insert_recital(1, "OPEN Recital: April 7, 2020 (7:30 - 8:30 PM)");
-    insert_recital_submission(1, "Status", "Laura Schneider. Guitar. Raindrops Keep Fallin' On My Head.");
-    insert_recital_submission(1, "Status", "Cathy Hoskins. Piano. Gia il sole dal Gange.");
-
+    $.get("/get-recitals", (data, status) => {
+        for(var i=0; i<data.length; i++){
+          recital_date = data[i];
+          insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
+          insert_recital_submission(recital_date["id"], "Status", "Lydia Laake. Piano. Versio in E Minor.");
+          insert_recital_submission(recital_date["id"], "Status", "Olivia Childers. Batti Batti O Bel Masetto. Don Giovanni.");
+        }
+      });
 });
 
