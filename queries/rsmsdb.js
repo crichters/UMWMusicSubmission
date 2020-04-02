@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-var config = require('./config');  // database connection settings in config.js file
-const db = new Sequelize(`mysql://${config.username}:${config.password}@${config.host}:3306/${config.database}`);
+const {database} = require('../config/config');  // database connection settings in config.js file
+const db = new Sequelize(`mysql://${database.username}:${database.password}@${database.host}:3306/${database.database}`);
 
 db
   .authenticate()

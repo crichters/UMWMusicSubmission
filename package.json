@@ -4,7 +4,8 @@
   "description": "A utility for the UMW Music Department to Handle Recital Submissions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "mysql2": "^2.1.0",
+    "request": "^2.88.2",
     "sequelize": "^5.21.5"
   }
 }
