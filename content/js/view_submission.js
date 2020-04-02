@@ -4,7 +4,7 @@ $.urlParam = function(name) {
        return "<i>Not Specified.</i>";
     }
     else{
-       return results[1] || 0;
+       return decodeURI(results[1]) || 0;
     }
 }
 
