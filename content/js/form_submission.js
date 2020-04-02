@@ -8,6 +8,10 @@ var collaborator_index = 0;
 // Function for sending form data to Express Backend
 // Sends POST request containing a map to /submit_recital_form
 function send_form_data() {
+  var recaptcha = $("#g-recaptcha-response").val();
+  if(recaptcha === ""){
+    alert("Please verify that you're not a bot with the reCaptcha");
+  } else {
     var recital_form = document.forms["recital_form"];
     var submission_values = {};
 
@@ -42,7 +46,8 @@ function send_form_data() {
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
         console.log("Posted successfully");
         window.location.href = "/submitted.html";
-    });
+    }); 
+  }
 }
 
 // Function for adding a collaborator to the form
