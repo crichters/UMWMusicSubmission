@@ -1,7 +1,7 @@
 # rsmsdb Module Instructions
 
 ## Database Connection
-To connect to a MySQL database, make sure you create a `config.js` file inside the queries directory.
+To connect to a MySQL database, make sure you add the following to the `dev.js` file inside the config directory.
 The file should contain the following code:
 
 ```
