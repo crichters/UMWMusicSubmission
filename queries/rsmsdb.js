@@ -234,9 +234,23 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
 function insertRecital(recital) {
 	const { date, end_time, start_time } = recital;
 	db.query(`INSERT INTO recital (date, end_time, start_time) `+
-		`VALUES("${date}","${end_time}","${start_time}")`);
+		`VALUES("${date}","${end_time}","${start_time}");`);
 
 };
 
+/**
+ * Update recital of the given id.
+ * @param {int} recitalId - the pk for the recital. 
+ * @param {Object} recital - the recital object with updated information. 
+ */
+function updateRecital(recitalId, recital) {
+  const { date, end_time, start_time } = recital;
+  db.query(`UPDATE recital SET date = "${date}", 
+                              end_time = "${end_time}", 
+                              start_time = "${start_time}" 
+            WHERE id = ${recitalId};`);
+};
+
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-        selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission};
+        selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
+      updateRecital};

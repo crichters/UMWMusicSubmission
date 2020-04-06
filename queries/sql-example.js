@@ -36,7 +36,6 @@ const recital = {
 	start_time: "12:30:00"
 };
 
-
 rsmsdb.selectOpenRecitals()
 .then(openRecitals => {
 	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
@@ -47,6 +46,11 @@ rsmsdb.selectOpenRecitals()
 
 	// insert recital
 	//rsmsdb.insertRecital(recital);
+
+	recital.date = "2022-04-20";
+
+	// update recital
+	rsmsdb.updateRecital(3, recital);
 
 	// get submissions for recital
 	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
