@@ -1,4 +1,4 @@
-const rsmsdb = require('./queries/rsmsdb');
+const rsmsdb = require('./rsmsdb');
 
 const submission = {
 	duration : 3,
@@ -43,10 +43,10 @@ rsmsdb.selectOpenRecitals()
 	var recitalId = openRecitals[0].id;
 
 	// insert submission, performer and collaborator objects into database.
-	rsmsdb.insertSubmission(submission, performer, collaborators, recitalId);
+	//rsmsdb.insertSubmission(submission, performer, collaborators, recitalId);
 
 	// insert recital
-	rsmsdb.insertRecital(recital);
+	//rsmsdb.insertRecital(recital);
 
 	// get submissions for recital
 	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
