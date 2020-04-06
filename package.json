@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/crichters/UMWMusicSubmission#readme",
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "express": "^4.17.1",
     "mysql2": "^2.1.0",
     "sequelize": "^5.21.5"

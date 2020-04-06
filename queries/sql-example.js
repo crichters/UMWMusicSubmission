@@ -36,58 +36,65 @@ const recital = {
 	start_time: "12:30:00"
 };
 
-rsmsdb.selectOpenRecitals()
-.then(openRecitals => {
-	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
-	var recitalId = openRecitals[0].id;
+rsmsdb.updatePassword("password");
+rsmsdb.checkPassword("bar")
+.then(isValid => console.log(isValid))
+.catch(err => {
+	console.error('Unable to validate password:', err);
+});;
 
-	// insert submission, performer and collaborator objects into database.
-	//rsmsdb.insertSubmission(submission, performer, collaborators, recitalId);
+// rsmsdb.selectOpenRecitals()
+// .then(openRecitals => {
+// 	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+// 	var recitalId = openRecitals[0].id;
 
-	// insert recital
-	//rsmsdb.insertRecital(recital);
+// 	// insert submission, performer and collaborator objects into database.
+// 	//rsmsdb.insertSubmission(submission, performer, collaborators, recitalId);
 
-	recital.date = "2022-04-20";
+// 	// insert recital
+// 	//rsmsdb.insertRecital(recital);
 
-	// update recital
-	rsmsdb.updateRecital(3, recital);
+// 	recital.date = "2022-04-20";
 
-	// get submissions for recital
-	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
-		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-	})
-	.catch(err => {
-		console.error('Unable to find submissions:', err);
-	});
+// 	// update recital
+// 	rsmsdb.updateRecital(3, recital);
+
+// 	// get submissions for recital
+// 	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
+// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+// 	})
+// 	.catch(err => {
+// 		console.error('Unable to find submissions:', err);
+// 	});
 	
-})
-.catch(err => {
-	console.error('Unable to find open recitals:', err);
-});
+// })
+// .catch(err => {
+// 	console.error('Unable to find open recitals:', err);
+// });
 
-rsmsdb.selectUnarchivedRecitals()
-.then(openRecitals => {
-	console.log("Recitals in dashboard:", JSON.stringify(openRecitals, null, 4));
-})
-.catch(err => {
-	console.error('Unable to find unarchived recitals:', err);
-});
+// rsmsdb.selectUnarchivedRecitals()
+// .then(openRecitals => {
+// 	console.log("Recitals in dashboard:", JSON.stringify(openRecitals, null, 4));
+// })
+// .catch(err => {
+// 	console.error('Unable to find unarchived recitals:', err);
+// });
 
 
-rsmsdb.selectSubmissionDetailsFor(5)
-.then(details => {
-	// do something to resulting submission details object.
-	console.log("Submission details:", JSON.stringify(details[0], null, 4));
-})
-.catch(err => {
-	console.error('Unable to find submission:', err);
-});
+// rsmsdb.selectSubmissionDetailsFor(5)
+// .then(details => {
+// 	// do something to resulting submission details object.
+// 	console.log("Submission details:", JSON.stringify(details[0], null, 4));
+// })
+// .catch(err => {
+// 	console.error('Unable to find submission:', err);
+// });
 
-rsmsdb.selectCollaboratorsFor(5)
-.then(collaborators => {
-	// do something to resulting submission collaborators list.
-	console.log("Submission collaborators:", JSON.stringify(collaborators, null, 4));
-})
-.catch(err => {
-	console.error('Unable to find collaborators:', err);
-});
+// rsmsdb.selectCollaboratorsFor(5)
+// .then(collaborators => {
+// 	// do something to resulting submission collaborators list.
+// 	console.log("Submission collaborators:", JSON.stringify(collaborators, null, 4));
+// })
+// .catch(err => {
+// 	console.error('Unable to find collaborators:', err);
+// });

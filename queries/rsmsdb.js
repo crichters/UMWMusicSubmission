@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
 var config = require('./config');  // database connection settings in config.js file
 const db = new Sequelize(`mysql://${config.username}:${config.password}@${config.host}:3306/${config.database}`);
 
@@ -251,6 +252,47 @@ function updateRecital(recitalId, recital) {
             WHERE id = ${recitalId};`);
 };
 
+
+/**
+ * Helper function to add new password.
+ * @param {String} password - the plain-text password to add.
+ */
+function insertPassword(password) {
+  bcrypt.hash(password, 7, function(err, hash) {
+    db.query(`INSERT INTO faculty_member (password) VALUES("${hash}");`);
+  });
+};
+
+
+/**
+ * Update the current password with the given password.
+ * @param {String} password - the plain-text password. 
+ */
+function updatePassword(password) {
+  bcrypt.hash(password, 7, function(err, hash) {
+    db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
+  });
+};
+
+
+/**
+ * Returns a promise to a boolean that stores whether or 
+ * not the given password is valid.
+ * @param {String} password - the password entered. 
+ */
+async function checkPassword(password) {
+  return new Promise((resolve, error) => {
+    db.query(`SELECT password FROM faculty_member WHERE id=1`, {type: db.QueryTypes.SELECT}).then(currPassword => {
+      bcrypt.compare(password, currPassword[0]["password"], function(err, result) {
+        if (err) {
+          return error(err);
+        }
+        resolve(result);
+      });
+    });
+  });
+};
+
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-      updateRecital};
+        updateRecital, updatePassword, checkPassword};
