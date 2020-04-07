@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 const directory = __dirname + '/content';
 
 app.get("/", (req, res) => {
-    res.sendFile(directory + '/template.html');
+    res.sendFile(directory + '/dashboard.html')
 });
 
 //This is a get request that simply returns the login page
@@ -46,6 +46,10 @@ app.get("/dashboard-data", async (req, res) => {
     });
     console.log(recitals);
     res.json(recitals);
+});
+
+app.get("/submission_details", (req, res) => {
+
 });
 
 //This get request is used to actually sign the user in.
