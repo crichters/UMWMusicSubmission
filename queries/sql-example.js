@@ -1,4 +1,4 @@
-const rsmsdb = require('./queries/rsmsdb');
+const rsmsdb = require('./rsmsdb');
 
 const submission = {
 	duration : 3,
