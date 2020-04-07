@@ -99,7 +99,7 @@ $("form").submit((event) => {
 function add_collaborator() {
     
     // Create the row HTML for a new collaborator, increment the index of total collaborators, and append to the proper div
-    var collaborator_text = `<div class="row top-buffer">
+    var collaborator_text = `<div class="row top-buffer" id="collaborator_${collaborator_index}">
     <div class="col-md-2">
       <label for="">
         <b>Collaborator Name:</b>
@@ -114,8 +114,16 @@ function add_collaborator() {
         <b>Collaborator Medium:</b>
       </label>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <input type="text" id="collaborator_${collaborator_index}_medium" name="collaborator_${collaborator_index}_medium">
+    </div>
+    <div class="col-md-1">
+    <a href="javascript:void(0)" onclick="$('#collaborator_${collaborator_index}').remove();">
+    <svg class="bi bi-x" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="gray" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+      <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>
+    </svg>
+    </a>
     </div>
   </div>`;
 
