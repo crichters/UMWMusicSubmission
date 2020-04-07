@@ -9,7 +9,7 @@ var collaborator_index = 0;
 // Sends POST request containing a map to /submit_recital_form
 $("form").submit((event) => {
   var recaptcha = $("#g-recaptcha-response").val();
-  if(recaptcha === ""){
+  if(!recaptcha === ""){
     alert("Please verify that you're not a bot with the reCaptcha");
     return false;
   } else {
@@ -24,6 +24,7 @@ $("form").submit((event) => {
         input_value = input_values[i].value;
 
         if(!input_id.includes("collaborator")){
+            console.log(input_values[i].value);
             submission_values[input_values[i].id] = input_values[i].value;
         }
     }

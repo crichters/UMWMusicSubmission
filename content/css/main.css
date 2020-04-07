@@ -10,7 +10,7 @@ nav {
     flex-direction: row;
 }
 
-nav a:link, a:active {
+nav a:link, nav a:active {
     display: inline-block;
     padding: 14px 25px;
     margin-top: 0px;
