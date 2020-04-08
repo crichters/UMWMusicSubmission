@@ -293,6 +293,15 @@ async function checkPassword(password) {
   });
 };
 
+/**
+ * inserts the email into the faculty_email database
+ * @param {String} email - the email entered
+ */
+function insertEmail(email)
+{
+  db.query(`INSERT INTO faculty_emails (email) VALUES('${email}');`);
+}
+
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword};
+        updateRecital, updatePassword, checkPassword, insertEmail};

@@ -42,6 +42,7 @@ rsmsdb.checkPassword("bar")
 .catch(err => {
 	console.error('Unable to validate password:', err);
 });;
+rsmsdb.insertEmail("test@mail.com")
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
