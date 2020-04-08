@@ -44,7 +44,8 @@ const recital = {
 // });;
 // rsmsdb.insertEmail("test@mail.com")
 
-rsmsdb.deleteSubmission(4)
+// rsmsdb.deleteSubmission(4)
+rsmsdb.updateRecitalStatus(1,true);
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {

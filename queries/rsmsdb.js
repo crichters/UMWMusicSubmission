@@ -315,6 +315,16 @@ function deleteSubmission(submission_id)
 
 }
 
+/**
+ * Given the recital id, it updates the status of if the recital is open or not
+ * @param {Int} recital_id - id of the recital to update
+ * @param {Boolean} isClosed - boolean value of if the recital is closed or not
+ */
+function updateRecitalStatus(recital_id, isClosed)
+{
+  db.query(`UPDATE recital SET is_closed=${isClosed} WHERE id=${recital_id};`);
+}
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission};
+        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
+        updateRecitalStatus};
