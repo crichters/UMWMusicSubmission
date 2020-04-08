@@ -2,7 +2,7 @@ USE umwrecit_rsms;
 
 CREATE TABLE faculty_member (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	password CHAR(70) NOT NULL DEFAULT 'password'
+	password CHAR(60) BINARY NOT NULL
 );
 
 CREATE TABLE faculty_emails (
