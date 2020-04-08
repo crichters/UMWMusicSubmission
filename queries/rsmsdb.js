@@ -52,8 +52,18 @@ async function selectUnarchivedRecitals() {
  */
 async function selectSubmissionsFor(recitalId) {
     return db.query("SELECT sub.id, " +
-                "sub.larger_work AS largerWork, " +
+                "sub.duration, "+
                 "sub.title, " +
+                "sub.larger_work AS largerWork, " +
+                "sub.email, " +
+                "sub.composer_name AS composerName, " +
+                "sub.composer_birth_year AS composerBirthYear, " +
+                "sub.composer_death_year AS composerDeathYear, " +
+                "sub.catalog_num AS catalogNum," +
+                "sub.scheduling_req AS schedulingReq, " +
+                "sub.tech_req AS techReq, " +
+                "sub.movement, " +
+                "recital.date, "+
                 "performer.name, " +
                 "performer.medium " + 
             "FROM submission AS sub " +
@@ -62,6 +72,8 @@ async function selectSubmissionsFor(recitalId) {
                 "ON sub.id = performers.submission_id " +
             "INNER JOIN performer " +
                 "ON performers.performer_id = performer.id " +
+            "INNER JOIN recital " +
+                "ON sub.recital_id = recital.id " +
             "WHERE NOT performers.is_collaborator " +
             `AND recital_id = ${recitalId}`
     , { type: db.QueryTypes.SELECT});

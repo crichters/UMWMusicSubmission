@@ -46,9 +46,10 @@ const recital = {
 
 // rsmsdb.deleteSubmission(4)
 // rsmsdb.updateRecitalStatus(1,true);
-rsmsdb.updateSubmissionStatus(1, "approved");
-rsmsdb.updateSubmissionStatus(2, "rejected");
-rsmsdb.updateSubmissionStatus(3, "approved");
+// rsmsdb.updateSubmissionStatus(1, "approved");
+// rsmsdb.updateSubmissionStatus(2, "rejected");
+// rsmsdb.updateSubmissionStatus(3, "approved");
+
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
@@ -67,12 +68,18 @@ rsmsdb.updateSubmissionStatus(3, "approved");
 // 	rsmsdb.updateRecital(3, recital);
 
 // 	// get submissions for recital
-// 	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
-// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-// 	})
-// 	.catch(err => {
-// 		console.error('Unable to find submissions:', err);
-// 	});
+	rsmsdb.selectSubmissionsFor(1).then(subs => {
+		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	})
+	.catch(err => {
+		console.error('Unable to find submissions:', err);
+	});
+	// rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
+	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	// })
+	// .catch(err => {
+	// 	console.error('Unable to find submissions:', err);
+	// });
 	
 // })
 // .catch(err => {
