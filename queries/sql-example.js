@@ -36,13 +36,15 @@ const recital = {
 	start_time: "12:30:00"
 };
 
-rsmsdb.updatePassword("password");
-rsmsdb.checkPassword("bar")
-.then(isValid => console.log(isValid))
-.catch(err => {
-	console.error('Unable to validate password:', err);
-});;
-rsmsdb.insertEmail("test@mail.com")
+// rsmsdb.updatePassword("password");
+// rsmsdb.checkPassword("bar")
+// .then(isValid => console.log(isValid))
+// .catch(err => {
+// 	console.error('Unable to validate password:', err);
+// });;
+// rsmsdb.insertEmail("test@mail.com")
+
+rsmsdb.deleteSubmission(4)
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
