@@ -45,7 +45,10 @@ const recital = {
 // rsmsdb.insertEmail("test@mail.com")
 
 // rsmsdb.deleteSubmission(4)
-rsmsdb.updateRecitalStatus(1,true);
+// rsmsdb.updateRecitalStatus(1,true);
+rsmsdb.updateSubmissionStatus(1, "approved");
+rsmsdb.updateSubmissionStatus(2, "rejected");
+rsmsdb.updateSubmissionStatus(3, "approved");
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
