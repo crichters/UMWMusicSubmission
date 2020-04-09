@@ -251,6 +251,7 @@ function insertRecital(recital) {
 
 };
 
+
 /**
  * Update recital of the given id.
  * @param {int} recitalId - the pk for the recital. 
@@ -271,6 +272,9 @@ function updateRecital(recitalId, recital) {
  */
 function insertPassword(password) {
   bcrypt.hash(password, 7, function(err, hash) {
+    if (err) {
+      console.log("Cannot insert password: " + err);
+    }
     db.query(`INSERT INTO faculty_member (password) VALUES("${hash}");`);
   });
 };
@@ -282,6 +286,9 @@ function insertPassword(password) {
  */
 function updatePassword(password) {
   bcrypt.hash(password, 7, function(err, hash) {
+    if (err) {
+      console.log("Cannot update password: " + err);
+    }
     db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
   });
 };
@@ -305,6 +312,7 @@ async function checkPassword(password) {
   });
 };
 
+
 /**
  * Inserts the email into the faculty_email database
  * @param {String} email - the email entered
@@ -312,7 +320,25 @@ async function checkPassword(password) {
 function insertEmail(email)
 {
   db.query(`INSERT INTO faculty_emails (email) VALUES('${email}');`);
-}
+};
+
+
+/**
+ * Returns a promise to a boolean that stores whether
+ * or not the provided email is valid.
+ * @param {String} email - the faculty email.
+ */
+async function checkEmail(email) {
+  return new Promise((resolve, error) => {
+    db.query(`SELECT EXISTS(SELECT * FROM faculty_emails WHERE email="${email}") AS isValid;`)
+    .then(email => {
+      resolve(email[0][0].isValid);  // extracts boolean from resulting query object.
+    })
+    .catch(err => {
+      error(err);
+    });
+  });
+};
 
 
 /**
@@ -325,7 +351,7 @@ function deleteSubmission(submission_id)
   db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
   db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
 
-}
+};
 
 
 /**
@@ -336,7 +362,7 @@ function deleteSubmission(submission_id)
 function updateRecitalStatus(recital_id, isClosed)
 {
   db.query(`UPDATE recital SET is_closed=${isClosed} WHERE id=${recital_id};`);
-}
+};
 
 
 /**
@@ -347,8 +373,10 @@ function updateRecitalStatus(recital_id, isClosed)
 function updateSubmissionStatus(submission_id, status)
 {
   db.query(`UPDATE submission SET status="${status}" WHERE id=${submission_id};`);
-}
+};
+
+
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
         updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
-        updateRecitalStatus, updateSubmissionStatus};
+        updateRecitalStatus, updateSubmissionStatus, checkEmail};

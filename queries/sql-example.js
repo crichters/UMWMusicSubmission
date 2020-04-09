@@ -37,12 +37,19 @@ const recital = {
 };
 
 // rsmsdb.updatePassword("password");
-// rsmsdb.checkPassword("bar")
-// .then(isValid => console.log(isValid))
-// .catch(err => {
-// 	console.error('Unable to validate password:', err);
-// });;
-// rsmsdb.insertEmail("test@mail.com")
+rsmsdb.checkPassword("bar")
+.then(isValid => console.log(isValid))
+.catch(err => {
+	console.log('Unable to validate password:', err);
+});;
+//rsmsdb.insertEmail("jkuykend@umw.edu");
+//rsmsdb.insertEmail("mmorley@umw.edu");
+
+rsmsdb.checkEmail("jkuykend@umw.edu")
+.then(isValid => console.log("Is email valid? " + isValid))
+.catch(err => {
+	console.error("Unable to validate email: ", err);
+});
 
 // rsmsdb.deleteSubmission(4)
 // rsmsdb.updateRecitalStatus(1,true);
