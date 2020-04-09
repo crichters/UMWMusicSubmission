@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 var config = require('./config');  // database connection settings in config.js file
 const db = new Sequelize(`mysql://${config.username}:${config.password}@${config.host}:3306/${config.database}`);
+const saltRounds = 7;
 
 db
   .authenticate()
@@ -271,9 +272,9 @@ function updateRecital(recitalId, recital) {
  * @param {String} password - the plain-text password to add.
  */
 function insertPassword(password) {
-  bcrypt.hash(password, 7, function(err, hash) {
+  bcrypt.hash(password, saltRounds, function(err, hash) {
     if (err) {
-      console.log("Cannot insert password: " + err);
+      console.error("Cannot insert password: " + err);
     }
     db.query(`INSERT INTO faculty_member (password) VALUES("${hash}");`);
   });
@@ -285,9 +286,9 @@ function insertPassword(password) {
  * @param {String} password - the plain-text password. 
  */
 function updatePassword(password) {
-  bcrypt.hash(password, 7, function(err, hash) {
+  bcrypt.hash(password, saltRounds, function(err, hash) {
     if (err) {
-      console.log("Cannot update password: " + err);
+      console.error("Cannot update password: " + err);
     }
     db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
   });
@@ -342,6 +343,40 @@ async function checkEmail(email) {
 
 
 /**
+ * Returns a promise to a list of all 
+ * faculty emails in the database. Each element
+ * is an object with id and email.
+ */
+async function selectEmails() {
+  return db.query(`SELECT * FROM faculty_emails`,
+    {type: db.QueryTypes.SELECT});
+}
+
+
+/**
+ * Returns a promise to a boolean indicating 
+ * if the email with the given id has been successfully
+ * deleted. If false, the email cannot be deleted because
+ * at least one email must exist in the database.
+ * @param {int} emailId - the email's pk. 
+ */
+async function deleteEmail(emailId) {
+  return new Promise((resolve, error) => {
+    db.query("SELECT COUNT(email) AS total FROM faculty_emails;")
+    .then(emails => {
+      // if total emails greater than 1
+      if (emails[0][0].total > 1) {
+        db.query(`DELETE FROM faculty_emails WHERE id=${emailId};`);
+        resolve(true);
+      }
+      resolve(false);
+    })
+    .catch(err => error(err))
+  });
+}
+
+
+/**
  * Deletes a submission based on the given submission id from the database
  * @param {Int} submission_id - id of the submission to be deleted
  */
@@ -379,4 +414,4 @@ function updateSubmissionStatus(submission_id, status)
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
         updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
-        updateRecitalStatus, updateSubmissionStatus, checkEmail};
+        updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};

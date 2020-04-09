@@ -38,15 +38,26 @@ const recital = {
 
 // rsmsdb.updatePassword("password");
 rsmsdb.checkPassword("bar")
-.then(isValid => console.log(isValid))
+.then(isValid => console.log("Is password valid? " + isValid))
 .catch(err => {
-	console.log('Unable to validate password:', err);
+	console.error('Unable to validate password:', err);
 });;
 //rsmsdb.insertEmail("jkuykend@umw.edu");
-//rsmsdb.insertEmail("mmorley@umw.edu");
+// rsmsdb.insertEmail("mmorley@umw.edu");
 
 rsmsdb.checkEmail("jkuykend@umw.edu")
 .then(isValid => console.log("Is email valid? " + isValid))
+.catch(err => {
+	console.error("Unable to validate email: ", err);
+});
+
+rsmsdb.deleteEmail(1)
+.then(deleted => {
+	console.log("Email deleted? " + deleted);
+	rsmsdb.selectEmails()
+	.then(emails => console.log("Faculty users:", JSON.stringify(emails, null, 4)))
+	.catch(err => console.error("Unable to retrieve emails:", err));
+})
 .catch(err => {
 	console.error("Unable to validate email: ", err);
 });
