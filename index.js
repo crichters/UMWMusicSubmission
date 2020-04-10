@@ -3,7 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-    selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -63,7 +63,16 @@ app.get("/dashboard-data", async (req, res) => {
 //This get request is used to actually sign the user in.
 app.get("/login", (req, res) => {
     const { email, password } = req.body;
-    
+    const valid = checkPassword(password);
+    if(valid) {
+        req.session.email = email;
+        res.redirect("/dashboard");
+    } else {
+        res.json({
+            status: "error",
+            message: "Invalid email/password combination"
+        });
+    }
 });
 
 app.get("/form", (req, res) => {
@@ -152,6 +161,7 @@ app.post("/change-password", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+    req.session.email = null;
 
 });
 
