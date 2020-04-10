@@ -52,8 +52,18 @@ async function selectUnarchivedRecitals() {
  */
 async function selectSubmissionsFor(recitalId) {
     return db.query("SELECT sub.id, " +
-                "sub.larger_work AS largerWork, " +
+                "sub.duration, "+
                 "sub.title, " +
+                "sub.larger_work AS largerWork, " +
+                "sub.email, " +
+                "sub.composer_name AS composerName, " +
+                "sub.composer_birth_year AS composerBirthYear, " +
+                "sub.composer_death_year AS composerDeathYear, " +
+                "sub.catalog_num AS catalogNum," +
+                "sub.scheduling_req AS schedulingReq, " +
+                "sub.tech_req AS techReq, " +
+                "sub.movement, " +
+                "recital.date, "+
                 "performer.name, " +
                 "performer.medium " + 
             "FROM submission AS sub " +
@@ -62,6 +72,8 @@ async function selectSubmissionsFor(recitalId) {
                 "ON sub.id = performers.submission_id " +
             "INNER JOIN performer " +
                 "ON performers.performer_id = performer.id " +
+            "INNER JOIN recital " +
+                "ON sub.recital_id = recital.id " +
             "WHERE NOT performers.is_collaborator " +
             `AND recital_id = ${recitalId}`
     , { type: db.QueryTypes.SELECT});
@@ -239,6 +251,7 @@ function insertRecital(recital) {
 
 };
 
+
 /**
  * Update recital of the given id.
  * @param {int} recitalId - the pk for the recital. 
@@ -258,7 +271,10 @@ function updateRecital(recitalId, recital) {
  * @param {String} password - the plain-text password to add.
  */
 function insertPassword(password) {
-  bcrypt.hash(password, 7, function(err, hash) {
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    if (err) {
+      console.error("Cannot insert password: " + err);
+    }
     db.query(`INSERT INTO faculty_member (password) VALUES("${hash}");`);
   });
 };
@@ -269,7 +285,10 @@ function insertPassword(password) {
  * @param {String} password - the plain-text password. 
  */
 function updatePassword(password) {
-  bcrypt.hash(password, 7, function(err, hash) {
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    if (err) {
+      console.error("Cannot update password: " + err);
+    }
     db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
   });
 };
@@ -293,6 +312,105 @@ async function checkPassword(password) {
   });
 };
 
+
+/**
+ * Inserts the email into the faculty_email database
+ * @param {String} email - the email entered
+ */
+function insertEmail(email)
+{
+  db.query(`INSERT INTO faculty_emails (email) VALUES('${email}');`);
+};
+
+
+/**
+ * Returns a promise to a boolean that stores whether
+ * or not the provided email is valid.
+ * @param {String} email - the faculty email.
+ */
+async function checkEmail(email) {
+  return new Promise((resolve, error) => {
+    db.query(`SELECT EXISTS(SELECT * FROM faculty_emails WHERE email="${email}") AS isValid;`)
+    .then(email => {
+      resolve(email[0][0].isValid);  // extracts boolean from resulting query object.
+    })
+    .catch(err => {
+      error(err);
+    });
+  });
+};
+
+
+/**
+ * Returns a promise to a list of all 
+ * faculty emails in the database. Each element
+ * is an object with id and email.
+ */
+async function selectEmails() {
+  return db.query(`SELECT * FROM faculty_emails`,
+    {type: db.QueryTypes.SELECT});
+}
+
+
+/**
+ * Returns a promise to a boolean indicating 
+ * if the email with the given id has been successfully
+ * deleted. If false, the email cannot be deleted because
+ * at least one email must exist in the database.
+ * @param {int} emailId - the email's pk. 
+ */
+async function deleteEmail(emailId) {
+  return new Promise((resolve, error) => {
+    db.query("SELECT COUNT(email) AS total FROM faculty_emails;")
+    .then(emails => {
+      // if total emails greater than 1
+      if (emails[0][0].total > 1) {
+        db.query(`DELETE FROM faculty_emails WHERE id=${emailId};`);
+        resolve(true);
+      }
+      resolve(false);
+    })
+    .catch(err => error(err))
+  });
+}
+
+
+/**
+ * Deletes a submission based on the given submission id from the database
+ * @param {Int} submission_id - id of the submission to be deleted
+ */
+function deleteSubmission(submission_id)
+{
+  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
+  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
+
+};
+
+
+/**
+ * Given the recital id, it updates the status of if the recital is open or not
+ * @param {Int} recital_id - id of the recital to update
+ * @param {Boolean} isClosed - boolean value of if the recital is closed or not
+ */
+function updateRecitalStatus(recital_id, isClosed)
+{
+  db.query(`UPDATE recital SET is_closed=${isClosed} WHERE id=${recital_id};`);
+};
+
+
+/**
+ * Updates the status to be either approved or denied given an id
+ * @param {Int} submission_id - id of the submission to update
+ * @param {String} status - either approved or denied
+ */
+function updateSubmissionStatus(submission_id, status)
+{
+  db.query(`UPDATE submission SET status="${status}" WHERE id=${submission_id};`);
+};
+
+
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword};
+        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
+        updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};
