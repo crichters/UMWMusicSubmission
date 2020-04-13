@@ -40,15 +40,15 @@
       <!-- Main Content Here -->
 
       <div class="row">
-        <form>
+        <form action="/login" method="POST"> 
         <div class="form-group">
             <label for="email_address">Email Address</label>
-            <input type="email" class="form-control" id="email_address" placeholder="Enter email address">
+            <input type="email" class="form-control" id="email_address" placeholder="Enter email address" name="email_address">
         </div>
         <br>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter Password">
+            <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password">
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
         </form>
