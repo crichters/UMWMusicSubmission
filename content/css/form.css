@@ -14,3 +14,7 @@ a .btn-secondary {
     content:" *";
     color: red;
   }
+
+  .bi-trash-fill:hover {
+    fill: red;
+  }
