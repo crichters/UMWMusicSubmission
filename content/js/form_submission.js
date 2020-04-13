@@ -4,15 +4,19 @@
 
 // Global Variable for keeping track of how many collaborators have been added.
 var collaborator_index = 0;
+var collaborator_list = [];
 
 // Function for sending form data to Express Backend
 // Sends POST request containing a map to /submit_recital_form
 $("form").submit((event) => {
-  var recaptcha = $("#g-recaptcha-response").val();
-  if(!recaptcha === ""){
+
+  if(!$("#g-recaptcha-response").val() === ""){
+
     alert("Please verify that you're not a bot with the reCaptcha");
     return false;
+
   } else {
+
     var recital_form = document.forms["recital_form"];
     var submission_values = {};
 
@@ -29,20 +33,10 @@ $("form").submit((event) => {
         }
     }
 
-    // Create a list of collaborators and add that list to the submission map
-    collaborator_list = [];
-    for (var i=0; i < collaborator_index; i++) {
-        collaborator_name_id = `#collaborator_${i}_name`;
-        collaborator_medium_id = `#collaborator_${i}_medium`;
-        collaborator_list[i] = {"collaborator_name" : $(collaborator_name_id).val(), "collaborator_medium": $(collaborator_medium_id).val()};
-    }
-    submission_values["collaborators"] = collaborator_list;
-    
     // Get the recital date from the selection box and add that to the map
     submission_values["recital_date"] = $("#date option:selected").attr('id');
 
-    // Logging, unless there's a reason to remove it
-    console.log(submission_values);
+    submission_values["collaborators"] = get_collaborators();
 
     // Send Post Request
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
@@ -52,48 +46,6 @@ $("form").submit((event) => {
   }
 });
 
-// function send_form_data() {
-//   var recaptcha = $("#g-recaptcha-response").val();
-//   if(recaptcha === ""){
-//     alert("Please verify that you're not a bot with the reCaptcha");
-//   } else {
-//     var recital_form = document.forms["recital_form"];
-//     var submission_values = {};
-
-//     input_values = recital_form.getElementsByTagName("input");
-    
-//     // Loop through every value that isn't a collaborator and add it to the map
-//     for(var i = 0; i < input_values.length; i++) {
-//         input_id = input_values[i].id;
-//         input_value = input_values[i].value;
-
-//         if(!input_id.includes("collaborator")){
-//             submission_values[input_values[i].id] = input_values[i].value;
-//         }
-//     }
-
-//     // Create a list of collaborators and add that list to the submission map
-//     collaborator_list = [];
-//     for (var i=0; i < collaborator_index; i++) {
-//         collaborator_name_id = `#collaborator_${i}_name`;
-//         collaborator_medium_id = `#collaborator_${i}_medium`;
-//         collaborator_list[i] = {"collaborator_name" : $(collaborator_name_id).val(), "collaborator_medium": $(collaborator_medium_id).val()};
-//     }
-//     submission_values["collaborators"] = collaborator_list;
-    
-//     // Get the recital date from the selection box and add that to the map
-//     submission_values["recital_date"] = $("#date option:selected").attr('id');
-
-//     // Logging, unless there's a reason to remove it
-//     console.log(submission_values);
-
-//     // Send Post Request
-//     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
-//         console.log("Posted successfully");
-//         window.location.href = "/submitted.html";
-//     }); 
-//   }
-// }
 
 // Function for adding a collaborator to the form
 function add_collaborator() {
@@ -118,7 +70,7 @@ function add_collaborator() {
       <input type="text" id="collaborator_${collaborator_index}_medium" name="collaborator_${collaborator_index}_medium">
     </div>
     <div class="col-md-1">
-    <a href="javascript:void(0)" onclick="$('#collaborator_${collaborator_index}').remove();">
+    <a href="javascript:void(0)" onclick="remove_collaborator(${collaborator_index});">
     <svg class="bi bi-x" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="gray" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>
       <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>
@@ -127,9 +79,8 @@ function add_collaborator() {
     </div>
   </div>`;
 
-
+    collaborator_list.push(collaborator_index);
     collaborator_index++;
-
     $("#collaborators_section").append(collaborator_text);
 }
 
@@ -139,6 +90,32 @@ function add_recital_date(id, date, start_time, end_time){
 }
 
 
+function remove_collaborator(index) {
+
+  for(var i=0; i<collaborator_list.length; i++){
+    if(collaborator_list[i] == index){
+      collaborator_list.splice(i, 1);
+    }
+  }
+  console.log(collaborator_list);
+  $(`#collaborator_${index}`).remove();
+}
+
+function get_collaborators() {
+
+  return_list = [];
+
+  collaborator_list.forEach((item, index) => {
+    collaborator_name_id = `#collaborator_${item}_name`;
+    collaborator_medium_id = `#collaborator_${item}_medium`;
+    collaborator = {"collaborator_name": $(collaborator_name_id).val(), "collaborator_medium": $(collaborator_medium_id).val()};
+
+    return_list.push(collaborator);
+  });
+
+  return return_list;
+}
+
 $(document).ready(() => {
   $.get("/get-recitals", (data, status) => {
     for(var i=0; i<data.length; i++){
@@ -146,4 +123,5 @@ $(document).ready(() => {
       add_recital_date(recital_date["id"], recital_date["date"], recital_date["startTime"], recital_date["endTime"]);
     }
   });
+
 });

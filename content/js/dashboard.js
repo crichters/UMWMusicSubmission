@@ -54,20 +54,20 @@ function make_test_recitals() {
 
 $(document).ready(function() {
 
-    // $.get("/dashboard-data", (data, status) => {
-    //     for(var i=0; i<data.length; i++){
-    //       recital_date = data[i];
-    //       insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
-    //       for(var j=0; j<recital_date["submissions"].length; j++){
-    //           submission = recital_date["submissions"][j];
-    //           var summary = `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`;
-    //           var link = `/view_submission.html?name=${submission["name"]}&medium=${submission["medium"]}&title=${submission["title"]}&work=${submission["largerWork"]}`;
-    //           insert_recital_submission(recital_date["id"], "Status", summary, link);
-    //       }
-    //     }
-    //   });
+    $.get("/dashboard-data", (data, status) => {
+        for(var i=0; i<data.length; i++){
+          recital_date = data[i];
+          insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
+          for(var j=0; j<recital_date["submissions"].length; j++){
+              submission = recital_date["submissions"][j];
+              var summary = `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`;
+              var link = `/view_submission.html?name=${submission["name"]}&medium=${submission["medium"]}&title=${submission["title"]}&work=${submission["largerWork"]}`;
+              insert_recital_submission(recital_date["id"], "Status", summary, link);
+          }
+        }
+      });
 
-    make_test_recitals();
+    // make_test_recitals();
 
 });
 
