@@ -9,3 +9,8 @@
 a .btn-secondary {
     color: #fff;
 }
+
+.required:after {
+    content:" *";
+    color: red;
+  }
