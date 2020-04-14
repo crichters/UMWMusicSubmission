@@ -3,7 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-    selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 //This is a get request that simply returns the login page
-app.get("/login-page", (req, res) => {
+app.get("/login", (req, res) => {
     res.sendFile(directory + '/login_page.html');
 });
 
@@ -46,12 +46,7 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
-    /*let submission_promises = [];
-    recitals.forEach((recital) => {
-        recital.submissions.forEach((submission) => {
-            submission_promises.push(selectSubmissionDetailsFor(submission.id));
-        });
-    });*/
+    console.log(recitals);
     res.json(recitals);
 });
 
@@ -61,9 +56,25 @@ app.get("/dashboard-data", async (req, res) => {
 });*/
 
 //This get request is used to actually sign the user in.
-app.get("/login", (req, res) => {
-    const { email, password } = req.body;
-    
+app.post("/login", async (req, res) => {
+    const { email_address, password } = req.body;
+    const validEmail = checkEmail(email_address);
+    const validPW = checkPassword(password);
+    console.log(validEmail, validPW);
+    if(valid) {
+        req.session.email = email;
+        res.redirect("/dashboard");
+    } else {
+        res.json({
+            status: "error",
+            message: "Invalid email/password combination"
+        });
+    }
+});
+
+app.get("/credentials", async (req, res) => {
+    const email = await insertEmail("simeon.neisler@gmail.com");
+    const pw = await insertPassword("Password");
 });
 
 app.get("/form", (req, res) => {
@@ -72,6 +83,7 @@ app.get("/form", (req, res) => {
 
 app.get("/get-recitals", async (req, res) => {
     const recitals = await selectOpenRecitals();
+    console.log(recitals);
     res.json(recitals);
 
 });
@@ -92,7 +104,6 @@ app.post("/submit_recital_form", async (req, res) => {
       }
     });*/
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
-    console.log(req.body);
     if(collaborators) {
         collaborators = collaborators.map((c) => {
             return {
@@ -100,7 +111,10 @@ app.post("/submit_recital_form", async (req, res) => {
                 medium: c.collaborator_medium
             }
         });
+    } else {
+        collaborators = []
     }
+    console.log(collaborators);
     const performer = {
         name,
         medium
@@ -118,7 +132,7 @@ app.post("/submit_recital_form", async (req, res) => {
         techReq: technical_requirements,
         movement
     };
-    for (property in submisssion) {
+    for (property in submission) {
         if(submission[property] == '' || submission[property == ""]) {
             submission[property] = null;
         }
@@ -133,14 +147,16 @@ app.get("/create-recital", (req, res) => {
 });
 
 app.post("/create-recital", async (req, res) => {
-    const {date, start_time, end_time} = req.body;
-    const recital = {
-        date,
+    let {date, start_time, end_time} = req.body;
+    date = Date.parse(date);
+    console.log(date);
+    /*const recital = {
+        date: Date.parse(date),
         start_time,
         end_time
     };
     const inserted = await insertRecital(recital);
-    res.send(inserted);
+    res.send(inserted);*/
 });
 
 app.post("/change-email", (req, res) => {
@@ -152,6 +168,7 @@ app.post("/change-password", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+    req.session.email = null;
 
 });
 

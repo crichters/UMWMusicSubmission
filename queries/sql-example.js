@@ -36,6 +36,43 @@ const recital = {
 	start_time: "12:30:00"
 };
 
+// rsmsdb.updatePassword("password");
+rsmsdb.checkPassword("bar")
+.then(isValid => console.log("Is password valid? " + isValid))
+.catch(err => {
+	console.error('Unable to validate password:', err);
+});;
+//rsmsdb.insertEmail("jkuykend@umw.edu");
+// rsmsdb.insertEmail("mmorley@umw.edu");
+
+rsmsdb.checkEmail("jkuykend@umw.edu")
+.then(isValid => console.log("Is email valid? " + isValid))
+.catch(err => {
+	console.error("Unable to validate email: ", err);
+});
+
+rsmsdb.deleteEmail(1)
+.then(deleted => {
+	console.log("Email deleted? " + deleted);
+	rsmsdb.selectEmails()
+	.then(emails => console.log("Faculty users:", JSON.stringify(emails, null, 4)))
+	.catch(err => console.error("Unable to retrieve emails:", err));
+})
+.catch(err => {
+	console.error("Unable to validate email: ", err);
+});
+
+// rsmsdb.deleteSubmission(4)
+// rsmsdb.updateRecitalStatus(1,true);
+// rsmsdb.updateSubmissionStatus(1, "approved");
+// rsmsdb.updateSubmissionStatus(2, "rejected");
+// rsmsdb.updateSubmissionStatus(3, "approved");
+
+
+// rsmsdb.selectOpenRecitals()
+// .then(openRecitals => {
+// 	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+// 	var recitalId = openRecitals[0].id;
 
 rsmsdb.selectOpenRecitals()
 .then(openRecitals => {
@@ -48,13 +85,22 @@ rsmsdb.selectOpenRecitals()
 	// insert recital
 	rsmsdb.insertRecital(recital);
 
-	// get submissions for recital
-	rsmsdb.selectSubmissionsFor(recitalId).then(subs => {
+// 	// update recital
+// 	rsmsdb.updateRecital(3, recital);
+
+// 	// get submissions for recital
+	rsmsdb.selectSubmissionsFor(1).then(subs => {
 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
 	})
 	.catch(err => {
 		console.error('Unable to find submissions:', err);
 	});
+	// rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
+	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	// })
+	// .catch(err => {
+	// 	console.error('Unable to find submissions:', err);
+	// });
 	
 })
 .catch(err => {
