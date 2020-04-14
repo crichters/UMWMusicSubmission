@@ -266,6 +266,7 @@ function updateRecital(recitalId, recital) {
 };
 
 
+
 /**
  * Helper function to add new password.
  * @param {String} password - the plain-text password to add.
@@ -412,5 +413,5 @@ function updateSubmissionStatus(submission_id, status)
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
+        updateRecital, updatePassword, checkPassword, insertEmail, insertPassword, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};
