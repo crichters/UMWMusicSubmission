@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
-var {config} = require('./config');  // database connection settings in config.js file
+var config = require('./config');  // database connection settings in config.js file
 const db = new Sequelize(`mysql://${config.username}:${config.password}@${config.host}:3306/${config.database}`);
 const saltRounds = 7;
 
