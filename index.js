@@ -11,10 +11,19 @@ const {keys} = require('./config/config');
 
 app.set("port", 3000);
 
+function checkSession(req, res, next) {
+    if(req.session.valid || req.path == "/login" || req.path == "/form") {
+        next();
+    } else {
+        res.redirect("/login");
+    }
+}
+
 app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
+app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
@@ -28,6 +37,7 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
+
     res.sendFile(directory + '/dashboard.html')
 });
 
@@ -58,14 +68,19 @@ app.get("/dashboard-data", async (req, res) => {
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
     const { email_address, password } = req.body;
-    const validEmail = checkEmail(email_address);
-    const validPW = checkPassword(password);
-    console.log(validEmail, validPW);
-    if(valid) {
-        req.session.email = email;
+    let validEmail, validPW;
+    try {
+        validEmail = await checkEmail(email_address);
+    } catch(error) {
+        console.log(error);
+    }
+    //const validPW = await checkPassword(password);
+    if(validEmail) {
+        req.session.valid = true;
         res.redirect("/dashboard");
     } else {
-        res.json({
+        req.session.valid = false;
+        res.send({
             status: "error",
             message: "Invalid email/password combination"
         });
@@ -83,9 +98,7 @@ app.get("/form", (req, res) => {
 
 app.get("/get-recitals", async (req, res) => {
     const recitals = await selectOpenRecitals();
-    console.log(recitals);
     res.json(recitals);
-
 });
 
 app.post("/submit_recital_form", async (req, res) => {
