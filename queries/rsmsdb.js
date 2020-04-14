@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
-var {database} = require('../config/config');  // database connection settings in config.js file
-const db = new Sequelize(`mysql://${database.username}:${database.password}@${database.host}:3306/${database.database}`);
+var config = require('./config');  // database connection settings in config.js file
+const db = new Sequelize(`mysql://${config.username}:${config.password}@${config.host}:3306/${config.database}`);
+const saltRounds = 7;
 
 db
   .authenticate()
@@ -266,7 +267,6 @@ function updateRecital(recitalId, recital) {
 };
 
 
-
 /**
  * Helper function to add new password.
  * @param {String} password - the plain-text password to add.
@@ -413,5 +413,5 @@ function updateSubmissionStatus(submission_id, status)
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword, insertEmail, insertPassword, deleteSubmission,
+        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};
