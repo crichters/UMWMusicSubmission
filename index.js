@@ -1,5 +1,7 @@
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
+
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
     selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
@@ -12,11 +14,12 @@ app.set("port", 3000);
 app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({secret: "secret"}));
 
 const directory = __dirname + '/content';
 
 app.get("/", (req, res) => {
-    res.sendFile(directory + '/template.html');
+    res.sendFile(directory + '/dashboard.html')
 });
 
 //This is a get request that simply returns the login page
@@ -36,7 +39,6 @@ app.get("/dashboard-data", async (req, res) => {
     });
     let submissions = await Promise.all(promises);
     let i = -1;
-    console.log(submissions);
     recitals = recitals.map((recital) => {
         i++;
         return {
@@ -44,13 +46,24 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
-    console.log(recitals);
+    /*let submission_promises = [];
+    recitals.forEach((recital) => {
+        recital.submissions.forEach((submission) => {
+            submission_promises.push(selectSubmissionDetailsFor(submission.id));
+        });
+    });*/
     res.json(recitals);
 });
 
+/*app.delete("/recital", async (req, res) => {
+    const {id} = req.body;
+    const deleted = await 
+});*/
+
 //This get request is used to actually sign the user in.
 app.get("/login", (req, res) => {
-
+    const { email, password } = req.body;
+    
 });
 
 app.get("/form", (req, res) => {
@@ -80,12 +93,14 @@ app.post("/submit_recital_form", async (req, res) => {
     });*/
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     console.log(req.body);
-    collaborators = collaborators.map((c) => {
-        return {
-            name: c.collaborator_name,
-            medium: c.collaborator_medium
-        }
-    });
+    if(collaborators) {
+        collaborators = collaborators.map((c) => {
+            return {
+                name: c.collaborator_name,
+                medium: c.collaborator_medium
+            }
+        });
+    }
     const performer = {
         name,
         medium
@@ -103,6 +118,12 @@ app.post("/submit_recital_form", async (req, res) => {
         techReq: technical_requirements,
         movement
     };
+    for (property in submisssion) {
+        if(submission[property] == '' || submission[property == ""]) {
+            submission[property] = null;
+        }
+    }
+    console.log(submission)
     const response = await insertSubmission(submission, performer, collaborators, recital_date);
     res.sendFile(directory +'/submitted.html');
 });
@@ -111,12 +132,15 @@ app.get("/create-recital", (req, res) => {
 
 });
 
-app.get("/get-submissions", async (req, res) => {
-
-});
-
-app.post("/create-recital", (req, res) => {
-
+app.post("/create-recital", async (req, res) => {
+    const {date, start_time, end_time} = req.body;
+    const recital = {
+        date,
+        start_time,
+        end_time
+    };
+    const inserted = await insertRecital(recital);
+    res.send(inserted);
 });
 
 app.post("/change-email", (req, res) => {
