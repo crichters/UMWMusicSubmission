@@ -413,6 +413,6 @@ function updateSubmissionStatus(submission_id, status)
 
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-        selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
+        selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};

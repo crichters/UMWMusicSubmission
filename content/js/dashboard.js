@@ -189,7 +189,7 @@ function edit_recital(recital_id) {
     submission_values["end_time"] = end_time;
   }
 
-  $.post("/create-recital", submission_values, (data, status, jqXHR) => {
+  $.post("/edit-recital", submission_values, (data, status, jqXHR) => {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
