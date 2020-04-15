@@ -12,7 +12,8 @@ const {keys} = require('./config/config');
 app.set("port", 3000);
 
 function checkSession(req, res, next) {
-    if(req.session.valid || req.path == "/login" || req.path == "/form") {
+    const validRoutes = ["/login", "/form", "/submit_recital_form"]
+    if(req.session.valid || validRoutes.includes(req.path)) {
         next();
     } else {
         res.redirect("/login");
@@ -23,7 +24,7 @@ app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
-app.all("*", checkSession);
+//app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
