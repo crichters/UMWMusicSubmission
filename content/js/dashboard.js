@@ -1,3 +1,5 @@
+recitals = [];
+
 function insert_recital(recital_number, recital_title) {
     var recital_table = `
     <div class="row">
@@ -38,13 +40,36 @@ function insert_recital(recital_number, recital_title) {
                   <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  This needs to pull the recitals and allow edits.
+                <form>
+                <div class="modal-body">  
+                  
+                <div class="form-group row">
+                          <label for="inputRecitalDate" class="col-sm-2 col-form-label">Recital Date</label>
+                          <div class="col-sm-10">
+                            <input class="form-control" id="editRecitalDate" placeholder="Recital Date" type="date">
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="inputStartTime" class="col-sm-2 col-form-label">Start Time</label>
+                          <div class="col-sm-10">
+                            <input class="form-control" id="editStartTime" placeholder="Start Time">
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="inputEndTime" class="col-sm-2 col-form-label">End Time</label>
+                          <div class="col-sm-10">
+                            <input class="form-control" id="editEndTime" placeholder="End Time">
+                          </div>
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary" onClick="">Submit</button>
+                  <button type="button" class="btn btn-primary" onClick="edit_recital(${recital_number})">Submit</button>
                 </div>
+                </form>
               </div>
             </div>
           </div>
@@ -127,9 +152,48 @@ function create_recital() {
     "date": recital_date
   };
 
+  if(recital_date == "" || start_time == "" || end_time == "") {
+    return;
+  }
+
   $.post("/create-recital", submission_values, (data, status, jqXHR) => {
     console.log("Post submitted");
+    console.log(data);
+    console.log(status);
     $('#addRecitalModal').modal('toggle');
+  });
+}
+
+function edit_recital(recital_id) {
+  var recital_date = $('#editRecitalDate').val();
+  var start_time = $('#editStartTime').val();
+  var end_time = $('#editEndTime').val();
+
+  submission_values = {};
+
+  submission_values["id"] = recital_id;
+
+  if(recital_date == "" && start_time == "" && end_time == "") {
+    return;
+  }
+
+  if(recital_date != "") {
+    submission_values["date"] = recital_date;
+  }
+
+  if(start_time != "") {
+    submission_values["start_time"] = start_time;
+  }
+
+  if(end_time != "") {
+    submission_values["end_time"] = end_time;
+  }
+
+  $.post("/create-recital", submission_values, (data, status, jqXHR) => {
+    console.log("Post submitted");
+    console.log(data);
+    console.log(status);
+    $('#editRecitalsModal').modal('toggle');
   });
 }
 
@@ -138,6 +202,7 @@ $(document).ready(function() {
     $.get("/dashboard-data", (data, status) => {
         for(var i=0; i<data.length; i++){
           recital_date = data[i];
+          recitals.push(recital_date);
           insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
           for(var j=0; j<recital_date["submissions"].length; j++){
               submission = recital_date["submissions"][j];
