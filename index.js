@@ -12,7 +12,7 @@ const {keys} = require('./config/config');
 app.set("port", 3000);
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid != undefined || validRoutes.includes(req.path)) {
         next();
@@ -168,9 +168,6 @@ app.delete("/submission", async (req, res) => {
     }
 });
 
-app.get("/create-recital", (req, res) => {
-
-});
 
 app.post("/create-recital", async (req, res) => {
     let {date, start_time, end_time} = req.body;
