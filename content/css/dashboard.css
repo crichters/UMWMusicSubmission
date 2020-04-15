@@ -1,0 +1,15 @@
+caption {
+    caption-side: top;
+    /* background-color: gray;
+    color: white; */
+    /* padding-left: 20px; */
+    font-size: 1.2rem;
+}
+
+.bi-check:hover {
+    fill: green;
+}
+
+.bi-trash-fill:hover {
+    fill: red;
+  }

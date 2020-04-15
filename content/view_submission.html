@@ -1,0 +1,193 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>TEMPLATE PAGE</title>
+    <meta name="description" content="Template Page">
+
+    <!-- Minified Bootstrap CSS Rules-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">
+          <img src="images/UMW-Music-wordmark-e1572294563960.jpg" width="100" height="50" alt="">
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="form.html">Submit</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+              </li>
+            </ul>
+          </div>
+    </nav>
+    <br>
+    <br>
+    <div class="container container-main flex-grow-1">
+      <!-- Main Content Here -->
+      <div class="row">
+        <table class="table" id="submission_details">
+
+            <caption style="font-size: 2rem; color:black;">Submission Details
+
+              <a href="#" data-toggle="tooltip" title="Approve Submission" style="float: right;">
+                  <svg class="bi bi-check" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="gray" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+              </svg></a>
+
+              <a href="#" data-toggle="tooltip" title="Deny Submission" style="float: right;">
+              <svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="gray" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
+              </svg>
+              </a>
+
+            </caption>
+            <caption><a href="#" title="Delete Submission" style="font-size: initial;float: right;">
+              Delete </a></caption>
+
+            <tr>
+                <td>
+                    <b>Name</b><br>
+                    <div id="name"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Email</b><br>
+                    <div id="email"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Recital Date</b><br>
+                    <div id="date"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Performance Medium</b><br>
+                    <div id="medium"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Selection Title</b><br>
+                    <div id="title"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Larger Work</b><br>
+                    <div id="work"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Opus Number / Catalog Number</b><br>
+                    <div id="cat_num"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Movement</b><br>
+                    <div id="movement"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Duration</b><br>
+                    <div id="duration"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Collaborators</b><br>
+                    <div id="collaborators"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Composer Birth Year</b><br>
+                    <div id="com_birth"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Composer Death Year</b><br>
+                    <div id="com_death"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Technical Requirements</b><br>
+                    <div id="tech_req"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Scheduling Requirements</b><br>
+                    <div id="sched_req"></div>
+                </td>
+            </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+    <footer class="page-footer font-small">
+      <div class="container-fluid text-center">
+        <br>
+        <div class="row">
+          <div class="col-md-3">
+            <h5>
+              Twitter@UMW_MUSIC
+            </h5>
+          </div>
+          <div class="col-md-3">
+          <h5>
+            Facebook@UMWMusic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            Insta@umwmusic
+          </h5>
+        </div>
+        <div class="col-md-3">
+          <h5>
+            CONTACT
+          </h5>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-3"></div>
+          <div class="col-md-3"></div>
+          <div class="col-md-3"></div>
+        </div>
+      </div>
+    </footer>
+    <!-- Jquery Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--  Popper JS Required for Dropdown boxes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <!-- Minified Bootstrap JavaScript-->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/view_submission.js"></script>
+
+</body>
+</html>

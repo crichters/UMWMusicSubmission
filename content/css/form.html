@@ -22,7 +22,7 @@
           <img src="images/UMW-Music-wordmark-e1572294563960.jpg" width="100" height="50" alt="">
         </a>
 
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div class="navbar" id="navbarText">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item">
                 <a class="nav-link" href="form.html">Submit</a>
@@ -37,166 +37,112 @@
     <br>
     <div class="container container-main flex-grow-1">
 
-      <div class="row">
         <!-- Header -->
-        <div class="col-md-6">
+        <div class="row">
           <h4>Recital Submission Form</h5>
         </div>
 
         <!-- Form Content Area -->
-        <form class="col-md-12" id="recital_form">
+        <form id="recital_form">
 
           <!-- Section 1: Name, Email Address -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="name" class="required">
-                <b>Name: </b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="name" name="name" value="" required="required">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for="name"><b>Name: </b></label>
+              <input class="form-control" type="text" id="name" name="name" value="" required="required">
             </div>
 
-
-            <div class="col-md-2">
-              <label for="email" class="required">
-                <b>Email Address: </b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="email" name="email" required="required">
+            <div class="form-group col-md-6">
+              <label for="email"><b>Email Address: </b></label>
+              <input class="form-control" type="text" id="email" name="email" required="required">
             </div>
           </div>
 
           <!-- Section 2: Recital Date, Performance Duration -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
               <label for="date"><b>Date of Recital: </b></label>
+              <select id="date" class="form-control">
+                <option selected>Choose...</option>
+                <option>...</option>
+              </select>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <select class="form-control d-inline-block" style="width: auto;" id="date" name="date">
-                </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <label for="duration" class="required">
-                <b>Performance Duration: </b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="duration" name="duration" required="required"> (Minutes)
+
+            <div class="form-group col-md-6">
+              <label for="duration"><b>Performance Duration: </b></label>
+              <input class="form-control" type="text" id="duration" name="duration" required="required"> (Minutes)
             </div>
           </div>
 
           <!-- Section 3, Performance Medium -->
-          <div class="row top-buffer" >
-            <div class="col-md-2">
-              <label for="" class="required">
-                <b>Performance Medium:</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="medium" name="medium" required="required">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for=""><b>Performance Medium:</b></label>
+              <input class="form-control" type="text" id="medium" name="medium" required="required">
             </div>
           </div>
 
           <!-- Section 4, Selection Title, Larger Work Title -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="Selection_Title" class="required">
-                <b>Title of Selection: </b>
-              </label>
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for="Selection_Title"><b>Title of Selection: </b></label>
+              <input class="form-control" type="text" id="selection_title" name="selection_title" value="" required="required">
             </div>
-            <div class="col-md-4">
-              <input type="text" id="selection_title" name="selection_title" value="" required="required">
-            </div>
-            <div class="col-md-2">
-              <label for="Selection_Title">
-                <b>Title of Larger Work: </b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="selection_work" name="selection_work" value="">
+
+            <div class="form-group col-md-6">
+              <label for="Selection_Title"><b>Title of Larger Work: </b></label>
+              <input class="form-control" type="text" id="selection_work" name="selection_work" value="">
             </div>
           </div>
 
           <!-- Section 5, Catalog Number -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="">
-                <b>Opus Number / Catalog Number</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="catalog_number" name="catalog_number">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for=""><b>Opus Number / Catalog Number</b></label>
+              <input class="form-control" type="text" id="catalog_number" name="catalog_number">
             </div>
 
-            <div class="col-md-2">
-              <label for="">
-                <b>Movement:</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="movement" name="movement">
+            <div class="form-group col-md-6">
+              <label for=""><b>Movement:</b></label>
+              <input class="form-control" type="text" id="movement" name="movement">
             </div>
           </div>
 
           <!-- Section 6, Composer, Composer Birth Year -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="">
-                <b>Composer</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="composer_name" name="composer">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for=""><b>Composer</b></label>
+              <input class="form-control" type="text" id="composer_name" name="composer">
             </div>
 
-            <div class="col-md-2">
-              <label for="">
-                <b>Composer Birth Year:</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="composer_birth" name="birth_year">
+            <div class="form-group col-md-6">
+              <label for=""><b>Composer Birth Year:</b></label>
+              <input class="form-control" type="text" id="composer_birth" name="birth_year">
             </div>
           </div>
 
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="">
-                <b>Composer Death Year</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="composer_death" name="death_year">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for=""><b>Composer Death Year</b></label>
+              <input class="form-control" type="text" id="composer_death" name="death_year">
             </div>
           </div>
 
           <!-- Section 6 Scheduling Requirements, Technical Requirements -->
-          <div class="row top-buffer">
-            <div class="col-md-2">
-              <label for="">
-                <b>Scheduling Requirements</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="schedule_requirements" name="schedule_requirements">
+          <div class="form-row top-buffer">
+            <div class="form-group col-md-6">
+              <label for=""><b>Scheduling Requirements</b></label>
+              <input class="form-control" type="text" id="schedule_requirements" name="schedule_requirements">
             </div>
 
-            <div class="col-md-2">
-              <label for="">
-                <b>Technical Requirements</b>
-              </label>
-            </div>
-            <div class="col-md-4">
-              <input type="text" id="technical_requirements" name="technical_requirements">
+            <div class="form-group col-md-6">
+              <label for=""><b>Technical Requirements</b></label>
+              <input class="form-control" type="text" id="technical_requirements" name="technical_requirements">
             </div>
           </div>
 
           <!-- Section 8, Collaborators -->
-          <div class="row top-buffer">
+          <div class="form-row top-buffer">
             <div class="col-md-4"></div>
             <div class="col-md-4">
               <div class="row">
@@ -220,20 +166,13 @@
 
           <div class="row top-buffer">
             <div class="col-md-4"></div>
-            <div class="col-md-4"><button class="btn btn-primary">Submit Recital</button></div>
+            <div class="col-md-4"><button onclick="send_form_data(); return false;" class="btn btn-primary">Submit Recital</button></div>
             <div class="col-md-4"></div>
           </div>
         </form>
         <!-- Submission Button -->
-         
-        </div>
-        
+                 
       </div>
-
-  
-
-    </div>
-
 
     
     <footer class="page-footer font-small">
