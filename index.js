@@ -2,8 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission,
-    selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
+    selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -12,9 +12,9 @@ const {keys} = require('./config/config');
 app.set("port", 3000);
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials"]
     const valid = validRoutes.includes(req.path);
-    if(req.session.valid != undefined || validRoutes.includes(req.path)) {
+    if(req.session.valid || validRoutes.includes(req.path)) {
         next();
     } else {
         res.redirect("/login");
@@ -25,7 +25,7 @@ app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
-app.all("*", checkSession);
+//app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
@@ -42,10 +42,6 @@ app.get("/dashboard", (req, res) => {
 
     res.sendFile(directory + '/dashboard.html')
 });
-
-app.get("/dashboard.html", (req, res) => {
-    res.sendFile(directory + '/dashboard.html')
-})
 
 app.get("/dashboard-data", async (req, res) => {
     let recitals = await selectOpenRecitals();
@@ -72,6 +68,7 @@ app.get("/dashboard-data", async (req, res) => {
 
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
+    console.log(req.body)
     const { email_address, password } = req.body;
     let validEmail, validPW;
     try {
@@ -79,8 +76,12 @@ app.post("/login", async (req, res) => {
     } catch(error) {
         console.log(error);
     }
-    //const validPW = await checkPassword(password);
-    if(validEmail) {
+    try {
+        validPW = await checkPassword(password);
+    } catch (err) {
+        console.log(err);
+    }
+    if(validEmail && validPW) {
         req.session.valid = true;
         res.redirect("/dashboard");
     } else {
@@ -93,7 +94,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/credentials", async (req, res) => {
-    const email = await insertEmail("simeon.neisler@gmail.com");
     const pw = await insertPassword("Password");
 });
 
@@ -185,16 +185,66 @@ app.post("/create-recital", async (req, res) => {
     }
 });
 
-app.post("/change-email", (req, res) => {
-
+app.post("/edit-recital", async (req, res) => {
+    const {id, date, start_time, end_time} = req.body;
+    const recitals = await selectOpenRecitals();
+    const newRecital = {date, start_time, end_time};
+    for(let i = 0; i < recitals.length; i++) {
+        recital = recitals[i]
+        console.log(recital)
+        if(recital.id == id) {
+            if(date == null || date == undefined) {
+                newRecital.date = recital.date
+            }
+            if(start_time == null || start_time == undefined) {
+                newRecital.start_time = recital.startTime
+            }
+            if(end_time == null || end_time == undefined) {
+                console.log(recital.end_time)
+                newRecital.end_time = recital.endTime
+            }
+            break;
+        }
+    }
+    const updated = updateRecital(id, newRecital);
 });
 
-app.post("/change-password", (req, res) => {
+app.get("/emails", async (req, res) => {
+    const emails = await selectEmails();
+    res.json(emails);
+});
 
+app.post("/email", async (req, res) => {
+    const {email} = req.body;
+    const inserted = await insertEmail(email);
+})
+
+app.delete("/email", async (req, res) => {
+    const {email_id} = req.body;
+    const emails = await selectEmails();
+    if(emails.length > 1) {
+        const deleted = await deleteEmail(email_id);
+    } else {
+        res.json({status: "error", message: "Need more than one email before deleting an email"});
+    }
+});
+
+app.post("/change-password", async (req, res) => {
+    const {old_password, new_password} = req.body;
+    if(checkPassword(old_password)) {
+        try {
+            const updated = await updatePassword(new_password);
+            res.send(true);
+        } catch {
+            res.send(false);
+        }
+    } else {
+        res.send(false);
+    }
 });
 
 app.get("/logout", (req, res) => {
-    req.session.email = null;
+    req.session.valid = false;
     res.redirect("/login");
 });
 
