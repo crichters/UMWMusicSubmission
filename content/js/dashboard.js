@@ -2,7 +2,19 @@ function insert_recital(recital_number, recital_title) {
     var recital_table = `
     <div class="row">
     <table class="table" id="recital_${recital_number}">
-        <caption>${recital_title}</caption>
+        <caption>${recital_title}
+
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-light btn-sm active">
+          <input type="radio" title="Open Recitals" id="openRecital" autocomplete="off" checked> Open
+          </label>
+          <label class="btn btn-light btn-sm">
+          <input type="radio" title="Close Recitals" id="closeRecital" autocomplete="off"> Closed
+          </label>
+          </div>
+
+
+        </caption>
         <thead>
             <tr>
                 <th scope="col">Status</th>
