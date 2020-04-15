@@ -116,6 +116,23 @@ function make_test_recitals() {
     }
 }
 
+function create_recital() {
+  var recital_date = $('#inputRecitalDate').val();
+  var start_time = $('#inputStartTime').val();
+  var end_time = $('#inputEndTime').val();
+
+  submission_values = {
+    "start_time": start_time,
+    "end_time": end_time,
+    "date": recital_date
+  };
+
+  $.post("/create-recital", submission_values, (data, status, jqXHR) => {
+    console.log("Post submitted");
+    $('#addRecitalModal').modal('toggle');
+  });
+}
+
 $(document).ready(function() {
 
     $.get("/dashboard-data", (data, status) => {
@@ -130,7 +147,5 @@ $(document).ready(function() {
           }
         }
       });
-
-     make_test_recitals();
 
 });
