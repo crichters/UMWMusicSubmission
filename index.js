@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
+const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission,
     selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
@@ -13,7 +13,8 @@ app.set("port", 3000);
 
 function checkSession(req, res, next) {
     const validRoutes = ["/login", "/form", "/submit_recital_form"]
-    if(req.session.valid || validRoutes.includes(req.path)) {
+    const valid = validRoutes.includes(req.path);
+    if(req.session.valid != undefined || validRoutes.includes(req.path)) {
         next();
     } else {
         res.redirect("/login");
@@ -24,7 +25,7 @@ app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
-//app.all("*", checkSession);
+app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
@@ -42,6 +43,10 @@ app.get("/dashboard", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
 });
 
+app.get("/dashboard.html", (req, res) => {
+    res.sendFile(directory + '/dashboard.html')
+})
+
 app.get("/dashboard-data", async (req, res) => {
     let recitals = await selectOpenRecitals();
     let promises = [];
@@ -57,7 +62,6 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
-    console.log(recitals);
     res.json(recitals);
 });
 
@@ -103,7 +107,7 @@ app.get("/get-recitals", async (req, res) => {
 });
 
 app.post("/submit_recital_form", async (req, res) => {
-    /*if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
     {
       return res.json({"responseError" : "Please select captcha first"});
     }
@@ -116,7 +120,7 @@ app.post("/submit_recital_form", async (req, res) => {
       if(body.success !== undefined && !body.success) {
         return res.json({"responseError" : "Failed captcha verification"});
       }
-    });*/
+    });
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     if(collaborators) {
         collaborators = collaborators.map((c) => {
@@ -128,7 +132,6 @@ app.post("/submit_recital_form", async (req, res) => {
     } else {
         collaborators = []
     }
-    console.log(collaborators);
     const performer = {
         name,
         medium
@@ -151,9 +154,18 @@ app.post("/submit_recital_form", async (req, res) => {
             submission[property] = null;
         }
     }
-    console.log(submission)
     const response = await insertSubmission(submission, performer, collaborators, recital_date);
     res.sendFile(directory +'/submitted.html');
+});
+
+app.delete("/submission", async (req, res) => {
+    const { submission_id } = req.body;
+    let deleted;
+    try {
+        deleted = await deleteSubmission(submission_id);
+    } catch(err) {
+        res.send(err);
+    }
 });
 
 app.get("/create-recital", (req, res) => {
@@ -162,15 +174,18 @@ app.get("/create-recital", (req, res) => {
 
 app.post("/create-recital", async (req, res) => {
     let {date, start_time, end_time} = req.body;
-    date = Date.parse(date);
-    console.log(date);
-    /*const recital = {
-        date: Date.parse(date),
+    const recital = {
+        date,
         start_time,
         end_time
     };
-    const inserted = await insertRecital(recital);
-    res.send(inserted);*/
+    let inserted;
+    try {
+        inserted = await insertRecital(recital);
+        res.redirect("/dashboard");
+    } catch (err) {
+        res.send(err);
+    }
 });
 
 app.post("/change-email", (req, res) => {
@@ -183,7 +198,7 @@ app.post("/change-password", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session.email = null;
-
+    res.redirect("/login");
 });
 
 app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
