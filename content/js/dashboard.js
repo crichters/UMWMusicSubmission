@@ -160,7 +160,7 @@ function create_recital() {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
-    $('#addRecitalModal').modal('toggle');
+    // location.reload();
   });
 }
 
@@ -193,7 +193,7 @@ function edit_recital(recital_id) {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
-    $('#editRecitalsModal').modal('toggle');
+    // location.reload();
   });
 }
 

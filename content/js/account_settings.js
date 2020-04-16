@@ -1,12 +1,18 @@
+var emails = [];
+
+
 // Function to Add Email
 $('#email_form').submit((e) => {
     e.preventDefault();
     
-    var email_address = $('#new_email').val();
-
-    $.post("/add_email", email_address, (data, success) => {
+    var request = {
+        "email_address":$('#new_email').val()
+    };
+    
+    $.post("/email", request, (data, success) => {
         console.log(data);
         console.log(success);
+        location.reload();
     });
     
 });
@@ -49,23 +55,24 @@ function test_emails() {
     }
 }
 
-function append_email(email_address) {
+function append_email(email_address, email_id) {
     var table_row = `
     <tr>
       <td>${email_address}</td>
-      <td><a href="#" onclick="delete_email(${email_address})">Delete</a></td>
+      <td><a href="#" onclick="delete_email(${email_id})">Delete</a></td>
     </tr>`;
 
     $('#email_table').append(table_row);
 }
 
-function delete_email(email_address) {
-    console.log(email_address);
+function delete_email(email_id) {
+    console.log(email_id);
 
 
-    $.post("/delete_email", email_address, (data, status) => {
+    $.post("/delete_email", email_id, (data, status) => {
         console.log(data);
         console.log(success);
+        location.reload();
     });
 }
 
@@ -75,8 +82,7 @@ $(document).ready(function() {
     $.get("/emails", (data, status) => {
         for(var i=0; i<data.length; i++){
           console.log(data[i]);
+          append_email(data[i]["email"], data[i]["id"]);
         }
       });
-
-      test_emails();
     });
