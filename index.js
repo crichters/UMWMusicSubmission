@@ -108,20 +108,20 @@ app.get("/get-recitals", async (req, res) => {
 });
 
 app.post("/submit_recital_form", async (req, res) => {
-    // if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
-    // {
-    //   return res.json({"responseError" : "Please select captcha first"});
-    // }
+    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    {
+      return res.json({"responseError" : "Please select captcha first"});
+    }
   
-    // const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
   
-    // request(verificationURL, (error,response,body) => {
-    //   body = JSON.parse(body);
+    request(verificationURL, (error,response,body) => {
+      body = JSON.parse(body);
   
-    //   if(body.success !== undefined && !body.success) {
-    //     return res.json({"responseError" : "Failed captcha verification"});
-    //   }
-    // });
+      if(body.success !== undefined && !body.success) {
+        return res.json({"responseError" : "Failed captcha verification"});
+      }
+    });
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     if(collaborators) {
         collaborators = collaborators.map((c) => {
@@ -194,22 +194,22 @@ app.post("/create-recital", async (req, res) => {
 });
 
 app.post("/edit-recital", async (req, res) => {
-    const {id, date, start_time, end_time} = req.body;
+    let {id, date, start_time, end_time} = req.body;
     const recitals = await selectOpenRecitals();
     const newRecital = {date, start_time, end_time};
     for(let i = 0; i < recitals.length; i++) {
         recital = recitals[i]
-        console.log(recital)
         if(recital.id == id) {
             if(date == null || date == undefined) {
-                newRecital.date = recital.date
+                date = new Date(recital.date);
+                date = date.toISOString().split('T')[0];
+                newRecital.date = date;
             }
             if(start_time == null || start_time == undefined) {
-                newRecital.start_time = recital.startTime
+                newRecital.start_time = recital.startTime.split(" ")[0]
             }
             if(end_time == null || end_time == undefined) {
-                console.log(recital.end_time)
-                newRecital.end_time = recital.endTime
+                newRecital.end_time = recital.endTime.split(" ")[0]
             }
             break;
         }
