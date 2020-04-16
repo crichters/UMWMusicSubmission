@@ -107,6 +107,13 @@ app.get("/get-recitals", async (req, res) => {
     res.json(recitals);
 });
 
+app.post("/get-submission-by-id", async (req, res) => {
+    var submissionId = req.body["id"];
+    console.log(req.body);
+    results = await selectSubmissionDetailsFor(submissionId);
+    res.send(results);
+})
+
 app.post("/submit_recital_form", async (req, res) => {
     // if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
     // {
