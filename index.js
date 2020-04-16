@@ -44,6 +44,10 @@ app.get("/dashboard", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
 });
 
+app.get("/account-settings", (req, res) => {
+    res.sendFile(directory + '/account_settings.html');
+});
+
 app.get("/dashboard-data", async (req, res) => {
     let recitals = await selectUnarchivedRecitals();
     let promises = [];
