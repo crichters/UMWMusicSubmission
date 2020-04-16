@@ -65,6 +65,7 @@ async function selectSubmissionsFor(recitalId) {
                 "sub.scheduling_req AS schedulingReq, " +
                 "sub.tech_req AS techReq, " +
                 "sub.movement, " +
+                "sub.status," +
                 "recital.date, "+
                 "performer.name, " +
                 "performer.medium " + 

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, selectUnarchivedRecitals, 
-    updateRecitalStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -45,7 +45,7 @@ app.get("/dashboard", (req, res) => {
 });
 
 app.get("/dashboard-data", async (req, res) => {
-    let recitals = await selectOpenRecitals();
+    let recitals = await selectUnarchivedRecitals();
     let promises = [];
     recitals.forEach((recital) => {
         promises.push(selectSubmissionsFor(recital.id));
@@ -108,20 +108,20 @@ app.get("/get-recitals", async (req, res) => {
 });
 
 app.post("/submit_recital_form", async (req, res) => {
-    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
-    {
-      return res.json({"responseError" : "Please select captcha first"});
-    }
+    // if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    // {
+    //   return res.json({"responseError" : "Please select captcha first"});
+    // }
   
-    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+    // const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
   
-    request(verificationURL, (error,response,body) => {
-      body = JSON.parse(body);
+    // request(verificationURL, (error,response,body) => {
+    //   body = JSON.parse(body);
   
-      if(body.success !== undefined && !body.success) {
-        return res.json({"responseError" : "Failed captcha verification"});
-      }
-    });
+    //   if(body.success !== undefined && !body.success) {
+    //     return res.json({"responseError" : "Failed captcha verification"});
+    //   }
+    // });
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     if(collaborators) {
         collaborators = collaborators.map((c) => {
@@ -211,9 +211,18 @@ app.post("/edit-recital", async (req, res) => {
 });
 
 app.post("/update-recital-status", async (req, res) => {
-    const { recitalId, closed } = req.body;
-    const closed = await updateRecitalStatus(recitalId, closed);
-    res.send(closed);
+    var recitalId = req.body["recital_id"];
+    var closed = req.body["open"];
+    const isclosed = await updateRecitalStatus(recitalId, closed == "false");
+    res.send(isclosed);
+});
+
+app.post("/update-submission-status", async (req, res) => {
+
+    var submission_id = req.body["submission_id"];
+    var status = req.body["submission_status"];
+    const ischanged = await updateSubmissionStatus(submission_id, status);
+    res.send(ischanged);
 });
 
 app.get("/emails", async (req, res) => {
