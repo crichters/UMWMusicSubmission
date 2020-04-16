@@ -145,7 +145,7 @@ function insert_recital_submission(recital_number, status, summary, link, id) {
             </a>
         </th>
         <td>${summary}</td>
-        <td><a type="button" href="javascript:void(0)" data-toggle="modal" data-target="#deleteRecitalModal">Delete</a> <a href="${link}">View</a></td>
+        <td><a type="button" href="javascript:void(0)" data-toggle="modal" data-target="#deleteRecitalModal" onclick="delete_submission(${id});">Delete</a> <a href="${link}">View</a></td>
         <td></td>
     </tr>
     `;
@@ -228,6 +228,15 @@ function edit_recital(recital_id) {
     console.log(data);
     console.log(status);
     // location.reload();
+  });
+}
+
+function delete_submission(submission_id) {
+  submission_values = {submission_id};
+  $.post("/delete-submission", submission_values, (data, status, jqXHR) => {
+    console.log(status);
+    console.log(data);
+    location.reload();
   });
 }
 

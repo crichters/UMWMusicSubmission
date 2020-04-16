@@ -159,6 +159,13 @@ app.post("/submit_recital_form", async (req, res) => {
     res.sendFile(directory +'/submitted.html');
 });
 
+app.post("/delete-submission", async (req, res) => {
+    submission_id = req.body["submission_id"];
+    console.log("Deleting:" + submission_id);
+    var deleted = await deleteSubmission(submission_id);
+    res.send(deleted);
+});
+
 app.delete("/submission", async (req, res) => {
     const { submission_id } = req.body;
     let deleted;
