@@ -3,7 +3,8 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
-    selectCollaboratorsFor, selectUnarchivedRecitals, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    selectCollaboratorsFor, selectUnarchivedRecitals, 
+    updateRecitalStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -207,6 +208,12 @@ app.post("/edit-recital", async (req, res) => {
         }
     }
     const updated = updateRecital(id, newRecital);
+});
+
+app.post("/update-recital-status", async (req, res) => {
+    const { recitalId, closed } = req.body;
+    const closed = await updateRecitalStatus(recitalId, closed);
+    res.send(closed);
 });
 
 app.get("/emails", async (req, res) => {
