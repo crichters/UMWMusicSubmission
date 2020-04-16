@@ -26,7 +26,7 @@ app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
-//app.all("*", checkSession);
+app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
@@ -222,6 +222,7 @@ app.post("/edit-recital", async (req, res) => {
         }
     }
     const updated = updateRecital(id, newRecital);
+    res.send(updated);
 });
 
 app.post("/update-recital-status", async (req, res) => {
