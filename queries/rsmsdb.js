@@ -101,6 +101,7 @@ async function selectSubmissionDetailsFor(submissionId) {
                     "sub.catalog_num AS catalogNum," +
                     "sub.scheduling_req AS schedulingReq, " +
                     "sub.tech_req AS techReq, " +
+                    "sub.status, " +
                     "sub.movement, " +
                     "recital.date, " +
                     "perf.name," +

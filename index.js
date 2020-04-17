@@ -27,7 +27,7 @@ app.use(express.static('content'));
 app.use(bodyParser.json({type: "application/json"}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
-//app.all("*", checkSession);
+app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
@@ -43,6 +43,10 @@ app.get("/login", (req, res) => {
 app.get("/dashboard", (req, res) => {
 
     res.sendFile(directory + '/dashboard.html')
+});
+
+app.get("/account-settings", (req, res) => {
+    res.sendFile(directory + '/account_settings.html');
 });
 
 app.get("/dashboard-data", async (req, res) => {
@@ -107,6 +111,13 @@ app.get("/get-recitals", async (req, res) => {
     const recitals = await selectOpenRecitals();
     res.json(recitals);
 });
+
+app.post("/get-submission-by-id", async (req, res) => {
+    var submissionId = req.body["id"];
+    console.log(req.body);
+    results = await selectSubmissionDetailsFor(submissionId);
+    res.send(results);
+})
 
 app.post("/submit_recital_form", async (req, res) => {
     console.log(req.body);
@@ -218,6 +229,7 @@ app.post("/edit-recital", async (req, res) => {
         }
     }
     const updated = updateRecital(id, newRecital);
+    res.send(updated);
 });
 
 app.post("/update-recital-status", async (req, res) => {

@@ -194,7 +194,7 @@ function create_recital() {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
-    // location.reload();
+    location.reload();
   });
 }
 
@@ -227,7 +227,7 @@ function edit_recital(recital_id) {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
-    // location.reload();
+    location.reload();
   });
 }
 
@@ -252,7 +252,7 @@ $(document).ready(function() {
           for(var j=0; j<recital_date["submissions"].length; j++){
               submission = recital_date["submissions"][j];
               var summary = `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`;
-              var link = `/view_submission.html?name=${submission["name"]}&medium=${submission["medium"]}&title=${submission["title"]}&work=${submission["largerWork"]}`;
+              var link = `/view_submission.html?id=${submission["id"]}`;
               insert_recital_submission(recital_date["id"], submission["status"], summary, link, submission["id"]);
           }
         }
