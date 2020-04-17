@@ -16,7 +16,7 @@ $("form").submit((event) => {
     return false;
 
   } else {
-
+    console.log($("#g-recaptcha-response").val() === "");
     var recital_form = document.forms["recital_form"];
     var submission_values = {};
 
@@ -41,7 +41,7 @@ $("form").submit((event) => {
     // Send Post Request
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
         console.log("Posted successfully");
-        window.location.href = "/submitted.html";
+        // window.location.href = "/submitted.html";
     }); 
   }
 });

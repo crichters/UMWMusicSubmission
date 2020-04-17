@@ -65,6 +65,7 @@ async function selectSubmissionsFor(recitalId) {
                 "sub.scheduling_req AS schedulingReq, " +
                 "sub.tech_req AS techReq, " +
                 "sub.movement, " +
+                "sub.status," +
                 "recital.date, "+
                 "performer.name, " +
                 "performer.medium " + 
@@ -100,6 +101,7 @@ async function selectSubmissionDetailsFor(submissionId) {
                     "sub.catalog_num AS catalogNum," +
                     "sub.scheduling_req AS schedulingReq, " +
                     "sub.tech_req AS techReq, " +
+                    "sub.status, " +
                     "sub.movement, " +
                     "recital.date, " +
                     "perf.name," +
@@ -383,9 +385,9 @@ async function deleteEmail(emailId) {
  */
 function deleteSubmission(submission_id)
 {
-  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
-  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
   db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
 
 };
 
@@ -413,6 +415,6 @@ function updateSubmissionStatus(submission_id, status)
 
 
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
-        selectCollaboratorsFor, selectUnarchivedRecitals, insertRecital, insertSubmission,
-        updateRecital, updatePassword, checkPassword, insertEmail, deleteSubmission,
+        selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
+        updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail};

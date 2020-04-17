@@ -1,3 +1,5 @@
+sub_status ="";
+
 $.urlParam = function(name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null){
@@ -8,27 +10,81 @@ $.urlParam = function(name) {
     }
 }
 
-function fill_table() {
+function fill_table(data) {
 
-    $("#name").append($.urlParam("name"));
-    $("#email").append($.urlParam("email"));
-    $("#date").append($.urlParam("date"));
-    $("#medium").append($.urlParam("medium"));
-    $("#title").append($.urlParam("title"));
-    $("#work").append($.urlParam("work"));
-    $("#cat_num").append($.urlParam("cat_num"));
-    $("#movement").append($.urlParam("movement"));
-    $("#duration").append($.urlParam("duration"));
-    $("#collaborators").append($.urlParam("collaborators"));
-    $("#com_birth").append($.urlParam("com_birth"));
-    $("#com_death").append($.urlParam("com_death"));
-    $("#tech_req").append($.urlParam("tech_req"));
-    $("#sched_req").append($.urlParam("sched_req"));
+    $("#name").append(data["name"]);
+    $("#email").append(data["email"]);
+    $("#date").append(data["date"]);
+    $("#medium").append(data["medium"]);
+    $("#title").append(data["title"]);
+    $("#work").append(data["largerWork"]);
+    $("#cat_num").append(data["catalogNum"]);
+    $("#movement").append(data["movement"]);
+    $("#duration").append(data["duration"] + " minutes");
+    $("#collaborators").append(data[""]);
+    $("#com_birth").append(data["composerBirthYear"]);
+    $("#com_death").append(data["composerDeathYear"]);
+    $("#tech_req").append(data["techReq"]);
+    $("#sched_req").append(data["schedulingReq"]);
 }
+
+function set_submission_status(submission_id, submission_status) {
+    submission_values = {submission_id, submission_status};
+    $.post("/update-submission-status", submission_values, (data, status, jqXHR) =>{
+      console.log(data);
+      console.log(status);
+      location.reload();
+    });
+  }
+
+  function delete_submission(submission_id) {
+    submission_values = {submission_id};
+    $.post("/delete-submission", submission_values, (data, status, jqXHR) => {
+      console.log(status);
+      console.log(data);
+      window.location.replace("/dashboard");
+    });
+  }
+
+$('#trash').click(() => {
+    set_submission_status($.urlParam("id"), ((sub_status == "denied") ? "unreviewed" : "denied"));
+});
+
+$('#check').click(() => {
+    set_submission_status($.urlParam("id"), ((sub_status == "approved") ? "unreviewed" : "approved"));
+});
+
+$('#deleteButton').click(() => {
+    delete_submission($.urlParam("id"));
+});
 
 $(document).ready(() => {
     console.log("Ready!");
+    id = $.urlParam("id");
+    submission_values = {id};
+    $.post(`/get-submission-by-id`, submission_values, (data, status, jqXHR) => {
+        
+        for(const property in data[0]) {
+            if(data[0][property] == null) {
 
-    console.log($.urlParam("name"));
-    fill_table();
+                data[0][property] = "<i>Not Specified.</i>";
+            }
+        }
+        if(data[0]["status"] == "approved") {
+            sub_status = "approved"
+            $('#check').attr("fill", "green");
+            $('#trash').attr("fill", "gray");
+
+        } else if(data[0]["status"] == "denied") {
+            sub_status = "denied"
+            $('#check').attr("fill", "gray");
+            $('#trash').attr("fill", "red");
+        } else {
+            sub_status = "unreviewed"
+            $('#check').attr("fill", "gray");
+            $('#trash').attr("fill", "gray");
+        }
+        fill_table(data[0]);
+        console.log(data);
+    });
 });

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>TEMPLATE PAGE</title>
+    <title>Account Settings</title>
     <meta name="description" content="Template Page">
 
     <!-- Minified Bootstrap CSS Rules-->
@@ -51,7 +51,75 @@
     <br>
     <div class="container container-main flex-grow-1">
       <!-- Main Content Here -->
-    </div>
+      <div class="row">
+          <h4>
+              Account Settings
+          </h4>
+      </div>
+      <br><br>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <h5>Manage User Emails</h5>
+          </div>
+          <br>
+          <div class="row">
+            <form id="email_form">
+              <div class="form-group row">
+                <div class="col-md-8">
+                  <input class="form-control" id="new_email" placeholder="Enter New User Email" type="email" required="required">
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-secondary">Submit</button>
+                </div>
+            
+              </div>
+            </form>
+          </div>
+          <br>
+          <div class="row">
+            <table class="table" id="email_table" style="width:100%;">
+              <thead>
+                <tr>
+                  <th scope="col">Email</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+          <div class="row">
+            <h5>Change Password</h5>
+          </div>
+          <br>
+          <form id="password_form">
+            <div class="form-group row">
+              <label for="old_password" class="form-label">Current Password</label>
+              <input class="form-control" id="old_password" placeholder="Enter Current Password" type="password" required="required">
+            </div>
+            <div class="form-group row">
+              <label for="new_password" class="form-label">New Password</label>
+              <input class="form-control" id="new_password" placeholder="Enter New Password" type="password" required="required">
+            </div>
+            <div class="form-group row">
+              <label for="new_password2" class="form-label">Confirm New Password</label>
+              <input class="form-control" id="new_password2" placeholder="Enter New Password" type="password" required="required">
+            </div>
+            <div class="form-group row">
+              <button class="btn btn-secondary" type="submit">Submit</button>
+            </div>
+            <div class="row" id="response"></div>
+          </form>
+
+        </div>
+      </div>
+
+      
+
+
+  </div>
 
 
 
@@ -94,6 +162,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/account_settings.js"></script>
 
 </body>
 </html>
