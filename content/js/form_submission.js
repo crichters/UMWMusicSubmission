@@ -6,6 +6,10 @@
 var collaborator_index = 0;
 var collaborator_list = [];
 
+function recaptchaCallback() {
+  $('#submit').removeAttr('disabled');
+}
+
 // Function for sending form data to Express Backend
 // Sends POST request containing a map to /submit_recital_form
 $("form").submit((event) => {
@@ -35,7 +39,7 @@ $("form").submit((event) => {
 
     // Get the recital date from the selection box and add that to the map
     submission_values["recital_date"] = $("#date option:selected").attr('id');
-
+    submission_values.captcha = $("#g-recaptcha-response").val();
     submission_values["collaborators"] = get_collaborators();
 
     // Send Post Request

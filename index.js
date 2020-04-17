@@ -100,7 +100,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/credentials", async (req, res) => {
+    const email = await insertEmail("simeon.neisler@gmail.com");
     const pw = await insertPassword("Password");
+    console.log("Credentials added");
+    res.redirect("/login");
 });
 
 app.get("/form", (req, res) => {
@@ -120,14 +123,13 @@ app.post("/get-submission-by-id", async (req, res) => {
 })
 
 app.post("/submit_recital_form", async (req, res) => {
-    console.log(req.body);
-    console.log(req.params)
-    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    console.log(req.body)
+    if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
         return res.json({"responseError" : "Please select captcha first"});
     }
   
-    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
   
     request(verificationURL, (error,response,body) => {
       body = JSON.parse(body);
