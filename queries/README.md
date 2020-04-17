@@ -13,7 +13,7 @@ const database = {
     port: "3306"
 };
 
-module.exports = database;
+module.exports = {config: database};
 ```
 
 ## Database Creation
