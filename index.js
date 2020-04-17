@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const request = require('request');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, selectUnarchivedRecitals, 
@@ -108,9 +109,11 @@ app.get("/get-recitals", async (req, res) => {
 });
 
 app.post("/submit_recital_form", async (req, res) => {
+    console.log(req.body);
+    console.log(req.params)
     if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
     {
-      return res.json({"responseError" : "Please select captcha first"});
+        return res.json({"responseError" : "Please select captcha first"});
     }
   
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
