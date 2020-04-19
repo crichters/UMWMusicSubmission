@@ -61,13 +61,18 @@ function archiveRecital(recitalId) {
  * @param {int} recitalId - the id of the recital to delete.
  */
 async function deleteRecital(recitalId) {
-  db.query(`DELETE FROM performer WHERE id IN 
-              (SELECT performer_id FROM submission_performers AS perfs 
-                  JOIN submission AS sub
-                  ON sub.id = perfs.submission_id 
-                WHERE recital_id = ${recitalId});`);
-  db.query(`DELETE FROM submission WHERE recital_id = ${recitalId};`);
-  db.query(`DELETE FROM recital WHERE id = ${recitalId};`);
+  db.query(`DELETE FROM recital WHERE id = ${recitalId};`)
+  .then(() => cleanPerformers());
+};
+
+
+/**
+ * Helper function that deletes dangling performers
+ * that do not appear in any submissions.
+ */
+function cleanPerformers() {
+  db.query(`DELETE FROM performer WHERE NOT EXISTS 
+              (SELECT performer_id FROM submission_performers);`);
 };
 
 
@@ -234,20 +239,20 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
                         tech_req, 
                         movement, 
                         recital_id) 
-            VALUES (` +
-                        `${duration}, ` +
-                        `"${title}", ` +
-                        `"${largerWork}", ` +
-                        `"${email}", ` +
-                        `${composerName ? '"' + composerName + '"' : null}, ` +
-                        `${composerBirthYear}, ` +
-                        `${composerDeathYear}, ` + 
-                        `${catalogNum ? '"' + catalogNum + '"' : null}, ` + 
-                        `${schedulingReq ? '"' + schedulingReq + '"' : null}, ` +
-                        `${techReq ? '"' + techReq + '"' : null}, ` + 
-                        `${movement ? '"' + movement + '"' : null}, ` + 
-                        `${recitalId}` +
-                    ");"
+            VALUES ( 
+                        ${duration}, 
+                        '${title}', 
+                        '${largerWork}', 
+                        '${email}', 
+                        ${composerName ? `'${composerName}'` : null},
+                        ${composerBirthYear}, 
+                        ${composerDeathYear},  
+                        ${catalogNum ? `'${catalogNum}'`  : null}, 
+                        ${schedulingReq ? `'${schedulingReq}'` : null},
+                        ${techReq ? `'${techReq}'` : null}, 
+                        ${movement ? `'${movement}'` : null}, 
+                        ${recitalId}
+                    );`
           )
   .then(() => {
     db.query(`INSERT INTO recital_submissions ( 
