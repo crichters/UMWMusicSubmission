@@ -71,6 +71,18 @@ rsmsdb.archiveRecital(3);
 // rsmsdb.updateSubmissionStatus(3, "approved");
 
 
+// delete recital with id 1
+rsmsdb.deleteRecital(1).
+then(() => {
+	rsmsdb.selectOpenRecitals()
+	.then(openRecitals => {
+		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+	});
+})
+.catch(err => {
+	console.error("Unable to delete recital:", err);
+});
+
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
 // 	console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
@@ -82,24 +94,24 @@ rsmsdb.archiveRecital(3);
 // 	// insert recital
 // 	//rsmsdb.insertRecital(recital);
 
-// 	recital.date = "2022-04-20";
+// 	// recital.date = "2022-04-20";
 
-// 	// update recital
-// 	rsmsdb.updateRecital(3, recital);
+// 	// // update recital
+// 	// rsmsdb.updateRecital(3, recital);
 
 // 	// get submissions for recital
-	// rsmsdb.selectSubmissionsFor(1).then(subs => {
-	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-	// })
-	// .catch(err => {
-	// 	console.error('Unable to find submissions:', err);
-	// });
-	// rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
-	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-	// })
-	// .catch(err => {
-	// 	console.error('Unable to find submissions:', err);
-	// });
+// 	rsmsdb.selectSubmissionsFor(1).then(subs => {
+// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+// 	})
+// 	.catch(err => {
+// 		console.error('Unable to find submissions:', err);
+// 	});
+// 	rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
+// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+// 	})
+// 	.catch(err => {
+// 		console.error('Unable to find submissions:', err);
+// 	});
 	
 // })
 // .catch(err => {

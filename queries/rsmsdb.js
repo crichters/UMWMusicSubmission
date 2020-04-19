@@ -57,6 +57,21 @@ function archiveRecital(recitalId) {
 
 
 /**
+ * Deletes a recital and its submissions from the database.
+ * @param {int} recitalId - the id of the recital to delete.
+ */
+async function deleteRecital(recitalId) {
+  db.query(`DELETE FROM performer WHERE id IN 
+              (SELECT performer_id FROM submission_performers AS perfs 
+                  JOIN submission AS sub
+                  ON sub.id = perfs.submission_id 
+                WHERE recital_id = ${recitalId});`);
+  db.query(`DELETE FROM submission WHERE recital_id = ${recitalId};`);
+  db.query(`DELETE FROM recital WHERE id = ${recitalId};`);
+};
+
+
+/**
  * Returns a promise to a list of submission objects for a given
  * recital. Objects contain submission id, performer name,
  * medium, title, largerWork (null if not specified) and status.
@@ -428,4 +443,4 @@ module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissi
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
-        archiveRecital};
+        archiveRecital, deleteRecital};
