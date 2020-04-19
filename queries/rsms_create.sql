@@ -1,4 +1,4 @@
-USE umwrecit_rsms;
+use umwrecit_rsms;
 
 CREATE TABLE faculty_member (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -47,10 +47,12 @@ CREATE TABLE recital_submissions (
 	submission_id INT NOT NULL,
 	CONSTRAINT re_sub_recital_id_fk
 		FOREIGN KEY (recital_id)
-		REFERENCES recital (id),
+		REFERENCES recital (id)
+		ON DELETE CASCADE,
 	CONSTRAINT re_sub_submission_id_fk
 		FOREIGN KEY (submission_id)
 		REFERENCES submission (id)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE performer (
@@ -68,8 +70,10 @@ CREATE TABLE submission_performers (
 	is_collaborator BOOLEAN NOT NULL default false,
 	CONSTRAINT perf_sub_performer_id_fk
 		FOREIGN KEY (performer_id)
-		REFERENCES performer (id),
+		REFERENCES performer (id)
+		ON DELETE CASCADE,
 	CONSTRAINT perf_sub_submission_id_fk
 		FOREIGN KEY (submission_id)
 		REFERENCES submission (id)
+		ON DELETE CASCADE
 );
