@@ -423,6 +423,15 @@ async function deleteSubmission(submission_id)
 
 
 /**
+ * Delets all archived recitals before the given date
+ * @param {Date} date - Date which all archived recitals older than that date will be deleted
+ */
+function deleteArchivedRecitalsBefore(date)
+{
+  db.query(`DELETE FROM recital WHERE date < '${date}' AND is_archived=true;`);
+};
+
+/**
  * Given the recital id, it updates the status of if the recital is open or not
  * @param {Int} recital_id - id of the recital to update
  * @param {Boolean} isClosed - boolean value of if the recital is closed or not
@@ -448,4 +457,4 @@ module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissi
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
-        archiveRecital, deleteRecital};
+        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore};
