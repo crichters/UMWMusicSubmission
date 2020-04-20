@@ -36,7 +36,8 @@ const recital = {
 	start_time: "12:30:00"
 };
 
-rsmsdb.archiveRecital(3);
+rsmsdb.archiveRecital(1);
+rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 
 // rsmsdb.updatePassword("password");
 // rsmsdb.checkPassword("bar")

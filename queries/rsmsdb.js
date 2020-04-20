@@ -413,14 +413,23 @@ async function deleteEmail(emailId) {
  * Deletes a submission based on the given submission id from the database
  * @param {Int} submission_id - id of the submission to be deleted
  */
-function deleteSubmission(submission_id)
+async function deleteSubmission(submission_id)
 {
-  db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
-
+  // db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
+  // db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM submission WHERE id=${submission_id};`)
+  .then(() => cleanPerformers());
 };
 
+
+/**
+ * Delets all archived recitals before the given date
+ * @param {Date} date - Date which all archived recitals older than that date will be deleted
+ */
+function deleteArchivedRecitalsBefore(date)
+{
+  db.query(`DELETE FROM recital WHERE date < '${date}' AND is_archived=true;`);
+};
 
 /**
  * Given the recital id, it updates the status of if the recital is open or not
@@ -448,4 +457,4 @@ module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissi
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
-        archiveRecital, deleteRecital};
+        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore};

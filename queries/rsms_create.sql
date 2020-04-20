@@ -26,7 +26,8 @@ CREATE TABLE submission (
 	recital_id INT NOT NULL,
 	CONSTRAINT sub_recital_id_fk
 		FOREIGN KEY (recital_id)
-		REFERENCES recital (id),
+		REFERENCES recital (id)
+		ON DELETE CASCADE,
 	duration INT NOT NULL,
 	title VARCHAR(50) NOT NULL,
 	larger_work VARCHAR(50),
