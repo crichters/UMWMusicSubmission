@@ -74,7 +74,6 @@ app.get("/dashboard-data", async (req, res) => {
 
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
-    console.log(req.body)
     const { email_address, password } = req.body;
     let validEmail, validPW;
     try {
@@ -192,9 +191,28 @@ app.delete("/submission", async (req, res) => {
     }
 });
 
+function convertTimeTo24(time12h) {
+    if(time12h == null) {
+        return null;
+    }
+    const [time, modifier] = time12h.split(' ');
+
+    let [hours, minutes] = time.split(':');
+
+    if (hours === '12') {
+        hours = '00';
+    }
+
+    if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+}
 
 app.post("/create-recital", async (req, res) => {
     let {date, start_time, end_time} = req.body;
+    start_time = convertTimeTo24(start_time);
+    end_time = convertTimeTo24(end_time);
     const recital = {
         date,
         start_time,
@@ -211,6 +229,7 @@ app.post("/create-recital", async (req, res) => {
 
 app.post("/edit-recital", async (req, res) => {
     let {id, date, start_time, end_time} = req.body;
+    start_time, end_time = convertTimeTo24(start_time), convertTimeTo24(end_time);
     const recitals = await selectOpenRecitals();
     const newRecital = {date, start_time, end_time};
     for(let i = 0; i < recitals.length; i++) {
@@ -222,10 +241,10 @@ app.post("/edit-recital", async (req, res) => {
                 newRecital.date = date;
             }
             if(start_time == null || start_time == undefined) {
-                newRecital.start_time = recital.startTime.split(" ")[0]
+                newRecital.start_time = recital.start_time.split(" ")[0];
             }
             if(end_time == null || end_time == undefined) {
-                newRecital.end_time = recital.endTime.split(" ")[0]
+                newRecital.end_time = recital.end_time.split(" ")[0];
             }
             break;
         }
