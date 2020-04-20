@@ -413,12 +413,12 @@ async function deleteEmail(emailId) {
  * Deletes a submission based on the given submission id from the database
  * @param {Int} submission_id - id of the submission to be deleted
  */
-function deleteSubmission(submission_id)
+async function deleteSubmission(submission_id)
 {
-  db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
-
+  // db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
+  // db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM submission WHERE id=${submission_id};`)
+  .then(() => cleanPerformers());
 };
 
 
