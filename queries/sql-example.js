@@ -39,7 +39,7 @@ const recital = {
 const criteria = {
 	phrase: 'piano',
 	date: '2020-04-06',
-	status: ['unreviewed', 'accepted']
+	status: null//['unreviewed', 'accepted']
 };
 
 rsmsdb.searchSubmissions(criteria)

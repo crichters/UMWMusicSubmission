@@ -422,15 +422,18 @@ function updateSubmissionStatus(submission_id, status)
 function searchSubmissions(criteria) {
   const {phrase, status, date} = criteria;
   var statusFormat = "";
-  for(var x=0;x<status.length;x++)
+  if(status!=null)
   {
-    if(x==0)
+    for(var x=0;x<status.length;x++)
     {
-      statusFormat += `('${status[x]}')`;
-    }
-    else
-    {
-      statusFormat += `,('${status[x]}')`;
+      if(x==0)
+      {
+        statusFormat += `('${status[x]}')`;
+      }
+      else
+      {
+        statusFormat += `,('${status[x]}')`;
+      }
     }
   }
   //console.log(statusFormat);
