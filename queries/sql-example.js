@@ -37,7 +37,7 @@ const recital = {
 };
 
 const criteria = {
-	phrase: 'piano',
+	phrase: 'piaNO',
 	date: '2020-04-06',
 	status: ['unreviewed', 'accepted']
 };
