@@ -422,9 +422,55 @@ function updateSubmissionStatus(submission_id, status)
 function searchSubmissions(criteria) {
   const {phrase, status, date} = criteria;
 
-  if (phrase && !status && !date) {
-    return searchByPhrase(phrase);
-  };
+  return db.query(`SELECT sub.id, 
+                    sub.duration, 
+                    sub.title, 
+                    sub.larger_work AS largerWork, 
+                    sub.email, 
+                    sub.composer_name AS composerName, 
+                    sub.composer_birth_year AS composerBirthYear, 
+                    sub.composer_death_year AS composerDeathYear, 
+                    sub.catalog_num AS catalogNum,
+                    sub.scheduling_req AS schedulingReq, 
+                    sub.tech_req AS techReq, 
+                    sub.movement, 
+                    sub.status,
+                    recital.date, 
+                    performer.name, 
+                    performer.medium  
+                  FROM submission AS sub 
+                  NATURAL JOIN recital_submissions 
+                  INNER JOIN submission_performers AS performers 
+                    ON sub.id = performers.submission_id 
+                  INNER JOIN performer 
+                    ON performers.performer_id = performer.id 
+                  INNER JOIN recital 
+                    ON sub.recital_id = recital.id 
+                  WHERE
+                      ${phrase ? 
+                      `LOWER(
+                        CONCAT(
+                          IFNULL(sub.duration, ''),
+                          IFNULL(sub.title, ''),
+                          IFNULL(sub.larger_work, ''),
+                          IFNULL(email, ''),
+                          IFNULL(sub.composer_name, ''),
+                          IFNULL(sub.composer_birth_year, ''),
+                          IFNULL(sub.composer_death_year, ''),
+                          IFNULL(sub.catalog_num, ''),
+                          IFNULL(sub.movement, ''),
+                          IFNULL(performer.name, ''),
+                          IFNULL(performer.medium, ''))) 
+                    LIKE LOWER("%${phrase}%")`: ``}
+                        ${phrase && (status || date) ? 
+                    `AND`: ``}
+                        ${status ? 
+                      `sub.status IN ('unreviewed')` : ``}
+                        ${date && status ? 
+                    `AND`: ``}
+                        ${date ? 
+                      `recital.date = '${date}'` : ``}
+                    ;`, { type: db.QueryTypes.SELECT});
 };
 
 
