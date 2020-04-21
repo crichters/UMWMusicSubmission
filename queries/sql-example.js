@@ -38,6 +38,15 @@ const recital = {
 
 rsmsdb.archiveRecital(1);
 rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
+const criteria = {
+	phrase: 'piaNO',
+	date: '2020-04-06',
+	status: null//['unreviewed', 'accepted']
+};
+
+rsmsdb.searchSubmissions(criteria)
+	.then(results => console.log("Search results:", JSON.stringify(results, null, 4)))
+	.catch(err => console.error("Unable to search:", err));
 
 // rsmsdb.updatePassword("password");
 // rsmsdb.checkPassword("bar")
@@ -101,6 +110,7 @@ then(() => {
 // 	// rsmsdb.updateRecital(3, recital);
 
 // 	// get submissions for recital
+<<<<<<< HEAD
 // 	rsmsdb.selectSubmissionsFor(1).then(subs => {
 // 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
 // 	})
@@ -113,6 +123,20 @@ then(() => {
 // 	.catch(err => {
 // 		console.error('Unable to find submissions:', err);
 // 	});
+=======
+	// rsmsdb.selectSubmissionsFor(1).then(subs => {
+	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	// })
+	// .catch(err => {
+	// 	console.error('Unable to find submissions:', err);
+	// });
+	// rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
+	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+	// })
+	// .catch(err => {
+	// 	console.error('Unable to find submissions:', err);
+	// });
+>>>>>>> 5769addc3db52e22c83fe78b314a3943294d6ba6
 	
 // })
 // .catch(err => {
