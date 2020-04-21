@@ -31,6 +31,22 @@ app.all("*", checkSession);
 
 const directory = __dirname + '/content';
 
+let server = app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
+    console.log("Server started");
+});
+
+process.on('uncaughtException', () => {
+    server.close(() => {
+        console.log("Closing HTTP server");
+    })
+})
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log("Closing HTTP server");
+    });
+});
+
 app.get("/", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
 });
@@ -307,7 +323,5 @@ app.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
-app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
-    console.log("Server started");
-});
+
 
