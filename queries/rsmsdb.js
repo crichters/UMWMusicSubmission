@@ -421,6 +421,19 @@ function updateSubmissionStatus(submission_id, status)
  */
 function searchSubmissions(criteria) {
   const {phrase, status, date} = criteria;
+  var statusFormat = "";
+  for(var x=0;x<status.length;x++)
+  {
+    if(x==0)
+    {
+      statusFormat += `('${status[x]}')`;
+    }
+    else
+    {
+      statusFormat += `,('${status[x]}')`;
+    }
+  }
+  //console.log(statusFormat);
 
   return db.query(`SELECT sub.id, 
                     sub.duration, 
@@ -465,7 +478,7 @@ function searchSubmissions(criteria) {
                         ${phrase && (status || date) ? 
                     `AND`: ``}
                         ${status ? 
-                      `sub.status IN ('unreviewed')` : ``}
+                      `sub.status IN (${statusFormat})` : ``}
                         ${date && status ? 
                     `AND`: ``}
                         ${date ? 
