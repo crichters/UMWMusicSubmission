@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const request = require('request');
+const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, selectUnarchivedRecitals, 
@@ -64,6 +65,7 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
+    fs.writeFile('../logs/app.log', recitals);
     res.json(recitals);
 });
 
@@ -101,7 +103,12 @@ app.post("/login", async (req, res) => {
 app.get("/credentials", async (req, res) => {
     const email = await insertEmail("simeon.neisler@gmail.com");
     const pw = await insertPassword("Password");
-    console.log("Credentials added");
+    fs.writeFile('logging/app.log', 'Credentials added', (err, data) => {
+        if(err) {
+            console.log(err)
+        }
+        console.log(data)
+    })
     res.redirect("/login");
 });
 
@@ -116,13 +123,11 @@ app.get("/get-recitals", async (req, res) => {
 
 app.post("/get-submission-by-id", async (req, res) => {
     var submissionId = req.body["id"];
-    console.log(req.body);
     results = await selectSubmissionDetailsFor(submissionId);
     res.send(results);
 })
 
 app.post("/submit_recital_form", async (req, res) => {
-    console.log(req.body)
     if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
         return res.json({"responseError" : "Please select captcha first"});

@@ -532,10 +532,5 @@ function searchSubmissions(criteria) {
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
-<<<<<<< HEAD
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
-        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore};
-=======
-        updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail,
-        searchSubmissions};
->>>>>>> 5769addc3db52e22c83fe78b314a3943294d6ba6
+        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore, searchSubmissions};
