@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Search Recital Submissions</title>
+    <title>Archived Recitals</title>
     <meta name="description" content="Template Page">
 
     <!-- Minified Bootstrap CSS Rules-->
@@ -13,9 +13,6 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/form.css">
-
-    <!-- Need to add the font awesome stylesheet for some icons-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 
 
 </head>
@@ -53,73 +50,38 @@
     <br>
     <br>
     <div class="container container-main flex-grow-1">
+      <!-- Main Content Here -->
 
       <!-- page title -->
       <div class="row">
-          <h4>Search Recital Submissions</h4>
+          <h4>Archive</h4>
       </div>
 
       <br>
-      <!-- search bar, search by dropdown, and search button-->
       <div class="row">
-            <div class="input-group" id="recitalSearch">
-                <input type="text" class="form-control" placeholder="Search for recitals" />
-                <div class="input-group-btn">
-                    <div class="btn-group" role="group">
-                        <div class="dropdown dropdown-sm">
-                            <button type="button" title="Search by" class="btn btn-light rounded-0 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
-                            <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                <form class="form-horizontal" role="form" style="padding: 10px;">
-                                  <div class="form-group">
-                                    <label for="filter">Search by</label>
-                                    <select class="form-control">
-                                        <option value="0" selected>All Recitals</option>
-                                        <option value="1">Accepted</option>
-                                        <option value="2">Rejected</option>
-                                        <option value="3">Unreviewed</option>
-                                    </select>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="contain">Date</label>
-                                    <input class="form-control" type="date" />
-                                  </div>
-                                  <!-- Maybe we could use JS to make this a confirm query button instead of search-->
-                                  <button type="submit" class="btn btn-primary btn-block"><span class="fa fa-search" aria-hidden="true"></span> Search</button>
-                                </form>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary rounded-right" title="Search"><span class="fa fa-search" aria-hidden="true"></span></button>
-                    </div>
-                </div>
+        <h6>Delete All Recitals Before:
+      </div>
+      <div class="row">
+        <div class="col" style="padding: 0px;">
+          <div class="input-group">
+            <input class="form-control" type="date" id="selectYear">
+            <div class="input-group-append">
+              <!-- Delete the recitals based on the date picked-->
+              <button class="btn btn-outline-danger" type="button">Delete</button>
             </div>
           </div>
+        </div>
+        <div class="col"></div>
+      </div>
+
       <br><br>
-
-      <!-- A table of some sort that shows all of the recitals being searched -->
       <div class="row">
-        <table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Submission Summary</th>
-              <th>Status</th>
-              <th>Recital Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="recitalTable">
-            <!-- replace with the recital that is being searched, with js-->
-            <tr>
-              <td>Emmanuel Smith. Piano. Canope</td>
-              <td>Accepted</td>
-              <td>10/03/2019</td>
-              <td>
-                <a  href="" title="View" onclick=""><i class="fa fa-eye" style="padding-right: 10px;"></i></a>
-                <a  href="javascript:void(0)" title="Delete" onclick=""><i class="fa fa-trash" style="color: red;"></i></a>
 
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- list of recitals?? -->
+        <div id="recitals">
+          <h6>Recitals need to be added here</h6>
+        </div>
+
       </div>
     </div>
 
