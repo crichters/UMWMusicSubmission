@@ -67,7 +67,7 @@
             <input class="form-control" type="date" id="selectYear">
             <div class="input-group-append">
               <!-- Delete the recitals based on the date picked-->
-              <button class="btn btn-outline-danger" type="button">Delete</button>
+              <button class="btn btn-outline-danger" type="button" data-toggle="modal" data-target="#deleteRecitalsModal" >Delete</button>
             </div>
           </div>
         </div>
@@ -84,6 +84,38 @@
 
       </div>
     </div>
+
+
+
+
+
+    <!-- This is the modal used to delete recitals before a certain date -->
+    <div class="modal fade" id="deleteRecitalsModal" tabindex="-1" role="dialog" aria-labelledby="deleteRecitalsLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteRecitalsLabel">Delete Recitals</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Add delete confirmation in modal -->
+                <form>
+                <div class="modal-body">
+
+                  <!-- need to add the date that was selected -->
+                  <h6> Are you sure you want to permanently delete all recitals before {{date}}? This action cannot be undone. </h6>
+
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-danger" onClick="create_recital();">Confirm</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
 
 
 
