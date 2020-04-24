@@ -4,6 +4,9 @@ package-lock.json
 .DS_store
 
 # Logs
+config/dev.js
+config/prod.js
+
 logs
 *.log
 npm-debug.log*
@@ -107,6 +110,5 @@ dist
 
 # TernJS port file
 .tern-port
-config/dev.js
 ./queries/config.js
 config.js

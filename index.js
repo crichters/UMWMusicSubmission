@@ -2,15 +2,16 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const request = require('request');
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
-    selectCollaboratorsFor, selectUnarchivedRecitals, 
-    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    selectCollaboratorsFor, archiveRecital, selectUnarchivedRecitals, 
+    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore } = require('./queries/rsmsdb');
 
 const app = express();
 
-const {keys} = require('./config/config');
+const {keys, mailer} = require('./config/config');
 
 app.set("port", 3000);
 
@@ -42,7 +43,6 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-
     res.sendFile(directory + '/dashboard.html')
 });
 
@@ -69,10 +69,15 @@ app.get("/dashboard-data", async (req, res) => {
     res.json(recitals);
 });
 
-/*app.delete("/recital", async (req, res) => {
+app.delete("/recital", async (req, res) => {
     const {id} = req.body;
-    const deleted = await 
-});*/
+    try {
+        const deleted = await deleteRecital(id);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
@@ -273,6 +278,16 @@ app.post("/update-submission-status", async (req, res) => {
     res.send(ischanged);
 });
 
+app.post("/archive", async (req, res) => {
+    const {recitalId} = req.body;
+    try {
+        const archived = await archiveRecital(recitalId);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.log(err);
+    }
+})
+
 app.get("/emails", async (req, res) => {
     const emails = await selectEmails();
     res.json(emails);
@@ -290,6 +305,16 @@ app.delete("/email", async (req, res) => {
         const deleted = await deleteEmail(email_id);
     } else {
         res.json({status: "error", message: "Need more than one email before deleting an email"});
+    }
+});
+
+app.delete("/date", async (req, res) => {
+    let {date} = req.body;
+    try {
+        let body = await deleteArchivedRecitalsBefore(date);
+        res.redirect("/dashboard")
+    } catch (err) {
+        console.log(err);
     }
 });
 
