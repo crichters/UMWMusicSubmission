@@ -36,31 +36,44 @@ const recital = {
 	start_time: "12:30:00"
 };
 
+rsmsdb.archiveRecital(1);
+rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
+  
+const criteria = {
+	phrase: 'piaNO',
+	date: '2020-04-06',
+	status: null//['unreviewed', 'accepted']
+};
+
+rsmsdb.searchSubmissions(criteria)
+	.then(results => console.log("Search results:", JSON.stringify(results, null, 4)))
+	.catch(err => console.error("Unable to search:", err));
+
 // rsmsdb.updatePassword("password");
-rsmsdb.checkPassword("bar")
-.then(isValid => console.log("Is password valid? " + isValid))
-.catch(err => {
-	console.error('Unable to validate password:', err);
-});;
+// rsmsdb.checkPassword("bar")
+// .then(isValid => console.log("Is password valid? " + isValid))
+// .catch(err => {
+// 	console.error('Unable to validate password:', err);
+// });
 //rsmsdb.insertEmail("jkuykend@umw.edu");
 // rsmsdb.insertEmail("mmorley@umw.edu");
 
-rsmsdb.checkEmail("jkuykend@umw.edu")
-.then(isValid => console.log("Is email valid? " + isValid))
-.catch(err => {
-	console.error("Unable to validate email: ", err);
-});
+// rsmsdb.checkEmail("jkuykend@umw.edu")
+// .then(isValid => console.log("Is email valid? " + isValid))
+// .catch(err => {
+// 	console.error("Unable to validate email: ", err);
+// });
 
-rsmsdb.deleteEmail(1)
-.then(deleted => {
-	console.log("Email deleted? " + deleted);
-	rsmsdb.selectEmails()
-	.then(emails => console.log("Faculty users:", JSON.stringify(emails, null, 4)))
-	.catch(err => console.error("Unable to retrieve emails:", err));
-})
-.catch(err => {
-	console.error("Unable to validate email: ", err);
-});
+// rsmsdb.deleteEmail(1)
+// .then(deleted => {
+// 	console.log("Email deleted? " + deleted);
+// 	rsmsdb.selectEmails()
+// 	.then(emails => console.log("Faculty users:", JSON.stringify(emails, null, 4)))
+// 	.catch(err => console.error("Unable to retrieve emails:", err));
+// })
+// .catch(err => {
+// 	console.error("Unable to validate email: ", err);
+// });
 
 // rsmsdb.deleteSubmission(4)
 // rsmsdb.updateRecitalStatus(1,true);
@@ -68,6 +81,18 @@ rsmsdb.deleteEmail(1)
 // rsmsdb.updateSubmissionStatus(2, "rejected");
 // rsmsdb.updateSubmissionStatus(3, "approved");
 
+
+// delete recital with id 1
+rsmsdb.deleteRecital(1).
+then(() => {
+	rsmsdb.selectOpenRecitals()
+	.then(openRecitals => {
+		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+	});
+})
+.catch(err => {
+	console.error("Unable to delete recital:", err);
+});
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
@@ -80,24 +105,24 @@ rsmsdb.deleteEmail(1)
 // 	// insert recital
 // 	//rsmsdb.insertRecital(recital);
 
-// 	recital.date = "2022-04-20";
+// 	// recital.date = "2022-04-20";
 
-// 	// update recital
-// 	rsmsdb.updateRecital(3, recital);
+// 	// // update recital
+// 	// rsmsdb.updateRecital(3, recital);
 
 // 	// get submissions for recital
-	rsmsdb.selectSubmissionsFor(1).then(subs => {
-		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-	})
-	.catch(err => {
-		console.error('Unable to find submissions:', err);
-	});
-	// rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
-	// 	console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
-	// })
-	// .catch(err => {
-	// 	console.error('Unable to find submissions:', err);
-	// });
+// 	rsmsdb.selectSubmissionsFor(1).then(subs => {
+// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+// 	})
+// 	.catch(err => {
+// 		console.error('Unable to find submissions:', err);
+// 	});
+// 	rsmsdb.selectSubmissionDetailsFor(1).then(subs => {
+// 		console.log("Submissions in recital:", JSON.stringify(subs, null, 4));
+// 	})
+// 	.catch(err => {
+// 		console.error('Unable to find submissions:', err);
+// 	});
 	
 // })
 // .catch(err => {

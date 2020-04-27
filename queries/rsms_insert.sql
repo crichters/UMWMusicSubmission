@@ -3,6 +3,9 @@ use umwrecit_rsms;
 insert into recital (date, start_time, end_time) values ("2020-04-06", "19:30:00", "20:30:00");
 insert into recital (date, start_time, end_time) values ("2020-04-23", "16:00:00", "17:00:00");
 
+INSERT INTO faculty_emails (email) VALUES("jkuykend@umw.edu");
+INSERT INTO faculty_emails (email) VALUES("mmorley@umw.edu");
+
 insert into submission (
 	duration, 
 	title, 
@@ -152,6 +155,54 @@ values (
 );
 
 insert into performer (name, medium) values ("Julie Shin", "piano");
+
+insert into submission_performers (
+	submission_id,
+	performer_id
+)
+values (
+	(select id from submission order by id desc limit 1),
+	(select id from performer where name = "Julie Shin" and medium = "piano")
+);
+
+insert into submission (
+	duration, 
+	title, 
+	larger_work, 
+	email, 
+	composer_name, 
+	composer_birth_year, 
+	composer_death_year, 
+	catalog_num, 
+	scheduling_req, 
+	tech_req,
+	movement,
+	recital_id
+)
+values (
+	1,
+	"I've Got a Golden Ticket",
+	"Willie Wonka & the Chocolate Factory",
+	"jshin2@umw.edu",
+	"Leslie Bricusse",
+	1931,
+	null,
+	null,
+	null,
+	null,
+	null,
+	1 -- id is the id associated with form's date drop-down menu item
+);
+
+insert into recital_submissions (
+	recital_id,
+	submission_id
+)
+values (
+	2,
+	(select last_insert_id())  -- get the id of the submission we just inserted
+);
+
 
 insert into submission_performers (
 	submission_id,
