@@ -25,6 +25,14 @@ nav ul li a:hover {
     color: white;
 }
 
+.table-container
+{
+	width: 100%;
+	overflow-y: auto;
+	_overflow: auto;
+	margin: 0 0 1em;
+}
+
 
 
 /* #navbar {
