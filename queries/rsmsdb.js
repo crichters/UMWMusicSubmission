@@ -353,7 +353,10 @@ async function checkPassword(password) {
  */
 function insertEmail(email)
 {
-  db.query(`INSERT INTO faculty_emails (email) VALUES('${email}');`);
+  return db.query(`INSERT INTO faculty_emails (email) VALUES('${email}');`).catch((err) => {
+    console.log("Error caught");
+    return false;
+  });
 };
 
 

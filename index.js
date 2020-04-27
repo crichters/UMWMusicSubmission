@@ -334,12 +334,13 @@ app.get("/emails", async (req, res) => {
 
 app.post("/email", async (req, res) => {
     let email = req.body['email_address'];
-
     const inserted = await insertEmail(email);
-    console.log(inserted);
-    res.send(inserted);
+    if(inserted){
+        res.json({status: "success"});
+    } else {
+        res.json({status: "error"});
+    }
 });
-
 
 
 app.post("/delete_email", async (req, res) => {
@@ -349,6 +350,8 @@ app.post("/delete_email", async (req, res) => {
     let emails = await selectEmails();
     if(emails.length > 1) {
         const deleted = await deleteEmail(email_id);
+        console.log(deleted);
+        res.send(deleted);
     } else {
         res.json({status: "error", message: "Need more than one email before deleting an email"});
     }

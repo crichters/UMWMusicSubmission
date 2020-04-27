@@ -10,8 +10,16 @@ $('#email_form').submit((e) => {
     };
     
     $.post("/email", request, (data, success) => {
-        console.log(data);
-        console.log(success);
+        if(data['status'] == "success") {
+            location.reload();
+        } else {
+            message = (!data["message"]) ? "Unable to add email address" : data["message"];
+        }
+        if(data){
+            location.reload();
+        } else {
+            $('#email_error').html(`<span style=\'color:red;\'>${message}</span>`);
+        }
         //location.reload();
     });
     
@@ -74,9 +82,12 @@ function delete_email(email_id) {
 
 
     $.post("/delete_email", request, (data, status) => {
-        console.log(data);
-        console.log(success);
-        location.reload();
+        if(data['status'] == 'success') {
+            location.reload();
+        } else {
+            message = (!data["message"]) ? "Cannot delete email address" : data["message"];
+            $('#email_error').html(`<span style="color:red;">${message}</span>`);
+        }
     });
 }
 
