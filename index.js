@@ -37,6 +37,24 @@ app.get("/", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
 });
 
+app.get("/emailtest", (req, res) => {
+    let transporter = nodemailer.createTransport(mailer);
+    let mailOptions = {
+        from: 'umw.programmers@gmail.com',
+        to: 'simeon.neisler@gmail.com',
+        subject: 'test',
+        text: 'Testing testing.'
+    }
+    transporter.sendMail(mailOptions, (err) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('Email sent');
+        }
+    })
+
+});
+
 //This is a get request that simply returns the login page
 app.get("/login", (req, res) => {
     res.sendFile(directory + '/login_page.html');

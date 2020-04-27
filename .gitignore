@@ -4,7 +4,6 @@ package-lock.json
 .DS_store
 
 # Logs
-config/dev.js
 config/prod.js
 
 logs
