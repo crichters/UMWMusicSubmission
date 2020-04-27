@@ -36,13 +36,43 @@ async function selectOpenRecitals() {
  * startTime (string) and isClosed status (boolean).
  */
 async function selectUnarchivedRecitals() {
-    return db.query("SELECT id, " + 
-                    "DATE_FORMAT(date, '%M %e, %Y') as date, " + 
-                    "TIME_FORMAT(start_time, '%h:%i %p') as startTime, " +
-                    "TIME_FORMAT(end_time, '%h:%i %p') as endTime, " +
-                    "is_closed as isClosed " +
-            "FROM recital WHERE NOT is_archived"
+    return db.query(`SELECT id, 
+                    DATE_FORMAT(date, '%M %e, %Y') as date, 
+                    TIME_FORMAT(start_time, '%h:%i %p') as startTime, 
+                    TIME_FORMAT(end_time, '%h:%i %p') as endTime, 
+                    is_closed as isClosed 
+            FROM recital WHERE NOT is_archived;`
     , { type: db.QueryTypes.SELECT});
+};
+
+
+/**
+ * Changes the recital's is_archived field to true.
+ * @param {int} recitalId - the id of the recital to archive.
+ */
+function archiveRecital(recitalId) {
+  db.query(`UPDATE recital SET is_archived = 1
+            WHERE id = ${recitalId};`);
+};
+
+
+/**
+ * Deletes a recital and its submissions from the database.
+ * @param {int} recitalId - the id of the recital to delete.
+ */
+async function deleteRecital(recitalId) {
+  db.query(`DELETE FROM recital WHERE id = ${recitalId};`)
+  .then(() => cleanPerformers());
+};
+
+
+/**
+ * Helper function that deletes dangling performers
+ * that do not appear in any submissions.
+ */
+function cleanPerformers() {
+  db.query(`DELETE FROM performer WHERE NOT EXISTS 
+              (SELECT performer_id FROM submission_performers);`);
 };
 
 
@@ -53,32 +83,32 @@ async function selectUnarchivedRecitals() {
  * @param {int} recitalId - The recital's pk. 
  */
 async function selectSubmissionsFor(recitalId) {
-    return db.query("SELECT sub.id, " +
-                "sub.duration, "+
-                "sub.title, " +
-                "sub.larger_work AS largerWork, " +
-                "sub.email, " +
-                "sub.composer_name AS composerName, " +
-                "sub.composer_birth_year AS composerBirthYear, " +
-                "sub.composer_death_year AS composerDeathYear, " +
-                "sub.catalog_num AS catalogNum," +
-                "sub.scheduling_req AS schedulingReq, " +
-                "sub.tech_req AS techReq, " +
-                "sub.movement, " +
-                "sub.status," +
-                "recital.date, "+
-                "performer.name, " +
-                "performer.medium " + 
-            "FROM submission AS sub " +
-            "NATURAL JOIN recital_submissions " +
-            "INNER JOIN submission_performers AS performers " +
-                "ON sub.id = performers.submission_id " +
-            "INNER JOIN performer " +
-                "ON performers.performer_id = performer.id " +
-            "INNER JOIN recital " +
-                "ON sub.recital_id = recital.id " +
-            "WHERE NOT performers.is_collaborator " +
-            `AND recital_id = ${recitalId}`
+    return db.query(`SELECT sub.id, 
+                sub.duration, 
+                sub.title, 
+                sub.larger_work AS largerWork, 
+                sub.email, 
+                sub.composer_name AS composerName, 
+                sub.composer_birth_year AS composerBirthYear, 
+                sub.composer_death_year AS composerDeathYear, 
+                sub.catalog_num AS catalogNum,
+                sub.scheduling_req AS schedulingReq, 
+                sub.tech_req AS techReq, 
+                sub.movement, 
+                sub.status,
+                recital.date, 
+                performer.name, 
+                performer.medium  
+            FROM submission AS sub 
+            NATURAL JOIN recital_submissions 
+            INNER JOIN submission_performers AS performers 
+                ON sub.id = performers.submission_id 
+            INNER JOIN performer 
+                ON performers.performer_id = performer.id 
+            INNER JOIN recital 
+                ON sub.recital_id = recital.id 
+            WHERE NOT performers.is_collaborator 
+            AND recital_id = ${recitalId}`
     , { type: db.QueryTypes.SELECT});
 };
 
@@ -91,29 +121,29 @@ async function selectSubmissionsFor(recitalId) {
  * @param {int} submissionId - The submission's pk.
  */
 async function selectSubmissionDetailsFor(submissionId) {
-    return db.query("SELECT sub.duration, " +
-                    "sub.title, " +
-                    "sub.larger_work AS largerWork, " +
-                    "sub.email, " +
-                    "sub.composer_name AS composerName, " +
-                    "sub.composer_birth_year AS composerBirthYear, " +
-                    "sub.composer_death_year AS composerDeathYear, " +
-                    "sub.catalog_num AS catalogNum," +
-                    "sub.scheduling_req AS schedulingReq, " +
-                    "sub.tech_req AS techReq, " +
-                    "sub.status, " +
-                    "sub.movement, " +
-                    "recital.date, " +
-                    "perf.name," +
-                    "perf.medium " +
-            "FROM submission AS sub " +
-            "NATURAL JOIN submission_performers AS perfs " +
-            "INNER JOIN performer AS perf " +
-                "ON perfs.performer_id = perf.id " +
-            "INNER JOIN recital " +
-              "ON sub.recital_id = recital.id " +
-            "WHERE NOT perfs.is_collaborator " +
-            `AND sub.id = ${submissionId}`
+    return db.query(`SELECT sub.duration, 
+                    sub.title, 
+                    sub.larger_work AS largerWork, 
+                    sub.email, 
+                    sub.composer_name AS composerName, 
+                    sub.composer_birth_year AS composerBirthYear, 
+                    sub.composer_death_year AS composerDeathYear, 
+                    sub.catalog_num AS catalogNum,
+                    sub.scheduling_req AS schedulingReq, 
+                    sub.tech_req AS techReq, 
+                    sub.status, 
+                    sub.movement, 
+                    DATE_FORMAT(recital.date, '%M %e, %Y') as date, 
+                    perf.name,
+                    perf.medium 
+            FROM submission AS sub 
+            NATURAL JOIN submission_performers AS perfs 
+            INNER JOIN performer AS perf 
+                ON perfs.performer_id = perf.id 
+            INNER JOIN recital 
+              ON sub.recital_id = recital.id 
+            WHERE NOT perfs.is_collaborator 
+            AND sub.id = ${submissionId}`
     , { type: db.QueryTypes.SELECT});
 };
 
@@ -125,11 +155,11 @@ async function selectSubmissionDetailsFor(submissionId) {
  * @param {int} submissionId - The submission's pk.
  */
 async function selectCollaboratorsFor(submissionId) {
-    return db.query("SELECT perf.name, perf.medium FROM submission_performers AS perfs " + 
-             "INNER JOIN performer AS perf " +
-                "ON perfs.performer_id = perf.id " +
-            `WHERE perfs.submission_id = ${submissionId} ` +
-            "AND perfs.is_collaborator", {type: db.QueryTypes.SELECT});
+    return db.query(`SELECT perf.name, perf.medium FROM submission_performers AS perfs  
+             INNER JOIN performer AS perf 
+                ON perfs.performer_id = perf.id 
+            WHERE perfs.submission_id = ${submissionId} 
+            AND perfs.is_collaborator`, {type: db.QueryTypes.SELECT});
 };
 
 
@@ -144,8 +174,8 @@ function insertCollaborators(collaborators, isCollaborator) {
   // add all colaborators into performer table.
 	for (var x = 0; x < collaborators.length; x++)
 	{
-		db.query(`INSERT INTO performer (name, medium)`+
-		` values("${collaborators[x].name}", "${collaborators[x].medium}");`);
+		db.query(`INSERT INTO performer (name, medium)
+		 values("${collaborators[x].name}", "${collaborators[x].medium}");`);
     insertSubmissionPerformers(collaborators[x].name, collaborators[x].medium, isCollaborator);
 	}
 
@@ -160,16 +190,16 @@ function insertCollaborators(collaborators, isCollaborator) {
  */
 function insertSubmissionPerformers(name, medium, isCollaborator){
 
-  db.query("INSERT INTO submission_performers (" +
-                      "performer_id, " + 
-                      "submission_id, " +
-                      "is_collaborator" +
-                  ") " +
-            "VALUES(" +
-                      `(SELECT id FROM performer WHERE name = "${name}" AND medium = "${medium}"),`+ 			
-                      "(SELECT id FROM submission ORDER BY id DESC LIMIT 1)," +
-                      `${isCollaborator}` +
-                  ");"
+  db.query(`INSERT INTO submission_performers (
+                    performer_id,  
+                    submission_id, 
+                    is_collaborator
+                  ) 
+            VALUES(
+                    (SELECT id FROM performer WHERE name = "${name}" AND medium = "${medium}"), 			
+                    (SELECT id FROM submission ORDER BY id DESC LIMIT 1),
+                    ${isCollaborator}
+                  );`
           );
 
 };
@@ -196,43 +226,43 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
           techReq, 
           movement } = submission;
 
-  db.query("INSERT INTO submission (" + 
-                        "duration, " +
-                        `title, `+
-                        `larger_work, `+
-                        `email, `+
-                        `composer_name, `+
-                        `composer_birth_year, `+
-                        `composer_death_year, `+
-                        `catalog_num, `+
-                        `scheduling_req, `+
-                        `tech_req, `+
-                        `movement, `+
-                        `recital_id) `+
-            "VALUES (" +
-                        `${duration}, ` +
-                        `"${title}", ` +
-                        `"${largerWork}", ` +
-                        `"${email}", ` +
-                        `${composerName ? '"' + composerName + '"' : null}, ` +
-                        `${composerBirthYear}, ` +
-                        `${composerDeathYear}, ` + 
-                        `${catalogNum ? '"' + catalogNum + '"' : null}, ` + 
-                        `${schedulingReq ? '"' + schedulingReq + '"' : null}, ` +
-                        `${techReq ? '"' + techReq + '"' : null}, ` + 
-                        `${movement ? '"' + movement + '"' : null}, ` + 
-                        `${recitalId}` +
-                    ");"
+  db.query(`INSERT INTO submission (
+                        duration, 
+                        title, 
+                        larger_work, 
+                        email, 
+                        composer_name, 
+                        composer_birth_year, 
+                        composer_death_year, 
+                        catalog_num, 
+                        scheduling_req, 
+                        tech_req, 
+                        movement, 
+                        recital_id) 
+            VALUES ( 
+                        ${duration}, 
+                        '${title}', 
+                        '${largerWork}', 
+                        '${email}', 
+                        ${composerName ? `'${composerName}'` : null},
+                        ${composerBirthYear}, 
+                        ${composerDeathYear},  
+                        ${catalogNum ? `'${catalogNum}'`  : null}, 
+                        ${schedulingReq ? `'${schedulingReq}'` : null},
+                        ${techReq ? `'${techReq}'` : null}, 
+                        ${movement ? `'${movement}'` : null}, 
+                        ${recitalId}
+                    );`
           )
   .then(() => {
-    db.query("INSERT INTO recital_submissions (" + 
-                          "submission_id, " + 
-                          "recital_id" +
-                      ") " +
-              "VALUES(" +
-                        "(SELECT id FROM submission ORDER BY id DESC LIMIT 1)," +
-                        `${recitalId}` +
-                    ");"
+    db.query(`INSERT INTO recital_submissions ( 
+                          submission_id, 
+                          recital_id
+                      ) 
+              VALUES(
+                        (SELECT id FROM submission ORDER BY id DESC LIMIT 1),
+                        ${recitalId}
+                    );`
             );
 
     insertCollaborators([performer], 0);
@@ -250,8 +280,8 @@ function insertSubmission(submission, performer, collaborators, recitalId) {
 */
 function insertRecital(recital) {
 	const { date, end_time, start_time } = recital;
-	db.query(`INSERT INTO recital (date, end_time, start_time) `+
-		`VALUES("${date}","${end_time}","${start_time}");`);
+	db.query(`INSERT INTO recital (date, end_time, start_time) 
+		VALUES("${date}","${end_time}","${start_time}");`);
 
 };
 
@@ -383,14 +413,23 @@ async function deleteEmail(emailId) {
  * Deletes a submission based on the given submission id from the database
  * @param {Int} submission_id - id of the submission to be deleted
  */
-function deleteSubmission(submission_id)
+async function deleteSubmission(submission_id)
 {
-  db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
-  db.query(`DELETE FROM submission WHERE id=${submission_id};`);
-
+  // db.query(`DELETE FROM recital_submissions WHERE submission_id=${submission_id};`);
+  // db.query(`DELETE FROM submission_performers WHERE submission_id=${submission_id};`);
+  db.query(`DELETE FROM submission WHERE id=${submission_id};`)
+  .then(() => cleanPerformers());
 };
 
+
+/**
+ * Delets all archived recitals before the given date
+ * @param {Date} date - Date which all archived recitals older than that date will be deleted
+ */
+function deleteArchivedRecitalsBefore(date)
+{
+  db.query(`DELETE FROM recital WHERE date < '${date}' AND is_archived=true;`);
+};
 
 /**
  * Given the recital id, it updates the status of if the recital is open or not
@@ -493,5 +532,5 @@ function searchSubmissions(criteria) {
 module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor,
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
-        updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail,
-        searchSubmissions};
+        updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
+        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore, searchSubmissions};
