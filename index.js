@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const request = require('request');
+const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, selectUnarchivedRecitals, 
@@ -9,8 +11,19 @@ const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, de
 const app = express();
 
 const {keys} = require('./config/config');
+const logFile = "./log.txt"
 
 app.set("port", 3000);
+
+function writeLog(logText) {
+    fs.appendFile(logFile, new Date() + " - " + logText + "\n", () => {
+        return 0;
+    });
+}
+
+fs.appendFile(logFile, "Testing\n", () => {
+    return 0;
+});
 
 function checkSession(req, res, next) {
     const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials"]
@@ -29,6 +42,32 @@ app.use(session({secret: "secret"}));
 app.all("*", checkSession);
 
 const directory = __dirname + '/content';
+
+let server = app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
+    console.log("Server started");
+    fs.appendFile(logFile, 'Server started\n', () => {
+        return 0;
+    });
+});
+
+process.on('uncaughtException', (exception) => {
+    fs.appendFile(logFile, 'Uncaught Exception!\n', () => {
+        return 0;
+    });
+    fs.appendFile(logFile, exception + "\n", () => {
+        return 0;
+    });
+    server.close(() => {
+        console.log("Closing HTTP server");
+    });
+
+})
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log("Closing HTTP server");
+    });
+});
 
 app.get("/", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
@@ -73,7 +112,6 @@ app.get("/dashboard-data", async (req, res) => {
 
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
-    console.log(req.body)
     const { email_address, password } = req.body;
     let validEmail, validPW;
     try {
@@ -99,7 +137,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/credentials", async (req, res) => {
+    const email = await insertEmail("simeon.neisler@gmail.com");
     const pw = await insertPassword("Password");
+    console.log("Credentials added");
+    res.redirect("/login");
 });
 
 app.get("/form", (req, res) => {
@@ -119,12 +160,25 @@ app.post("/get-submission-by-id", async (req, res) => {
 })
 
 app.post("/submit_recital_form", async (req, res) => {
-    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    fs.appendFile(logFile, 'Line 141: writing body.\n', () => {
+        return 0;
+    });
+    fs.appendFile(logFile, req.body + '\n', () => {
+        return 0;
+    });
+
+    fs.appendFile(logFile, "\nPerforming captcha verification\n", () => {
+        return 0;
+    });
+    
+    /*
+    if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
-      return res.json({"responseError" : "Please select captcha first"});
+        return res.json({"responseError" : "Please select captcha first"});
     }
+    */
   
-    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+    const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
   
     request(verificationURL, (error,response,body) => {
       body = JSON.parse(body);
@@ -132,6 +186,9 @@ app.post("/submit_recital_form", async (req, res) => {
       if(body.success !== undefined && !body.success) {
         return res.json({"responseError" : "Failed captcha verification"});
       }
+    });
+    fs.appendFile(logFile, "\nCaptcha verification complete\n", () => {
+        return 0;
     });
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     if(collaborators) {
@@ -166,7 +223,13 @@ app.post("/submit_recital_form", async (req, res) => {
             submission[property] = null;
         }
     }
+    fs.appendFile(logFile, 'Performing query\n', () => {
+        return 0;
+    });
     const response = await insertSubmission(submission, performer, collaborators, recital_date);
+    fs.appendFile(logFile, 'Query finished\n' + response, () => {
+        return 0;
+    });
     res.sendFile(directory +'/submitted.html');
 });
 
@@ -187,9 +250,28 @@ app.delete("/submission", async (req, res) => {
     }
 });
 
+function convertTimeTo24(time12h) {
+    if(time12h == null) {
+        return null;
+    }
+    const [time, modifier] = time12h.split(' ');
+
+    let [hours, minutes] = time.split(':');
+
+    if (hours === '12') {
+        hours = '00';
+    }
+
+    if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+}
 
 app.post("/create-recital", async (req, res) => {
     let {date, start_time, end_time} = req.body;
+    start_time = convertTimeTo24(start_time);
+    end_time = convertTimeTo24(end_time);
     const recital = {
         date,
         start_time,
@@ -206,6 +288,7 @@ app.post("/create-recital", async (req, res) => {
 
 app.post("/edit-recital", async (req, res) => {
     let {id, date, start_time, end_time} = req.body;
+    start_time, end_time = convertTimeTo24(start_time), convertTimeTo24(end_time);
     const recitals = await selectOpenRecitals();
     const newRecital = {date, start_time, end_time};
     for(let i = 0; i < recitals.length; i++) {
@@ -217,10 +300,10 @@ app.post("/edit-recital", async (req, res) => {
                 newRecital.date = date;
             }
             if(start_time == null || start_time == undefined) {
-                newRecital.start_time = recital.startTime.split(" ")[0]
+                newRecital.start_time = recital.start_time.split(" ")[0];
             }
             if(end_time == null || end_time == undefined) {
-                newRecital.end_time = recital.endTime.split(" ")[0]
+                newRecital.end_time = recital.end_time.split(" ")[0];
             }
             break;
         }
@@ -283,7 +366,5 @@ app.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
-app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
-    console.log("Server started");
-});
+
 

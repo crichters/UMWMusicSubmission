@@ -8,7 +8,14 @@ var collaborator_list = [];
 
 // Function for sending form data to Express Backend
 // Sends POST request containing a map to /submit_recital_form
+
+function recaptchaCallback() {
+  $('#submit').removeAttr('disabled');
+}
+
 $("form").submit((event) => {
+    
+  event.preventDefault();
 
   if(!$("#g-recaptcha-response").val() === ""){
 
@@ -41,7 +48,7 @@ $("form").submit((event) => {
     // Send Post Request
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
         console.log("Posted successfully");
-        // window.location.href = "/submitted.html";
+        console.log(data);        
     }); 
   }
 });

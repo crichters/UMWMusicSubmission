@@ -26,6 +26,7 @@ function fill_table(data) {
     $("#com_death").append(data["composerDeathYear"]);
     $("#tech_req").append(data["techReq"]);
     $("#sched_req").append(data["schedulingReq"]);
+    console.log(data);
 }
 
 function set_submission_status(submission_id, submission_status) {
