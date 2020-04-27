@@ -12,7 +12,7 @@ $('#email_form').submit((e) => {
     $.post("/email", request, (data, success) => {
         console.log(data);
         console.log(success);
-        location.reload();
+        //location.reload();
     });
     
 });
@@ -66,10 +66,14 @@ function append_email(email_address, email_id) {
 }
 
 function delete_email(email_id) {
-    console.log(email_id);
+
+    var request = {
+      'email_id': email_id
+    };
+    console.log(request);
 
 
-    $.post("/delete_email", email_id, (data, status) => {
+    $.post("/delete_email", request, (data, status) => {
         console.log(data);
         console.log(success);
         location.reload();

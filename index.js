@@ -148,7 +148,7 @@ app.get("/form", (req, res) => {
 });
 
 app.get("/get-recitals", async (req, res) => {
-    const recitals = await selectOpenRecitals();
+    let  recitals = await selectOpenRecitals();
     res.json(recitals);
 });
 
@@ -272,7 +272,7 @@ app.post("/create-recital", async (req, res) => {
     let {date, start_time, end_time} = req.body;
     start_time = convertTimeTo24(start_time);
     end_time = convertTimeTo24(end_time);
-    const recital = {
+    let recital = {
         date,
         start_time,
         end_time
@@ -289,10 +289,10 @@ app.post("/create-recital", async (req, res) => {
 app.post("/edit-recital", async (req, res) => {
     let {id, date, start_time, end_time} = req.body;
     start_time, end_time = convertTimeTo24(start_time), convertTimeTo24(end_time);
-    const recitals = await selectOpenRecitals();
-    const newRecital = {date, start_time, end_time};
+    let recitals = await selectOpenRecitals();
+    let newRecital = {date, start_time, end_time};
     for(let i = 0; i < recitals.length; i++) {
-        recital = recitals[i]
+        let recital = recitals[i]
         if(recital.id == id) {
             if(date == null || date == undefined) {
                 date = new Date(recital.date);
@@ -313,8 +313,8 @@ app.post("/edit-recital", async (req, res) => {
 });
 
 app.post("/update-recital-status", async (req, res) => {
-    var recitalId = req.body["recital_id"];
-    var closed = req.body["open"];
+    let  recitalId = req.body["recital_id"];
+    let closed = req.body["open"];
     const isclosed = await updateRecitalStatus(recitalId, closed == "false");
     res.send(isclosed);
 });
@@ -328,23 +328,31 @@ app.post("/update-submission-status", async (req, res) => {
 });
 
 app.get("/emails", async (req, res) => {
-    const emails = await selectEmails();
+    let emails = await selectEmails();
     res.json(emails);
 });
 
 app.post("/email", async (req, res) => {
-    const {email} = req.body;
-    const inserted = await insertEmail(email);
-})
+    let email = req.body['email_address'];
 
-app.delete("/email", async (req, res) => {
-    const {email_id} = req.body;
-    const emails = await selectEmails();
+    const inserted = await insertEmail(email);
+    console.log(inserted);
+    res.send(inserted);
+});
+
+
+
+app.post("/delete_email", async (req, res) => {
+    console.log(req.body);
+
+    let email_id = req.body['email_id'];
+    let emails = await selectEmails();
     if(emails.length > 1) {
         const deleted = await deleteEmail(email_id);
     } else {
         res.json({status: "error", message: "Need more than one email before deleting an email"});
     }
+
 });
 
 app.post("/change-password", async (req, res) => {
