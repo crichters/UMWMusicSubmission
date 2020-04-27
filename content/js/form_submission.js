@@ -47,8 +47,12 @@ $("form").submit((event) => {
 
     // Send Post Request
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
-        console.log("Posted successfully");
-        console.log(data);        
+
+        if(data["status"] == "success") {
+            window.open(data);
+        } else {
+            console.log(data);
+        }
     }); 
   }
 });

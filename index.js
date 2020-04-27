@@ -160,6 +160,7 @@ app.post("/get-submission-by-id", async (req, res) => {
 })
 
 app.post("/submit_recital_form", async (req, res) => {
+
     fs.appendFile(logFile, 'Line 141: writing body.\n', () => {
         return 0;
     });
@@ -170,19 +171,19 @@ app.post("/submit_recital_form", async (req, res) => {
     fs.appendFile(logFile, "\nPerforming captcha verification\n", () => {
         return 0;
     });
-    
+
     /*
     if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
         return res.json({"responseError" : "Please select captcha first"});
     }
     */
-  
+
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
-  
+
     request(verificationURL, (error,response,body) => {
       body = JSON.parse(body);
-  
+
       if(body.success !== undefined && !body.success) {
         return res.json({"responseError" : "Failed captcha verification"});
       }
@@ -190,6 +191,12 @@ app.post("/submit_recital_form", async (req, res) => {
     fs.appendFile(logFile, "\nCaptcha verification complete\n", () => {
         return 0;
     });
+    let format_check = validateSubmission(req.body);
+    if(format_check["status"] != "success") {
+        console.log(format_check["message"]);
+        res.send({status: "error", message: format_check["message"]});
+        return;
+    }
     let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email, composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements, collaborators, recital_date} = req.body;
     if(collaborators) {
         collaborators = collaborators.map((c) => {
@@ -201,7 +208,7 @@ app.post("/submit_recital_form", async (req, res) => {
     } else {
         collaborators = []
     }
-    const performer = {
+    let performer = {
         name,
         medium
     }
@@ -218,19 +225,20 @@ app.post("/submit_recital_form", async (req, res) => {
         techReq: technical_requirements,
         movement
     };
+
     for (property in submission) {
         if(submission[property] == '' || submission[property == ""]) {
             submission[property] = null;
         }
     }
-    fs.appendFile(logFile, 'Performing query\n', () => {
-        return 0;
-    });
-    const response = await insertSubmission(submission, performer, collaborators, recital_date);
-    fs.appendFile(logFile, 'Query finished\n' + response, () => {
-        return 0;
-    });
-    res.sendFile(directory +'/submitted.html');
+    // fs.appendFile(logFile, 'Performing query\n', () => {
+    //     return 0;
+    // });
+    insertSubmission(submission, performer, collaborators, recital_date);
+    // fs.appendFile(logFile, 'Query finished\n' + response, () => {
+    //     return 0;
+    // });
+    res.send({status: "success", message: "submitted.html"});
 });
 
 app.post("/delete-submission", async (req, res) => {
@@ -382,4 +390,51 @@ app.get("/logout", (req, res) => {
 });
 
 
+function validateSubmission(request) {
+    let MAX_STRING = 50;
+    let SMALL_STRING = 10;
+    let SHORT_LIMIT = 32767;
+    let {name, medium, duration, selection_title, selection_work, catalog_number, movement, email,
+        composer_name, composer_birth, composer_death, schedule_requirements, technical_requirements,
+        collaborators, recital_date} = request;
 
+    duration = parseInt(duration);
+    composer_birth = parseInt(composer_birth);
+    composer_death = parseInt(composer_death);
+
+    if(duration > Number.MAX_SAFE_INTEGER || !Number.isInteger(duration)) {
+        return {status: "error", message: "duration format error"};
+    }
+    if(name.length > MAX_STRING) {
+        return {status: "error", message: "name format error"};
+    }
+    if(medium.length > MAX_STRING) {
+        return {status: "error", message: "medium format error"};
+    }
+    if(selection_title.length > MAX_STRING) {
+        return {status: "error", message: "title format error"};
+    }
+    if(selection_work.length > MAX_STRING) {
+        return {status: "error", message: "larger_work format error"};
+    }
+    if(catalog_number.length > SMALL_STRING) {
+        return {status: "error", message: "catalog_number format error"};
+    }
+    if(movement.length > MAX_STRING) {
+        return {status: "error", message: "movement format error"};
+    }
+    if(email.length > MAX_STRING) {
+        return {status: "error", message: "email format error"};
+    }
+    if(composer_name.length > MAX_STRING) {
+        return {status: "error", message: "composer_name format error"};
+    }
+    if(composer_birth > SHORT_LIMIT || !Number.isInteger(composer_birth)) {
+        return {status: "error", message: "composer_birth format error"};
+    }
+    if(composer_death > SHORT_LIMIT || !Number.isInteger(composer_death)) {
+        return {status: "error", message: "composer_death format error"};
+    }
+    return {status: "success"};
+
+}
