@@ -181,7 +181,7 @@ app.post("/submit_recital_form", async (req, res) => {
         return res.json({"responseError" : "Please select captcha first"});
     }
     */
-
+    /*
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
 
     request(verificationURL, (error,response,body) => {
@@ -191,6 +191,7 @@ app.post("/submit_recital_form", async (req, res) => {
         return res.json({"responseError" : "Failed captcha verification"});
       }
     });
+    */
     fs.appendFile(logFile, "\nCaptcha verification complete\n", () => {
         return 0;
     });
@@ -405,7 +406,7 @@ function validateSubmission(request) {
     composer_birth = parseInt(composer_birth);
     composer_death = parseInt(composer_death);
 
-    if(duration > Number.MAX_SAFE_INTEGER || !Number.isInteger(duration)) {
+    if(duration > Number.MAX_SAFE_INTEGER || !Number.isInteger(duration) && !isNaN(duration)) {
         return {status: "error", message: "duration format error"};
     }
     if(name.length > MAX_STRING) {
@@ -432,10 +433,12 @@ function validateSubmission(request) {
     if(composer_name.length > MAX_STRING) {
         return {status: "error", message: "composer_name format error"};
     }
-    if(composer_birth > SHORT_LIMIT || !Number.isInteger(composer_birth)) {
+    if(composer_birth > SHORT_LIMIT || !Number.isInteger(composer_birth) && !isNaN(composer_birth)) {
+    console.log(composer_birth);
         return {status: "error", message: "composer_birth format error"};
     }
-    if(composer_death > SHORT_LIMIT || !Number.isInteger(composer_death)) {
+    if(composer_death > SHORT_LIMIT || !Number.isInteger(composer_death) && !isNaN(composer_death)) {
+        console.log(composer_death);
         return {status: "error", message: "composer_death format error"};
     }
     return {status: "success"};

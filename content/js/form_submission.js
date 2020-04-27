@@ -49,7 +49,7 @@ $("form").submit((event) => {
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
 
         if(data["status"] == "success") {
-            window.open(data);
+            location.replace(data["message"]);
         } else {
             console.log(data);
         }
