@@ -351,7 +351,11 @@ app.post("/delete_email", async (req, res) => {
     if(emails.length > 1) {
         const deleted = await deleteEmail(email_id);
         console.log(deleted);
-        res.send(deleted);
+        if(deleted) {
+            res.json({status: "success"});
+        } else {
+            res.json({status: "error"});
+        }
     } else {
         res.json({status: "error", message: "Need more than one email before deleting an email"});
     }
@@ -359,16 +363,16 @@ app.post("/delete_email", async (req, res) => {
 });
 
 app.post("/change-password", async (req, res) => {
-    const {old_password, new_password} = req.body;
-    if(checkPassword(old_password)) {
-        try {
-            const updated = await updatePassword(new_password);
-            res.send(true);
-        } catch {
-            res.send(false);
-        }
+    let old_password = req.body["current_password"];
+    let new_password = req.body["new_password"];
+    console.log(old_password);
+    console.log(new_password);
+    response = await checkPassword(old_password);
+    if(response) {
+        let updated = updatePassword(new_password);
+        res.json({status:"success"});
     } else {
-        res.send(false);
+        res.json({status: "error"});
     }
 });
 

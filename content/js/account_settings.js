@@ -14,13 +14,8 @@ $('#email_form').submit((e) => {
             location.reload();
         } else {
             message = (!data["message"]) ? "Unable to add email address" : data["message"];
-        }
-        if(data){
-            location.reload();
-        } else {
             $('#email_error').html(`<span style=\'color:red;\'>${message}</span>`);
         }
-        //location.reload();
     });
     
 });
@@ -30,6 +25,7 @@ function clear_passwords() {
     $('#new_password').val('');
     $('#new_password2').val('');
 }
+
 
 $('#password_form').submit((e) => {
     e.preventDefault();
@@ -46,10 +42,12 @@ $('#password_form').submit((e) => {
         
         $.post("/change-password", change_request, (data, success) => {
             clear_passwords();
-            if(data === true) {
+            if(data["status"] == "success"){
+                $('#password_form')[0].reset();
                 $('#response').html(`<span style="color:green;">Password changed successfully</span>`);
             } else {
-                $('#response').html(`<span style="color:red;">Error changing password</span>`);
+                message = (!data["message"]) ? "Error changing password" : data["message"];
+                $('#response').html(`<span style="color:red;">${message}</span>`);
             }
         });
     } else {

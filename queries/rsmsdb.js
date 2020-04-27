@@ -323,7 +323,7 @@ function updatePassword(password) {
     if (err) {
       console.error("Cannot update password: " + err);
     }
-    db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
+    return db.query(`UPDATE faculty_member SET password="${hash}" WHERE id=1;`);
   });
 };
 
