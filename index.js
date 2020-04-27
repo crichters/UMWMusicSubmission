@@ -26,7 +26,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials", "/submitted"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -147,6 +147,9 @@ app.get("/form", (req, res) => {
     res.sendFile(__dirname + '/content/form.html');
 });
 
+app.get("/submitted", (req, res) => {
+   res.sendFile(__dirname + '/content/submitted.html');
+});
 app.get("/get-recitals", async (req, res) => {
     let  recitals = await selectOpenRecitals();
     res.json(recitals);
