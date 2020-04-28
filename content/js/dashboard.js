@@ -53,14 +53,14 @@ function insert_recital(recital_number, recital_title) {
                         <div class="form-group row">
                           <label for="inputStartTime" class="col-sm-2 col-form-label">Start Time</label>
                           <div class="col-sm-10">
-                            <input class="form-control" id="editStartTime_${recital_number}" placeholder="Start Time">
+                            <input class="form-control" id="editStartTime_${recital_number}" placeholder="Start Time" type="time">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="inputEndTime" class="col-sm-2 col-form-label">End Time</label>
                           <div class="col-sm-10">
-                            <input class="form-control" id="editEndTime_${recital_number}" placeholder="End Time">
+                            <input class="form-control" id="editEndTime_${recital_number}" placeholder="End Time" type="time">
                           </div>
                         </div>
 
@@ -223,11 +223,12 @@ function edit_recital(recital_id) {
     submission_values["end_time"] = end_time;
   }
 
+
   $.post("/edit-recital", submission_values, (data, status, jqXHR) => {
     console.log("Post submitted");
     console.log(data);
     console.log(status);
-    location.reload();
+    //location.reload();
   });
 }
 

@@ -137,7 +137,7 @@ async function selectSubmissionDetailsFor(submissionId) {
                     perf.name,
                     perf.medium 
             FROM submission AS sub 
-            NATURAL JOIN submission_performers AS perfs 
+            INNER JOIN submission_performers AS perfs on perfs.submission_id = sub.id
             INNER JOIN performer AS perf 
                 ON perfs.performer_id = perf.id 
             INNER JOIN recital 

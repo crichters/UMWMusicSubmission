@@ -26,6 +26,10 @@ function fill_table(data) {
     $("#com_death").append(data["composerDeathYear"]);
     $("#tech_req").append(data["techReq"]);
     $("#sched_req").append(data["schedulingReq"]);
+
+    for(let i = 0; i < data["collaborators"].length; i++) {
+        console.log(data["collaborators"][i]["name"]);
+    }
     console.log(data);
 }
 

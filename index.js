@@ -159,6 +159,8 @@ app.post("/get-submission-by-id", async (req, res) => {
     var submissionId = req.body["id"];
     console.log(req.body);
     results = await selectSubmissionDetailsFor(submissionId);
+    results[0]["collaborators"] = await selectCollaboratorsFor(submissionId);
+    console.log(results);
     res.send(results);
 })
 
@@ -306,6 +308,9 @@ app.post("/edit-recital", async (req, res) => {
     for(let i = 0; i < recitals.length; i++) {
         let recital = recitals[i]
         if(recital.id == id) {
+            console.log("Date: ", date);
+            console.log("start time: ", start_time);
+            console.log("End time: ", end_time)
             if(date == null || date == undefined) {
                 date = new Date(recital.date);
                 date = date.toISOString().split('T')[0];
