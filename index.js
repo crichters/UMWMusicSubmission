@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
-    selectCollaboratorsFor, archiveRecital, selectUnarchivedRecitals, 
+    selectCollaboratorsFor, archiveRecital, searchSubmissions, selectUnarchivedRecitals, 
     updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore } = require('./queries/rsmsdb');
 
 const app = express();
@@ -307,16 +307,29 @@ app.post("/archive", async (req, res) => {
 })
 
 app.get("/emails", async (req, res) => {
-    const emails = await selectEmails();
+    let emails;
+    try {
+        emails = await selectEmails();
+    } catch (err) {
+        console.log(err);
+        res.send({status: "Error", message: "Failed to retrieve emails"});
+    }
     res.json(emails);
 });
 
 app.post("/email", async (req, res) => {
     const {email} = req.body;
-    const inserted = await insertEmail(email);
-})
+    let inserted;
+    try {
+        inserted = await insertEmail(email);
+    } catch (err) {
+        console.log(err)
+        res.send({status: "Error", message: "Email failed to insert"});
+    }
+    res.send(true);
+});
 
-app.delete("/email", async (req, res) => {
+app.delete("/delete-email", async (req, res) => {
     const {email_id} = req.body;
     const emails = await selectEmails();
     if(emails.length > 1) {
@@ -326,7 +339,7 @@ app.delete("/email", async (req, res) => {
     }
 });
 
-app.delete("/date", async (req, res) => {
+app.post("/delete-date", async (req, res) => {
     let {date} = req.body;
     try {
         let body = await deleteArchivedRecitalsBefore(date);
@@ -354,6 +367,19 @@ app.get("/logout", (req, res) => {
     req.session.valid = false;
     res.redirect("/login");
 });
+
+app.post("/search", (req, res) => {
+    const {phrase, status, date} = req.body;
+    const criteria = {phrase, status, date};
+    let searchResult;
+    try {
+        searchResult = await searchSubmissions(criteria);
+    } catch (err) {
+        console.log(err)
+    }
+    res.send(searchResult);
+
+})
 
 app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
     console.log("Server started");
