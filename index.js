@@ -373,7 +373,7 @@ function generatePassword() {
     return string;
 }
 
-app.get("/forgot-password", async (req, res) => {
+app.post("/forgot-password", async (req, res) => {
     const {email} = req.body.email;
     if(!checkEmail(email)) {
         res.json({status: "Error", message: "Email not recognized"});
