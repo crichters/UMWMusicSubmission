@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
-    selectCollaboratorsFor, archiveRecital, searchSubmissions, selectUnarchivedRecitals, 
+    selectCollaboratorsFor, unarchiveRecital, archiveRecital, searchSubmissions, selectUnarchivedRecitals, 
     updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore } = require('./queries/rsmsdb');
 
 const app = express();
@@ -199,6 +199,18 @@ app.post("/submit_recital_form", async (req, res) => {
         }
     }
     const response = await insertSubmission(submission, performer, collaborators, recital_date);
+    const emails = await selectEmails();
+    let mailOptions = {
+        from: 'umw.social.services@gmail.com',
+        to: emails[2].email,
+        subject: 'Submission Notification',
+        text: name + " has submitted a recital performance."
+    }
+    transporter.sendMail(mailOptions, (err) => {
+        if(err) {
+            console.log(err)
+        }
+    });
     res.sendFile(directory +'/submitted.html');
 });
 
@@ -304,7 +316,17 @@ app.post("/archive", async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-})
+});
+
+app.post("/unarchive", async (req, res) => {
+    const {recitalId} = req.body;
+    try {
+        const unarchived = await selectUnarchivedRecitals(recitalId);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.log(err)
+    }
+});
 
 app.get("/emails", async (req, res) => {
     let emails;

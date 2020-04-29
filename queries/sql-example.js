@@ -36,6 +36,7 @@ const recital = {
 	start_time: "12:30:00"
 };
 
+<<<<<<< HEAD
 rsmsdb.archiveRecital(1);
 rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 const criteria = {
@@ -43,10 +44,12 @@ const criteria = {
 	date: '2020-04-06',
 	status: null//['unreviewed', 'accepted']
 };
+=======
+rsmsdb.selectArchivedRecitals().then(archived =>
+	console.log("Archived recitals:", JSON.stringify(archived, null, 4)));
+>>>>>>> ccd6711afb0b74b0f34eb039d40b45852e6d2945
 
-rsmsdb.searchSubmissions(criteria)
-	.then(results => console.log("Search results:", JSON.stringify(results, null, 4)))
-	.catch(err => console.error("Unable to search:", err));
+// rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 
 // rsmsdb.updatePassword("password");
 // rsmsdb.checkPassword("bar")
@@ -82,16 +85,16 @@ rsmsdb.searchSubmissions(criteria)
 
 
 // delete recital with id 1
-rsmsdb.deleteRecital(1).
-then(() => {
-	rsmsdb.selectOpenRecitals()
-	.then(openRecitals => {
-		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
-	});
-})
-.catch(err => {
-	console.error("Unable to delete recital:", err);
-});
+// rsmsdb.deleteRecital(1).
+// then(() => {
+// 	rsmsdb.selectOpenRecitals()
+// 	.then(openRecitals => {
+// 		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+// 	});
+// })
+// .catch(err => {
+// 	console.error("Unable to delete recital:", err);
+// });
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
