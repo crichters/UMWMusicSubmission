@@ -106,4 +106,4 @@ $(document).ready(function() {
           append_email(data[i]["email"], data[i]["id"]);
         }
       });
-    });
+});

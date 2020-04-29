@@ -7,7 +7,8 @@ const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, archiveRecital, searchSubmissions, selectUnarchivedRecitals,
-    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore } = require('./queries/rsmsdb');
+    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore,
+    selectArchivedRecitals, deleteRecital} = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -132,7 +133,6 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
-    fs.writeFile('../logs/app.log', recitals);
     res.json(recitals);
 });
 
@@ -140,6 +140,14 @@ app.get("/dashboard-data", async (req, res) => {
     const {id} = req.body;
     const deleted = await 
 });*/
+
+app.post("/delete-recital", async (req, res) => {
+    let {recital_id} = req.body;
+    recital_id = parseInt(recital_id);
+    deleteRecital(recital_id).then(() => {
+        res.send({status: "success"});
+    });
+});
 
 //This get request is used to actually sign the user in.
 app.post("/login", async (req, res) => {
@@ -466,6 +474,24 @@ app.post("/forgot-password", async (req, res) => {
         });
         res.redirect("/login");
     }
+});
+
+app.get("/get-archived", async (req, res) => {
+    let recitals = await selectArchivedRecitals();
+    let promises = [];
+    recitals.forEach((recital) => {
+        promises.push(selectSubmissionsFor(recital.id));
+    });
+    let submissions = await Promise.all(promises);
+    let i = -1;
+    recitals = recitals.map((recital) => {
+        i++;
+        return {
+            ...recital,
+            submissions: submissions[i]
+        }
+    });
+    res.json(recitals);
 });
 
 app.post("/search", async (req, res) => {

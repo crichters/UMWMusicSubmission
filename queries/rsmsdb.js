@@ -47,11 +47,27 @@ async function selectUnarchivedRecitals() {
 
 
 /**
+ * Returns a promise to a list of recital objects that
+ * appear in the archives. Objects contain
+ * the recital id (int), date (string), endTime (string),
+ * and startTime (string).
+ */
+async function selectArchivedRecitals() {
+    return db.query(`SELECT id, 
+                            DATE_FORMAT(date, '%M %e, %Y') as date, 
+                            TIME_FORMAT(start_time, '%h:%i %p') as startTime, 
+                            TIME_FORMAT(end_time, '%h:%i %p') as endTime 
+                    FROM recital WHERE is_archived;`,
+                    { type: db.QueryTypes.SELECT});
+};
+
+
+/**
  * Changes the recital's is_archived field to true.
  * @param {int} recitalId - the id of the recital to archive.
  */
 function archiveRecital(recitalId) {
-  db.query(`UPDATE recital SET is_archived = 1
+  db.query(`UPDATE recital SET is_archived = 1, is_closed = 1
             WHERE id = ${recitalId};`);
 };
 
@@ -536,4 +552,5 @@ module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissi
         selectCollaboratorsFor, selectUnarchivedRecitals, insertPassword, insertRecital, insertSubmission,
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
-        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore, searchSubmissions};
+        archiveRecital, deleteRecital, deleteArchivedRecitalsBefore, searchSubmissions,
+        selectArchivedRecitals};

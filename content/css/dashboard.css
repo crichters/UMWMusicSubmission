@@ -13,3 +13,8 @@ caption {
 .bi-x:hover {
     fill: red;
   }
+
+.bi-trash-fill:hover {
+    fill: red;
+
+}
