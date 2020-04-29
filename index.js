@@ -28,7 +28,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search", "/forgot-password"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -441,7 +441,7 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/forgot-password", (req, res) => {
-    res.sendFile(directory + '/forgot-password.html')
+    res.sendFile(directory + '/forgot_password.html')
 });
 
 app.post("/forgot-password", async (req, res) => {
