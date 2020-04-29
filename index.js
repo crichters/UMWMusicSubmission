@@ -373,6 +373,10 @@ function generatePassword() {
     return string;
 }
 
+app.get("/forgot-password", (req, res) => {
+    res.sendFile(directory + '/forgot-password.html')
+})
+
 app.post("/forgot-password", async (req, res) => {
     const {email} = req.body.email;
     if(!checkEmail(email)) {
