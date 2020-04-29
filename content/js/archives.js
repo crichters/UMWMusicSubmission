@@ -70,7 +70,12 @@ function set_submission_status(submission_id, submission_status) {
 }
 
 function delete_recitals_before(date) {
-    console.log(date);
+    submission_values = {date: date};
+    $.post("/delete-date", submission_values, (data, status, jqXHR) =>{
+        console.log(data);
+        console.log(status);
+        location.reload();
+    });
 }
 
 $('#delete_before_date_button').click( () => {
