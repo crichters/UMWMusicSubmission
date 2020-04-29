@@ -16,7 +16,7 @@ const {keys, mailer} = require('./config/config');
 app.set("port", 3000);
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials", "/forgot-password"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -363,24 +363,37 @@ app.post("/change-password", async (req, res) => {
     }
 });
 
-app.get("/forgot-password", (req, res) => {
+function generatePassword() {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let string = "";
+    for(i = 0; i < 10; i++) {
+        let index = Math.floor(Math.random() * 62);
+        string += characters[index];
+    }
+    return string;
+}
+
+app.get("/forgot-password", async (req, res) => {
     const {email} = req.body.email;
     if(!checkEmail(email)) {
         res.json({status: "Error", message: "Email not recognized"});
     } else {
+        console.log("Sending email");
+        let newPW = generatePassword();
+        const updated = await updatePassword(newPW);
         let mailOptions = {
             from: 'umw.social.services@gmail.com',
-            to: email,
+            to: 'simeon.neisler@gmail.com',
             subject: 'Forgot Password',
-            text: "Here's the link to reset your password.\nIf you didn't issue this request please click here."
+            text: "Someone tried to reset your password. Here's your new one\n" + newPW + "\nWhen you sign in, make sure to go to the account settings page and set up a new one."
         }
         transporter.sendMail(mailOptions, (err) => {
             if(err) {
                 console.log(err);
             } else {
-                console.log('Email sent');
             }
         });
+        res.redirect("/login");
     }
 });
 
