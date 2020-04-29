@@ -31,6 +31,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
 app.all("*", checkSession);
 
+const transporter = nodemailer.createTransport(mailer);
+
 const directory = __dirname + '/content';
 
 app.get("/", (req, res) => {
@@ -38,7 +40,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/emailtest", (req, res) => {
-    let transporter = nodemailer.createTransport(mailer);
     let mailOptions = {
         from: 'umw.programmers@gmail.com',
         to: 'simeon.neisler@gmail.com',
@@ -52,7 +53,6 @@ app.get("/emailtest", (req, res) => {
             console.log('Email sent');
         }
     })
-
 });
 
 //This is a get request that simply returns the login page
@@ -87,7 +87,7 @@ app.get("/dashboard-data", async (req, res) => {
     res.json(recitals);
 });
 
-app.delete("/recital", async (req, res) => {
+app.post("/delete-recital", async (req, res) => {
     const {id} = req.body;
     try {
         const deleted = await deleteRecital(id);
@@ -329,7 +329,7 @@ app.post("/email", async (req, res) => {
     res.send(true);
 });
 
-app.delete("/delete-email", async (req, res) => {
+app.post("/delete-email", async (req, res) => {
     const {email_id} = req.body;
     const emails = await selectEmails();
     if(emails.length > 1) {
@@ -363,12 +363,33 @@ app.post("/change-password", async (req, res) => {
     }
 });
 
+app.get("/forgot-password", (req, res) => {
+    const {email} = req.body.email;
+    if(!checkEmail(email)) {
+        res.json({status: "Error", message: "Email not recognized"});
+    } else {
+        let mailOptions = {
+            from: 'umw.social.services@gmail.com',
+            to: email,
+            subject: 'Forgot Password',
+            text: "Here's the link to reset your password.\nIf you didn't issue this request please click here."
+        }
+        transporter.sendMail(mailOptions, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log('Email sent');
+            }
+        });
+    }
+});
+
 app.get("/logout", (req, res) => {
     req.session.valid = false;
     res.redirect("/login");
 });
 
-app.post("/search", (req, res) => {
+app.post("/search", async (req, res) => {
     const {phrase, status, date} = req.body;
     const criteria = {phrase, status, date};
     let searchResult;
@@ -377,7 +398,7 @@ app.post("/search", (req, res) => {
     } catch (err) {
         console.log(err)
     }
-    res.send(searchResult);
+    res.json(searchResult);
 
 })
 
