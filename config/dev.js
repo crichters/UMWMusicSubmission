@@ -4,4 +4,15 @@ const keys = {
     captchaPrivate: '6LdzSeYUAAAAAPL-O7Vp7jG06xvQ8YOq1AVzVAhU'
 }
 
-module.exports = {keys};
+const mailer = {
+    service: 'gmail',
+    auth: {
+        user: 'umw.social.services@gmail.com',
+        pass: 'trinkleB52'
+    }
+}
+
+module.exports = {
+    keys,
+    mailer
+}

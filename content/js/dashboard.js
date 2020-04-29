@@ -139,8 +139,9 @@ function insert_recital_submission(recital_number, status, summary, link, id) {
             </svg></a>
 
             <a href="#" data-toggle="tooltip" title="Deny Submission" onclick="${"set_submission_status(" + id + ", " + ((status == "denied") ? "'unreviewed'" : "'denied'")});">
-            <svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="${((status == "denied") ? "red" : "gray")}" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
+            <svg class="bi bi-x" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="${((status == "denied") ? "red" : "gray")}" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>
             </svg>
             </a>
         </th>

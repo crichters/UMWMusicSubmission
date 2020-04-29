@@ -2,15 +2,17 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const request = require('request');
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
-    selectCollaboratorsFor, selectUnarchivedRecitals, 
-    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission } = require('./queries/rsmsdb');
+    selectCollaboratorsFor, archiveRecital, searchSubmissions, selectUnarchivedRecitals,
+    updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore } = require('./queries/rsmsdb');
 
 const app = express();
 
-const {keys} = require('./config/config');
+const {keys, mailer} = require('./config/config');
+
 const logFile = "./log.txt"
 
 app.set("port", 3000);
@@ -71,6 +73,24 @@ process.on('SIGTERM', () => {
 
 app.get("/", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
+});
+
+app.get("/emailtest", (req, res) => {
+    let transporter = nodemailer.createTransport(mailer);
+    let mailOptions = {
+        from: 'umw.programmers@gmail.com',
+        to: 'cgrichters@gmail.com',
+        subject: 'test',
+        text: 'Testing testing.'
+    }
+    transporter.sendMail(mailOptions, (err) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('Email sent');
+        }
+    })
+
 });
 
 //This is a get request that simply returns the login page
