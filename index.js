@@ -28,7 +28,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials", "/submitted", "/search"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -164,12 +164,12 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/credentials", async (req, res) => {
-    const email = await insertEmail("simeon.neisler@gmail.com");
-    const pw = await insertPassword("Password");
-    console.log("Credentials added");
-    res.redirect("/login");
-});
+// app.get("/credentials", async (req, res) => {
+//     const email = await insertEmail("simeon.neisler@gmail.com");
+//     const pw = await insertPassword("Password");
+//     console.log("Credentials added");
+//     res.redirect("/login");
+// });
 
 app.get("/form", (req, res) => {
     res.sendFile(__dirname + '/content/form.html');

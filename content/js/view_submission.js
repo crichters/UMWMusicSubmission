@@ -27,9 +27,13 @@ function fill_table(data) {
     $("#tech_req").append(data["techReq"]);
     $("#sched_req").append(data["schedulingReq"]);
 
+    let collaborator_names = "";
+
     for(let i = 0; i < data["collaborators"].length; i++) {
-        console.log(data["collaborators"][i]["name"]);
+        collaborator_names = collaborator_names + data["collaborators"][i]["name"] + ". " + data["collaborators"][i]["medium"] +((i == data["collaborators"].length -1) ? "" : ", ");
     }
+
+    $("#collaborators").append(collaborator_names);
     console.log(data);
 }
 

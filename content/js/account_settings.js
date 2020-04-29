@@ -20,6 +20,14 @@ $('#email_form').submit((e) => {
     
 });
 
+$('#logout_button').click(() => {
+    {
+        $.get("/logout", (data, status) => {
+            location.reload();
+        });
+    }
+});
+
 function clear_passwords() {
     $('#old_password').val('');
     $('#new_password').val('');
