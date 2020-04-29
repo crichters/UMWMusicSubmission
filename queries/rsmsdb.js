@@ -73,7 +73,7 @@ function archiveRecital(recitalId) {
 
 
 /**
- * Changes the recital's is_archived field to true.
+ * Changes the recital's is_archived field to false.
  * @param {int} recitalId - the id of the recital to unarchive.
  */
 function unarchiveRecital(recitalId)
