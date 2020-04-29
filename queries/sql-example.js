@@ -37,7 +37,7 @@ const recital = {
 };
 
 rsmsdb.archiveRecital(1);
-rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
+//rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 
 // rsmsdb.updatePassword("password");
 // rsmsdb.checkPassword("bar")
