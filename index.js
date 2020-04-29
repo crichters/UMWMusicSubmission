@@ -43,6 +43,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret: "secret"}));
 app.all("*", checkSession);
 
+const transporter = nodemailer.createTransport(mailer);
+
 const directory = __dirname + '/content';
 
 let server = app.listen(process.env.PORT || app.get("port"), process.env.IP, (req, res) => {
@@ -130,6 +132,7 @@ app.get("/dashboard-data", async (req, res) => {
             submissions: submissions[i]
         }
     });
+    fs.writeFile('../logs/app.log', recitals);
     res.json(recitals);
 });
 
@@ -422,12 +425,50 @@ app.post("/change-password", async (req, res) => {
     }
 });
 
+function generatePassword() {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let string = "";
+    for(i = 0; i < 10; i++) {
+        let index = Math.floor(Math.random() * 62);
+        string += characters[index];
+    }
+    return string;
+}
+
 app.get("/logout", (req, res) => {
     req.session.valid = false;
     res.redirect("/login");
 });
 
-app.post("/search", (req, res) => {
+app.get("/forgot-password", (req, res) => {
+    res.sendFile(directory + '/forgot-password.html')
+});
+
+app.post("/forgot-password", async (req, res) => {
+    const {email} = req.body.email;
+    if(!checkEmail(email)) {
+        res.json({status: "Error", message: "Email not recognized"});
+    } else {
+        console.log("Sending email");
+        let newPW = generatePassword();
+        const updated = await updatePassword(newPW);
+        let mailOptions = {
+            from: 'umw.social.services@gmail.com',
+            to: 'simeon.neisler@gmail.com',
+            subject: 'Forgot Password',
+            text: "Someone tried to reset your password. Here's your new one\n" + newPW + "\nWhen you sign in, make sure to go to the account settings page and set up a new one."
+        }
+        transporter.sendMail(mailOptions, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+            }
+        });
+        res.redirect("/login");
+    }
+});
+
+app.post("/search", async (req, res) => {
     const {phrase, status, date} = req.body;
     const criteria = {phrase, status, date};
     let searchResult;
