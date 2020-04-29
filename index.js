@@ -87,6 +87,14 @@ app.get("/account-settings", (req, res) => {
     res.sendFile(directory + '/account_settings.html');
 });
 
+app.get("/search", (req, res) => {
+    res.sendFile(directory + '/search_page.html');
+});
+
+app.get("/archive", (req, res) => {
+    res.sendFile(directory + '/archive_page.html');
+});
+
 app.get("/dashboard-data", async (req, res) => {
     let recitals = await selectUnarchivedRecitals();
     let promises = [];
@@ -165,24 +173,10 @@ app.post("/get-submission-by-id", async (req, res) => {
 })
 
 app.post("/submit_recital_form", async (req, res) => {
-
-    fs.appendFile(logFile, 'Line 141: writing body.\n', () => {
-        return 0;
-    });
-    fs.appendFile(logFile, req.body + '\n', () => {
-        return 0;
-    });
-
-    fs.appendFile(logFile, "\nPerforming captcha verification\n", () => {
-        return 0;
-    });
-
-    /*
     if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
         return res.json({"responseError" : "Please select captcha first"});
     }
-    */
     /*
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
 
@@ -194,9 +188,6 @@ app.post("/submit_recital_form", async (req, res) => {
       }
     });
     */
-    fs.appendFile(logFile, "\nCaptcha verification complete\n", () => {
-        return 0;
-    });
     let format_check = validateSubmission(req.body);
     if(format_check["status"] != "success") {
         console.log(format_check["message"]);
@@ -308,9 +299,6 @@ app.post("/edit-recital", async (req, res) => {
     for(let i = 0; i < recitals.length; i++) {
         let recital = recitals[i]
         if(recital.id == id) {
-            console.log("Date: ", date);
-            console.log("start time: ", start_time);
-            console.log("End time: ", end_time)
             if(date == null || date == undefined) {
                 date = new Date(recital.date);
                 date = date.toISOString().split('T')[0];
@@ -342,6 +330,16 @@ app.post("/update-submission-status", async (req, res) => {
     var status = req.body["submission_status"];
     const ischanged = await updateSubmissionStatus(submission_id, status);
     res.send(ischanged);
+});
+
+app.post("/archive", async (req, res) => {
+    const {recitalId} = req.body;
+    try {
+        const archived = await archiveRecital(recitalId);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 app.get("/emails", async (req, res) => {
@@ -379,6 +377,16 @@ app.post("/delete_email", async (req, res) => {
 
 });
 
+app.post("/delete-date", async (req, res) => {
+    let {date} = req.body;
+    try {
+        let body = await deleteArchivedRecitalsBefore(date);
+        res.redirect("/dashboard")
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 app.post("/change-password", async (req, res) => {
     let old_password = req.body["current_password"];
     let new_password = req.body["new_password"];
@@ -398,6 +406,17 @@ app.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
+app.post("/search", (req, res) => {
+    const {phrase, status, date} = req.body;
+    const criteria = {phrase, status, date};
+    let searchResult;
+    try {
+        searchResult = searchSubmissions(criteria);
+    } catch (err) {
+        console.log(err)
+    }
+    res.send(searchResult);
+});
 
 function validateSubmission(request) {
     let MAX_STRING = 50;
