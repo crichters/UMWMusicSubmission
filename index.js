@@ -8,7 +8,7 @@ const fs = require('fs');
 const { selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissionsFor, deleteSubmission, updateRecital,
     selectCollaboratorsFor, archiveRecital, searchSubmissions, selectUnarchivedRecitals,
     updateRecitalStatus, updateSubmissionStatus, updatePassword, deleteEmail, selectEmails, insertEmail, insertPassword, checkEmail, checkPassword, insertRecital, insertSubmission, deleteArchivedRecitalsBefore,
-    selectArchivedRecitals, deleteRecital} = require('./queries/rsmsdb');
+    selectArchivedRecitals, deleteRecital, unarchiveRecital} = require('./queries/rsmsdb');
 
 const app = express();
 
@@ -29,7 +29,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search", "/forgot-password"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search", "/forgot-password", "/get-submission-by-id"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -165,6 +165,9 @@ app.post("/login", async (req, res) => {
     }
     if(validEmail && validPW) {
         req.session.valid = true;
+        res.send({
+            status: "success"
+        });
         res.redirect("/dashboard");
     } else {
         req.session.valid = false;

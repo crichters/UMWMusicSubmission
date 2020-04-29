@@ -73,6 +73,16 @@ function archiveRecital(recitalId) {
 
 
 /**
+ * Changes the recital's is_archived field to false.
+ * @param {int} recitalId - the id of the recital to unarchive.
+ */
+function unarchiveRecital(recitalId)
+{
+  db.query(`UPDATE recital SET is_archived = 0
+  WHERE id = ${recitalId};`);
+};
+
+/**
  * Deletes a recital and its submissions from the database.
  * @param {int} recitalId - the id of the recital to delete.
  */
@@ -553,4 +563,4 @@ module.exports = {selectOpenRecitals, selectSubmissionDetailsFor, selectSubmissi
         updateRecital, updateRecitalStatus, updatePassword, checkPassword, insertEmail, deleteSubmission,
         updateRecitalStatus, updateSubmissionStatus, checkEmail, selectEmails, deleteEmail, 
         archiveRecital, deleteRecital, deleteArchivedRecitalsBefore, searchSubmissions,
-        selectArchivedRecitals};
+        selectArchivedRecitals, unarchiveRecital};

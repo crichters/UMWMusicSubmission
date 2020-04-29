@@ -59,7 +59,7 @@
       <!-- Main Content Here -->
 
       <div class="row">
-        <form action="/login" method="POST">
+        <form id="login_form">
         <div class="form-group">
             <label for="email_address">Email Address</label>
             <input type="email" class="form-control" id="email_address" placeholder="Enter email address" name="email_address">
@@ -71,7 +71,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
           <a style="padding-left: 30%;" href="/forgot-password">Forgot Password</a>
+          <div id="login_response" style="color:red; margin-top: 5%;"></div>
         </form>
+
       </div>
 
     </div>
@@ -129,6 +131,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/login.js"></script>
 
 </body>
 </html>
