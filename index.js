@@ -28,7 +28,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials", "/submitted"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/credentials", "/submitted", "/search"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -193,11 +193,12 @@ app.post("/get-submission-by-id", async (req, res) => {
 })
 
 app.post("/submit_recital_form", async (req, res) => {
+
+    /*
     if(req.body.captcha == undefined || req.body.captcha === '' || req.body.captcha == null)
     {
         return res.json({"responseError" : "Please select captcha first"});
     }
-    /*
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys.captchaPrivate + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
 
     request(verificationURL, (error,response,body) => {
@@ -435,7 +436,12 @@ app.post("/search", (req, res) => {
     } catch (err) {
         console.log(err)
     }
-    res.send(searchResult);
+    searchResult.then((result) => {
+        let results = {};
+        results["search_results"] = result;
+        results["is_logged_in"] = req.session.valid == true;
+        res.send(results);
+    })
 });
 
 function validateSubmission(request) {

@@ -64,16 +64,16 @@
       <!-- search bar, search by dropdown, and search button-->
       <div class="row">
             <div class="input-group" id="recitalSearch">
-                <input type="text" class="form-control" placeholder="Search for recitals" />
+                <input type="text" id="search_phrase" class="form-control" placeholder="Search for recitals" />
                 <div class="input-group-btn">
                     <div class="btn-group" role="group">
                         <div class="dropdown dropdown-sm">
                             <button type="button" title="Search by" class="btn btn-light rounded-0 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                             <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                <form class="form-horizontal" role="form" style="padding: 10px;">
+                                <form id="search_form" class="form-horizontal" role="form" style="padding: 10px;">
                                   <div class="form-group">
                                     <label for="filter">Search by</label>
-                                    <select class="form-control">
+                                    <select id="search_status" class="form-control">
                                         <option value="0" selected>All Recitals</option>
                                         <option value="1">Accepted</option>
                                         <option value="2">Rejected</option>
@@ -82,14 +82,14 @@
                                   </div>
                                   <div class="form-group">
                                     <label for="contain">Date</label>
-                                    <input class="form-control" type="date" />
+                                    <input id="search_date" class="form-control" type="date" />
                                   </div>
                                   <!-- Maybe we could use JS to make this a confirm query button instead of search-->
                                   <button type="submit" class="btn btn-primary btn-block"><span class="fa fa-search" aria-hidden="true"></span> Search</button>
                                 </form>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary rounded-right" title="Search"><span class="fa fa-search" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-primary rounded-right" title="Search" onclick="search()"><span class="fa fa-search" aria-hidden="true"></span></button>
                     </div>
                 </div>
             </div>
@@ -110,16 +110,7 @@
           </thead>
           <tbody id="recitalTable">
             <!-- replace with the recital that is being searched, with js-->
-            <tr>
-              <td>Emmanuel Smith. Piano. Canope</td>
-              <td>Accepted</td>
-              <td>10/03/2019</td>
-              <td>
-                <a  href="" title="View" onclick=""><i class="fa fa-eye" style="padding-right: 10px;"></i></a>
-                <a  href="javascript:void(0)" title="Delete" onclick=""><i class="fa fa-trash" style="color: red;"></i></a>
 
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -179,6 +170,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Minified Bootstrap JavaScript-->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/search.js"></script>
 
 </body>
 </html>

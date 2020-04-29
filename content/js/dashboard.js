@@ -252,7 +252,7 @@ $(document).ready(function() {
           insert_recital(recital_date["id"], `OPEN Recital: ${recital_date["date"]} (${recital_date["startTime"]} - ${recital_date["endTime"]})`);
           set_recital_status(recital_date["id"], recital_date["isClosed"] == 0);
           for(var j=0; j<recital_date["submissions"].length; j++){
-              submission = recital_date["submissions"][j];
+              var submission = recital_date["submissions"][j];
               var summary = `${submission["name"]}. ${submission["medium"]}. ${submission["title"]}.`;
               var link = `/view_submission.html?id=${submission["id"]}`;
               insert_recital_submission(recital_date["id"], submission["status"], summary, link, submission["id"]);
