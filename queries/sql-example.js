@@ -36,8 +36,11 @@ const recital = {
 	start_time: "12:30:00"
 };
 
-rsmsdb.archiveRecital(1);
-rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
+
+rsmsdb.selectArchivedRecitals().then(archived =>
+	console.log("Archived recitals:", JSON.stringify(archived, null, 4)));
+
+// rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 
 // rsmsdb.updatePassword("password");
 // rsmsdb.checkPassword("bar")
@@ -73,16 +76,16 @@ rsmsdb.deleteArchivedRecitalsBefore('2020-04-13');
 
 
 // delete recital with id 1
-rsmsdb.deleteRecital(1).
-then(() => {
-	rsmsdb.selectOpenRecitals()
-	.then(openRecitals => {
-		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
-	});
-})
-.catch(err => {
-	console.error("Unable to delete recital:", err);
-});
+// rsmsdb.deleteRecital(1).
+// then(() => {
+// 	rsmsdb.selectOpenRecitals()
+// 	.then(openRecitals => {
+// 		console.log("Open recitals:", JSON.stringify(openRecitals, null, 4));
+// 	});
+// })
+// .catch(err => {
+// 	console.error("Unable to delete recital:", err);
+// });
 
 // rsmsdb.selectOpenRecitals()
 // .then(openRecitals => {
