@@ -9,6 +9,7 @@ $('#login_form').submit((e) => {
         } else {
             // ERR Handle
             $('#login_response').html("Error, incorrect username or password");
+            $('#password').val("")
         }
     });
 

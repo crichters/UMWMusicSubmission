@@ -178,12 +178,19 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// app.get("/credentials", async (req, res) => {
-//     const email = await insertEmail("simeon.neisler@gmail.com");
-//     const pw = await insertPassword("Password");
-//     console.log("Credentials added");
-//     res.redirect("/login");
-// });
+/*
+app.get("/credentials", async (req, res) => {
+    const email = await insertEmail("simeon.neisler@gmail.com");
+    const pw = await insertPassword("Password");
+    fs.writeFile('logging/app.log', 'Credentials added', (err, data) => {
+        if(err) {
+            console.log(err)
+        }
+        console.log(data)
+    })
+    res.redirect("/login");
+});
+*/
 
 app.get("/form", (req, res) => {
     res.sendFile(__dirname + '/content/form.html');
@@ -263,14 +270,20 @@ app.post("/submit_recital_form", async (req, res) => {
             submission[property] = null;
         }
     }
-    // fs.appendFile(logFile, 'Performing query\n', () => {
-    //     return 0;
-    // });
-    insertSubmission(submission, performer, collaborators, recital_date);
-    // fs.appendFile(logFile, 'Query finished\n' + response, () => {
-    //     return 0;
-    // });
-    res.send({status: "success", message: "submitted.html"});
+    const response = await insertSubmission(submission, performer, collaborators, recital_date);
+    const emails = await selectEmails();
+    let mailOptions = {
+        from: 'umw.social.services@gmail.com',
+        to: emails[2].email,
+        subject: 'Submission Notification',
+        text: name + " has submitted a recital performance."
+    }
+    transporter.sendMail(mailOptions, (err) => {
+        if(err) {
+            console.log(err)
+        }
+    });
+    res.sendFile(directory +'/submitted.html');
 });
 
 app.post("/delete-submission", async (req, res) => {
@@ -377,6 +390,16 @@ app.post("/archive", async (req, res) => {
     }
 });
 
+app.post("/unarchive", async (req, res) => {
+    const {recitalId} = req.body;
+    try {
+        const unarchived = await selectUnarchivedRecitals(recitalId);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.log(err)
+    }
+});
+
 app.get("/emails", async (req, res) => {
     let emails = await selectEmails();
     res.json(emails);
@@ -456,7 +479,7 @@ app.get("/forgot-password", (req, res) => {
 });
 
 app.post("/forgot-password", async (req, res) => {
-    const {email} = req.body.email;
+    let {email} = req.body;
     if(!checkEmail(email)) {
         res.json({status: "Error", message: "Email not recognized"});
     } else {
@@ -465,17 +488,20 @@ app.post("/forgot-password", async (req, res) => {
         const updated = await updatePassword(newPW);
         let mailOptions = {
             from: 'umw.social.services@gmail.com',
-            to: 'simeon.neisler@gmail.com',
+            to: email,
             subject: 'Forgot Password',
             text: "Someone tried to reset your password. Here's your new one\n" + newPW + "\nWhen you sign in, make sure to go to the account settings page and set up a new one."
         }
+        console.log(mailOptions);
+
         transporter.sendMail(mailOptions, (err) => {
             if(err) {
                 console.log(err);
+                res.send({status:error});
             } else {
             }
         });
-        res.redirect("/login");
+        res.send({status: "success"})
     }
 });
 
