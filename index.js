@@ -29,7 +29,7 @@ fs.appendFile(logFile, "Testing\n", () => {
 });
 
 function checkSession(req, res, next) {
-    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search", "/forgot-password", "/get-submission-by-id"]
+    const validRoutes = ["/login", "/form", "/submit_recital_form", "/get-recitals", "/submitted", "/search", "/forgot-password", "/get-submission-by-id", "/logged-in"]
     const valid = validRoutes.includes(req.path);
     if(req.session.valid || validRoutes.includes(req.path)) {
         next();
@@ -76,6 +76,10 @@ process.on('SIGTERM', () => {
 
 app.get("/", (req, res) => {
     res.sendFile(directory + '/dashboard.html')
+});
+
+app.get("/logged-in", (req, res) => {
+    res.send(req.session.valid === true);
 });
 
 app.get("/emailtest", (req, res) => {
@@ -283,7 +287,8 @@ app.post("/submit_recital_form", async (req, res) => {
             console.log(err)
         }
     });
-    res.sendFile(directory +'/submitted.html');
+
+    res.send({status: "success", message: "/submitted.html"});
 });
 
 app.post("/delete-submission", async (req, res) => {
@@ -539,6 +544,8 @@ app.post("/search", async (req, res) => {
         res.send(results);
     })
 });
+
+
 
 function validateSubmission(request) {
     let MAX_STRING = 50;

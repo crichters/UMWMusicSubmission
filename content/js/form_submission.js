@@ -48,7 +48,7 @@ $("form").submit((event) => {
     // Send Post Request
     $.post("/submit_recital_form", submission_values, function(data, status, jqXHR){
 
-        if(data["status"] == "success") {
+        if(data["status"] === "success") {
             location.replace(data["message"]);
         } else {
             console.log(data);

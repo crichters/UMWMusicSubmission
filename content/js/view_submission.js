@@ -68,7 +68,6 @@ $('#deleteButton').click(() => {
 });
 
 $(document).ready(() => {
-    console.log("Ready!");
     id = $.urlParam("id");
     submission_values = {id};
     $.post(`/get-submission-by-id`, submission_values, (data, status, jqXHR) => {
@@ -95,5 +94,12 @@ $(document).ready(() => {
         }
         fill_table(data[0]);
         console.log(data);
+    });
+    $.get('/logged-in', (data, success) => {
+        if(data != true) {
+            $('#deny_submission').remove();
+            $('#approve_submission').remove();
+            $('#deleteButton').remove();
+        }
     });
 });
